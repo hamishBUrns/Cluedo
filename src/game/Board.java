@@ -1,12 +1,12 @@
 package game;
 
 public class Board {
-
+	//this shit is working
 	//some kind of 2d array here
 	private Tile [][] board;
 
 	public Board(){
-		
+
 	}
 
 	public boolean goNorth(Player p){
