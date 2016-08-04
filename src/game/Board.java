@@ -11,9 +11,9 @@ public class Board {
 
 	public boolean goNorth(Player p){
 		//stuff happens, do checks that move is valid
-		board[p.getRow()][p.getCol()].player = null;
+		board[p.getRow()][p.getCol()].setPlayer(null);
 		p.setRow(p.getRow()+1);
-		board[p.getRow()][p.getCol()].player = p;
+		board[p.getRow()][p.getCol()].setPlayer(p);
 		return true;
 	}
 }
