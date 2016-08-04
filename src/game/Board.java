@@ -1,19 +1,25 @@
 package game;
 
 public class Board {
-	//this shit is working
-	//some kind of 2d array here
-	private Tile [][] board;
 
-	public Board(){
+	private Tile[][] board;
+
+	public Board() {
 
 	}
 
-	public boolean goNorth(Player p){
-		//stuff happens, do checks that move is valid
-		board[p.getRow()][p.getCol()].getPlayer = null;
-		p.setRow(p.getRow()+1);
-		board[p.getRow()][p.getCol()].getplayer = p;
+	public boolean moveValid(int oldRow, int oldCol, int newRow, int newCol, Player p) {
+		if (newRow < 0 || newRow > board.length || newCol < 0 || newCol > board[0].length) {
+			return false;
+		}
+		if (board[newRow][newCol] instanceof RoomTile && !(board[oldRow][oldCol] instanceof DoorTile)) {
+			System.out.println("You must be on a door to enter a room");
+			return false;
+		}
+		board[oldRow][oldCol].setPlayer(null);
+		p.setRow(newRow);
+		p.setCol(newCol);
+		board[newRow][newCol].setPlayer(p);
 		return true;
 	}
 }

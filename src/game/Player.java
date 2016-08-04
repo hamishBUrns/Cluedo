@@ -21,14 +21,19 @@ public class Player {
 		hand = cards;
 	}
 
-	public void getHand(){
+	public void printHand(){
 		for(Card c : hand){
 			System.out.println(c.getName());
 		}
 	}
 
+<<<<<<< HEAD
 	public String getName(){
 		return name;
+=======
+	public List<Card> getHand(){
+		return hand;
+>>>>>>> aaace10f87764c98505dd6c68baf5e64548c3091
 	}
 
 	public int getRow(){
