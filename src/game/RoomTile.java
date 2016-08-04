@@ -12,10 +12,12 @@ public class RoomTile implements Tile {
 		return null;
 	}
 
+
 	@Override
 	public void setPlayer(Player p) {
 		// TODO Auto-generated method stub
 
 	}
+
 
 }
