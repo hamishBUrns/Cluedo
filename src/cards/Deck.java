@@ -4,37 +4,63 @@ import java.util.*;
 
 public class Deck {
 	public ArrayList<Card> deck = new ArrayList<Card>();
-	public List<Card> characters = new ArrayList<>();
-	public List<Card> rooms = new ArrayList<>();
-	public List<Card> weapons = new ArrayList<>();
+	public ArrayList<Card> characters = new ArrayList<>();
+	public ArrayList<Card> rooms = new ArrayList<>();
+	public ArrayList<Card> weapons = new ArrayList<>();
 
 	public Deck() {
 		setCards();
 
 	}
 	public void setCards(){
-		deck.add(new CharacterCard("Miss Scarlett"));
-		deck.add(new CharacterCard("Colonel Mustard"));
-		deck.add(new CharacterCard("Mrs White"));
-		deck.add(new CharacterCard("The Reverend green"));
-		deck.add(new CharacterCard("Mrs Peacock"));
-		deck.add(new CharacterCard("Professor Plum"));
+		characters.add(new CharacterCard("Miss Scarlett"));
+		characters.add(new CharacterCard("Colonel Mustard"));
+		characters.add(new CharacterCard("Mrs White"));
+		characters.add(new CharacterCard("The Reverend green"));
+		characters.add(new CharacterCard("Mrs Peacock"));
+		characters.add(new CharacterCard("Professor Plum"));
 
-		deck.add(new RoomCard("Kitchen"));
-		deck.add(new RoomCard("Ballroom"));
-		deck.add(new RoomCard("Conservatory"));
-		deck.add(new RoomCard("Billiard room"));
-		deck.add(new RoomCard("Library"));
-		deck.add(new RoomCard("Study"));
-		deck.add(new RoomCard("Hall"));
-		deck.add(new RoomCard("Lounge"));
-		deck.add(new RoomCard("Dining room"));
+		rooms.add(new RoomCard("Kitchen"));
+		rooms.add(new RoomCard("Ballroom"));
+		rooms.add(new RoomCard("Conservatory"));
+		rooms.add(new RoomCard("Billiard room"));
+		rooms.add(new RoomCard("Library"));
+		rooms.add(new RoomCard("Study"));
+		rooms.add(new RoomCard("Hall"));
+		rooms.add(new RoomCard("Lounge"));
+		rooms.add(new RoomCard("Dining room"));
 
-		deck.add(new WeaponCard("Candlestick"));
-		deck.add(new WeaponCard("Dagger"));
-		deck.add(new WeaponCard("Lead Pipe"));
-		deck.add(new WeaponCard("Revolver"));
-		deck.add(new WeaponCard("Rope"));
-		deck.add(new WeaponCard("Spanner"));
+		weapons.add(new WeaponCard("Candlestick"));
+		weapons.add(new WeaponCard("Dagger"));
+		weapons.add(new WeaponCard("Lead Pipe"));
+		weapons.add(new WeaponCard("Revolver"));
+		weapons.add(new WeaponCard("Rope"));
+		weapons.add(new WeaponCard("Spanner"));
+
+		for(Card c: characters){
+			deck.add(c);
+		}
+		for(Card c: rooms){
+			deck.add(c);
+		}
+		for(Card c: weapons){
+			deck.add(c);
+		}
+	}
+	public ArrayList<Card> setSolution(){
+		ArrayList<Card> solution = new ArrayList<Card>();
+		solution.add(getRandomCard(characters));
+		solution.add(getRandomCard(rooms));
+		solution.add(getRandomCard(weapons));
+		return solution;
+
+	}
+	public Card getRandomCard(ArrayList<Card> set){
+		Random rand = new Random();
+		int index=rand.nextInt(set.size());
+		Card card= set.get(index);
+		set.remove(index);
+		return card;
+		//only removes from one set but you have those two sets.
 	}
 }
