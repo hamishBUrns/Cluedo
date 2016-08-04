@@ -13,4 +13,13 @@ public class CharacterCard implements Card {
 		return name;
 	}
 
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof CharacterCard){
+			CharacterCard other = (CharacterCard) o;
+			return name.equals(other.getName());
+		}
+		return false;
+	}
+
 }

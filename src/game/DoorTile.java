@@ -1,23 +1,19 @@
 package game;
 
-public class RoomTile implements Tile {
+public class DoorTile implements Tile {
 
 	private Player player;
-
-	public RoomTile() {
-		// TODO Auto-generated constructor stub
-	}
 
 	@Override
 	public Player getPlayer() {
 		// TODO Auto-generated method stub
-		return null;
+		return player;
 	}
 
 	@Override
 	public void setPlayer(Player p) {
 		// TODO Auto-generated method stub
+		player = p;
 	}
-
 
 }

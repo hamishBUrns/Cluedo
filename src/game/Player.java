@@ -19,10 +19,14 @@ public class Player {
 		hand = cards;
 	}
 
-	public void getHand(){
+	public void printHand(){
 		for(Card c : hand){
 			System.out.println(c.getName());
 		}
+	}
+
+	public List<Card> getHand(){
+		return hand;
 	}
 
 	public int getRow(){

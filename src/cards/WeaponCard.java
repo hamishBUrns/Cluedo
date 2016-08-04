@@ -11,4 +11,13 @@ public class WeaponCard implements Card{
 		return name;
 	}
 
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof WeaponCard){
+			WeaponCard other = (WeaponCard) o;
+			return name.equals(other.getName());
+		}
+		return false;
+	}
+
 }
