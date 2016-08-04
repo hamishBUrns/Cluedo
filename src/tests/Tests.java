@@ -10,7 +10,7 @@ import main.*;
 public class Tests {
 	@Test
 	public void validCardFromString_1(){
-		Game g = new Game(new TextClient(), 3);
+		Game g = new Game(new TextClient());
 		Card c = g.cardFromString("professor plum");
 		assertEquals((CharacterCard) c, new CharacterCard("Professor Plum"));
 		c = g.cardFromString("MRS WHITE");
@@ -20,7 +20,7 @@ public class Tests {
 	}
 
 	public void invalidCardFromString(){
-		Game g = new Game(new TextClient(), 3);
+		Game g = new Game(new TextClient());
 		Card c = g.cardFromString("butts");
 		assertTrue(c == null);
 		c = g.cardFromString("mr plum");
@@ -28,6 +28,10 @@ public class Tests {
 	}
 
 	public void validRefute(){
-		Game g = new Game(new TextClient(), 3);
+		Game g = new Game(new TextClient());
+	}
+
+	public void validDeal_4(){
+		Game g= new Game(new TextClient());
 	}
 }

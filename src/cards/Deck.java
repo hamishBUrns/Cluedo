@@ -47,13 +47,43 @@ public class Deck {
 			deck.add(c);
 		}
 	}
+
 	public ArrayList<Card> setSolution(){
 		ArrayList<Card> solution = new ArrayList<Card>();
-		solution.add(getRandomCard(characters));
-		solution.add(getRandomCard(rooms));
-		solution.add(getRandomCard(weapons));
+		while(solution.isEmpty()){
+			Card card= getRandomCard(deck);
+			if(card instanceof WeaponCard){
+				solution.add(card);
+			}
+			else{deck.add(card);}
+		}
+		while(solution.size()==1){
+			Card card= getRandomCard(deck);
+			if(card instanceof RoomCard){
+				solution.add(card);
+			}
+			else{deck.add(card);}
+		}
+		while(solution.size()==2){
+			Card card= getRandomCard(deck);
+			if(card instanceof CharacterCard){
+				solution.add(card);
+			}
+			else{deck.add(card);}
+		}
 		return solution;
 
+	}
+	public Card deal(){
+		if(deck.size()==0){
+			System.out.println("no cards in deck");
+			return null;
+		}
+		return getRandomCard(deck);
+
+	}
+	public ArrayList<Card> getDeck(){
+		return deck;
 	}
 	public Card getRandomCard(ArrayList<Card> set){
 		Random rand = new Random();
@@ -61,6 +91,6 @@ public class Deck {
 		Card card= set.get(index);
 		set.remove(index);
 		return card;
-		//only removes from one set but you have those two sets.
+
 	}
 }

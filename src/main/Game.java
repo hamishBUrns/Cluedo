@@ -8,26 +8,26 @@ import game.*;
 public class Game {
 
 	private ArrayList<Player> players = new ArrayList<Player>();
+	private ArrayList<Card> solution = new ArrayList<Card>();
+	private ArrayList<Card> leftOver = new ArrayList<Card>();
 	private TextClient client;
 	private Deck deck;
 	private Board board;
 	private int turnIndex;
 	private boolean gameStillGoing;
 
-	public Game(TextClient c, int numPlayers) {
+	public Game(TextClient c) {
 		client = c;
 		deck = new Deck();
 		gameStillGoing = true;
 
 		assignCharacters();
 		dealCards();
-
-
-		// deal cards
-
-
+		runGame();
+	}
 
 	public void runGame(){
+		System.out.println("Starting game!");
 		while (gameStillGoing) {
 			for (Player p : players) {
 
@@ -35,11 +35,20 @@ public class Game {
 			}
 		}
 	}
-	public void dealCards(){
-		for(Player p: players){
 
+	public void dealCards(){
+		solution=deck.setSolution();
+
+		while(deck.getDeck().size()>2){
+			for(Player p: players){
+				p.giveCard(deck.deal());
+			}
+		}
+		while(!deck.getDeck().isEmpty()){
+			leftOver.add(deck.deal());
 		}
 	}
+
 	public void assignCharacters(){
 		ArrayList<Player> characters =new ArrayList<Player>();
 		characters.add(new Player("Miss Scarlet",9,0));
@@ -49,37 +58,48 @@ public class Game {
 		characters.add(new Player("Mrs Peacock",24,19));
 		characters.add(new Player("Professor Plum",7,24));
 
-		int numPlayers = client.readInt("How many players?");
+		int numPlayers = client.readInt("Hi, How many players?");
 		while (numPlayers > 6 || numPlayers < 2) {
 			numPlayers = client.readInt("Must have between 2 and 6 players");
 		}
-
-		while (numPlayers >= 0) {
+		int player =1;
+		while (numPlayers > 0) {
 			System.out.println("Characters left:");
 			for(Player p: characters){
 				System.out.println(p.getName());
 			}
-			String character = client.readString("Player"+(6-numPlayers)+"Type your character");
+
+			String character = client.readString("Player"+player+" Type your character");
 			while(playerFromString(character,characters)==null){
 				character=client.readString("Type out character as shown:");
 			}
 			players.add(playerFromString(character,characters));
-
+			characters.remove(playerFromString(character,characters));
+			numPlayers--;
+			player++;
 
 		}
 	}
 
-	public Player playerFromString(String character,ArrayList<Player> characters){
-		for(Player p: characters){
-			if(p.getName().equals(character)){
-				return p;
-			}
-		}
-		return null;
-	}
+	/**
+	 * Runs through actions taken on a players turn
+	 * @param p
+	 */
+
 	public void turn(Player p) {
+		System.out.print(p.getName()+"'s turn, cards in hand are:");
+		for(Card c: p.getHand()){
+			System.out.print(c.getName()+", ");
+		}
+		System.out.print("\nLeftover cards are:");
+		for(Card c: solution){
+			System.out.print(c.getName()+", ");
+		}
+		System.out.println();
+		
 		Random rand = new Random();
 		int diceRoll = rand.nextInt(11) + 2; // generate a random number between 2 and 12
+		System.out.println(p.getName()+" rolled a "+ diceRoll);
 
 		move(diceRoll, p);
 		// suggestion/accusation mechanics go here
@@ -198,16 +218,26 @@ public class Game {
 		}
 		return null;
 	}
+	
+	/**
+	 * Return player from defaults whose name matches input string, null if not match
+	 * @param character
+	 * @param characters
+	 * @return
+	 */
+	public Player playerFromString(String character,ArrayList<Player> characters){
+		for(Player p: characters){
+			if(p.getName().equals(character)){
+				return p;
+			}
+		}
+		return null;
+	}
 
 	public static void main(String args[]) {
 		TextClient client = new TextClient();
 
-		int numPlayers = client.readInt("How many players?");
-		while (numPlayers > 6 || numPlayers < 2) {
-			numPlayers = client.readInt("Must have between 2 and 6 players");
-		}
-
-		Game game = new Game(client, numPlayers);
+		Game game = new Game(client);
 		game.runGame();
 	}
 

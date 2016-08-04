@@ -6,7 +6,7 @@ import cards.Card;
 
 public class Player {
 
-	private List<Card> hand;
+	private List<Card> hand= new ArrayList<Card>();
 	private int row,col;
 	private String name;
 
@@ -21,19 +21,24 @@ public class Player {
 		hand = cards;
 	}
 
+	public void giveCard(Card card){
+		if(card!=null){
+			hand.add(card);
+		}
+	}
+
 	public void printHand(){
 		for(Card c : hand){
 			System.out.println(c.getName());
 		}
 	}
 
-<<<<<<< HEAD
 	public String getName(){
 		return name;
-=======
+	}
+
 	public List<Card> getHand(){
 		return hand;
->>>>>>> aaace10f87764c98505dd6c68baf5e64548c3091
 	}
 
 	public int getRow(){

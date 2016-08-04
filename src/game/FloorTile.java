@@ -1,6 +1,6 @@
 package game;
 
-public class FloorTile implements Tile {
+public class WallTile implements Tile {
 
 	private Player player;
 
