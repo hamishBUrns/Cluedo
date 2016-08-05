@@ -30,29 +30,33 @@ public class Checklist {
 	public void printChecklist(){
 		System.out.println("//Checklist//");
 		System.out.println("Characters:");
-		getCheckedCharas();
+		printCheckedCharas();
 		System.out.println("Rooms:");
-		getCheckedRooms();
+		printCheckedRooms();
 		System.out.println("Weapons:");
-		getCheckedWeaps();
+		printCheckedWeaps();
 	}
 
-	public void getCheckedCharas(){
+	public void printCheckedCharas(){
 		for(CharacterCard c : characters){
 			System.out.println(c.getName());
 		}
 	}
 
-	public void getCheckedRooms(){
+	public void printCheckedRooms(){
 		for(RoomCard r : rooms){
 			System.out.println(r.getName());
 		}
 	}
 
-	public void getCheckedWeaps(){
+	public void printCheckedWeaps(){
 		for(WeaponCard w : weapons){
 			System.out.println(w.getName());
 		}
+	}
+
+	public boolean contains(Card c){
+		return characters.contains(c) || rooms.contains(c) || weapons.contains(c);
 	}
 
 }

@@ -7,11 +7,12 @@ import java.util.*;
 import org.junit.Test;
 
 import cards.*;
+import game.*;
 import main.*;
 
 public class Tests {
 	@Test
-	public void validCardFromString_1(){
+	public void validCardFromString(){
 		Game g = new Game(new TextClient(), 2);
 		Card c = g.cardFromString("professor plum");
 		assertEquals((CharacterCard) c, new CharacterCard("Professor Plum"));
@@ -33,8 +34,27 @@ public class Tests {
 	@Test
 	public void isRefuted(){
 		Game g = new Game(new TextClient(), 2);
-		g.dealCards();
+		List<Player> players = g.getPlayers();
+		Card c = new CharacterCard("Mrs White");
+		players.get(1).giveCard(c);
+		List<Card> cards = new ArrayList<>();
+		cards.add(c);
+		cards.add(new WeaponCard("Rope"));
+		cards.add(new RoomCard("Hall"));
+		assertEquals(g.refute(cards), c);
+		assertTrue(g.getChecklist().contains(c));
+	}
 
+	@Test
+	public void notRefuted(){
+		Game g = new Game(new TextClient(), 2);
+		List<Player> players = g.getPlayers();
+		players.get(1).giveCard(new CharacterCard("Mrs White"));
+		List<Card> cards = new ArrayList<>();
+		cards.add(new CharacterCard("The Reverend Green"));
+		cards.add(new WeaponCard("Rope"));
+		cards.add(new RoomCard("Hall"));
+		assertTrue(g.refute(cards) == null);
 	}
 
 	@Test

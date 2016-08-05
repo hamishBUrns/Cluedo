@@ -37,9 +37,10 @@ public class TextClient {
 
 	public void help(){
 		System.out.println("Command list:");
-		System.out.println("hand: see what cards are in your hand");
 		System.out.println("checklist: see cards that have been checked and cannot be part of the solution");
+		System.out.println("hand: see what cards are in your hand");
 		System.out.println("suggest: make a suggestion by stating a character and weapon (must be in a room)");
 		System.out.println("accuse: make an accusation by stating a character, room, and weapon");
+		System.out.println("end: ends your turn");
 	}
 }
