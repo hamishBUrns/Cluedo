@@ -1,6 +1,6 @@
 package game;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Room {
 	private String name;
@@ -29,6 +29,14 @@ public class Room {
 		place.setToken(null);
 		pieces.remove(token);
 		//need to move Token col and row in outside method depending on where its going
+	}
+
+	public List<Token> getTokens(){
+		return pieces;
+	}
+
+	public List<Tile> getTiles(){
+		return tiles;
 	}
 
 }

@@ -1,6 +1,6 @@
 package game;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Board {
 
@@ -122,8 +122,18 @@ public class Board {
 		return board[row][col];
 	}
 
+<<<<<<< HEAD
 	public ArrayList<Room> getRooms(){
 		return rooms;
+=======
+	public Room currentRoom(Token t){
+		for(Room r : rooms){
+			if(r.getTiles().contains(getTile(t.getRow(),t.getCol()))){
+				return r;
+			}
+		}
+		return null;
+>>>>>>> 6b554b8d9a7b82038f03845ad51ff99f3b55a134
 	}
 
 	public void printBoard() {
