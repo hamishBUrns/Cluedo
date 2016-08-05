@@ -125,6 +125,16 @@ public class Board {
 			System.out.println();
 		}
 	}
+
+	/**
+	 * check if a move is valid and and if so move the player
+	 * @param oldRow
+	 * @param oldCol
+	 * @param newRow
+	 * @param newCol
+	 * @param p
+	 * @return
+	 */
 	public boolean moveValid(int oldRow, int oldCol, int newRow, int newCol, Player p) {
 		if (newRow < 0 || newRow > board.length || newCol < 0 || newCol > board[0].length) {
 			return false;
