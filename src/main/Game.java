@@ -28,6 +28,7 @@ public class Game {
 		deck = new Deck();
 		checklist = new Checklist();
 		gameStillGoing = true;
+		board = new Board();
 
 		assignCharacters();
 		dealCards();
@@ -91,6 +92,10 @@ public class Game {
 		characters.add(new Player("The Reverend Green", 0, 17));
 		characters.add(new Player("Mrs Peacock", 24, 19));
 		characters.add(new Player("Professor Plum", 7, 24));
+
+		for(Player p: characters){ //Putting players on tiles.
+			board.getTile(p.getCol(), p.getRow()).setPlayer(p);
+		}
 
 		int numPlayers = client.readInt("Hi, How many players?");
 		while (numPlayers > 6 || numPlayers < 2) {
@@ -164,7 +169,7 @@ public class Game {
 	 * gets user input to move them around the board
 	 */
 	public void move(int diceRoll, Player p) {
-		
+		board.printBoard();
 		while (diceRoll > 0) {
 			System.out.println("Steps left: " + diceRoll);
 			String dir = client.readString("Choose a direction").toUpperCase();

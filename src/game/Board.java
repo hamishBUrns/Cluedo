@@ -110,6 +110,11 @@ public class Board {
 			row++;
 		}
 	}
+	
+	public Tile getTile(int row, int col){
+		return board[row][col];
+	}
+	
 	public void printBoard(){
 
 		for(Tile[] tArray: board ){
