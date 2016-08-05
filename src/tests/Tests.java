@@ -61,4 +61,10 @@ public class Tests {
 	public void validDeal_4(){
 		Game g= new Game(new TextClient(), 5);
 	}
+
+	@Test
+	public void boardGood_5(){
+		Board board=new Board();
+		board.printBoard();
+	}
 }
