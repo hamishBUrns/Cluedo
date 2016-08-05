@@ -7,7 +7,7 @@ public class Tile{
 	private Player player;
 
 	public Tile(String typ,String roomNam){
-		type=type;
+		this.type=typ;
 		roomName=roomNam;
 
 	}
