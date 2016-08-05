@@ -9,16 +9,24 @@ public class Game {
 
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private ArrayList<Card> solution = new ArrayList<Card>();
-	private ArrayList<Card> leftOver = new ArrayList<Card>();
+
 	private TextClient client;
 	private Deck deck;
+	private Checklist checklist;
 	private Board board;
+
 	private int turnIndex;
 	private boolean gameStillGoing;
 
+	/**
+	 * constructor for actually playing the game
+	 *
+	 * @param c
+	 */
 	public Game(TextClient c) {
 		client = c;
 		deck = new Deck();
+		checklist = new Checklist();
 		gameStillGoing = true;
 
 		assignCharacters();
@@ -26,7 +34,28 @@ public class Game {
 		runGame();
 	}
 
-	public void runGame(){
+	/**
+	 * constructor that doesn't require user input for testing purposes
+	 *
+	 * @param c
+	 * @param numPlayers
+	 */
+	public Game(TextClient c, int numPlayers) {
+		ArrayList<Player> characters = new ArrayList<Player>();
+		characters.add(new Player("Miss Scarlet", 9, 0));
+		characters.add(new Player("Colonel Mustard", 15, 0));
+		characters.add(new Player("Mrs White", 24, 6));
+		characters.add(new Player("The Reverend Green", 0, 17));
+		characters.add(new Player("Mrs Peacock", 24, 19));
+		characters.add(new Player("Professor Plum", 7, 24));
+
+		while (numPlayers > 0) {
+			numPlayers--;
+			players.add(characters.get(numPlayers));
+		}
+	}
+
+	public void runGame() {
 		System.out.println("Starting game!");
 		while (gameStillGoing) {
 			for (Player p : players) {
@@ -36,45 +65,50 @@ public class Game {
 		}
 	}
 
-	public void dealCards(){
-		solution=deck.setSolution();
+	/**
+	 * evenly deals cards to the players and add leftovers to checklist
+	 */
+	public void dealCards() {
+		solution = deck.setSolution();
 
-		while(deck.getDeck().size()>2){
-			for(Player p: players){
+		while (deck.getDeck().size() > 2) {
+			for (Player p : players) {
 				p.giveCard(deck.deal());
 			}
 		}
-		while(!deck.getDeck().isEmpty()){
-			leftOver.add(deck.deal());
+		for (Card c : deck.getDeck()) {
+			checklist.addCard(c);
 		}
+		deck.setCards();// repopulate the deck to be used as a record of all the
+						// card in the game
 	}
 
-	public void assignCharacters(){
-		ArrayList<Player> characters =new ArrayList<Player>();
-		characters.add(new Player("Miss Scarlet",9,0));
-		characters.add(new Player("Colonel Mustard",15,0));
-		characters.add(new Player("Mrs White",24,6));
-		characters.add(new Player("The Reverend Green",0,17));
-		characters.add(new Player("Mrs Peacock",24,19));
-		characters.add(new Player("Professor Plum",7,24));
+	public void assignCharacters() {
+		ArrayList<Player> characters = new ArrayList<Player>();
+		characters.add(new Player("Miss Scarlet", 9, 0));
+		characters.add(new Player("Colonel Mustard", 15, 0));
+		characters.add(new Player("Mrs White", 24, 6));
+		characters.add(new Player("The Reverend Green", 0, 17));
+		characters.add(new Player("Mrs Peacock", 24, 19));
+		characters.add(new Player("Professor Plum", 7, 24));
 
 		int numPlayers = client.readInt("Hi, How many players?");
 		while (numPlayers > 6 || numPlayers < 2) {
 			numPlayers = client.readInt("Must have between 2 and 6 players");
 		}
-		int player =1;
+		int player = 1;
 		while (numPlayers > 0) {
 			System.out.println("Characters left:");
-			for(Player p: characters){
+			for (Player p : characters) {
 				System.out.println(p.getName());
 			}
 
-			String character = client.readString("Player"+player+" Type your character");
-			while(playerFromString(character,characters)==null){
-				character=client.readString("Type out character as shown:");
+			String character = client.readString("Player" + player + " Type your character");
+			while (playerFromString(character, characters) == null) {
+				character = client.readString("Type out character as shown:");
 			}
-			players.add(playerFromString(character,characters));
-			characters.remove(playerFromString(character,characters));
+			players.add(playerFromString(character, characters));
+			characters.remove(playerFromString(character, characters));
 			numPlayers--;
 			player++;
 
@@ -83,27 +117,46 @@ public class Game {
 
 	/**
 	 * Runs through actions taken on a players turn
+	 *
 	 * @param p
 	 */
-
 	public void turn(Player p) {
-		System.out.print(p.getName()+"'s turn, cards in hand are:");
-		for(Card c: p.getHand()){
-			System.out.print(c.getName()+", ");
-		}
-		System.out.print("\nLeftover cards are:");
-		for(Card c: solution){
-			System.out.print(c.getName()+", ");
-		}
-		System.out.println();
-		
+		System.out.print(p.getName() + "'s turn, cards in hand are:");
+		p.printHand();
+
 		Random rand = new Random();
-		int diceRoll = rand.nextInt(11) + 2; // generate a random number between 2 and 12
-		System.out.println(p.getName()+" rolled a "+ diceRoll);
+		int diceRoll = rand.nextInt(11) + 2; // generate a random number between
+												// 2 and 12
+		System.out.println(p.getName() + " rolled a " + diceRoll);
 
 		move(diceRoll, p);
-		// suggestion/accusation mechanics go here
+		boolean turnEnded = false;
+		while(!turnEnded){
+			String command = client.readString("what would you like to do?").toLowerCase();
+			switch (command) {
+			case ("checklist"):
+				checklist.printChecklist();
+				break;
+			case ("hand"):
+				p.printHand();
+				break;
+			case ("suggest"):
+				// room checks n stuff, then call suggest
+				turnEnded = true;
+				break;
+			case ("accuse"):
+				accuse(p);
+				turnEnded = true;
+				break;
+			case ("help"):
+				client.help();
+				break;
+			default:
+				System.out.println("Invalid command, type 'help' to see command list and descriptions");
+			}
+		}
 
+		// suggestion/accusation mechanics go here
 	}
 
 	/**
@@ -116,25 +169,25 @@ public class Game {
 			switch (dir) {
 			case ("N"):
 				// go north
-				if(board.moveValid(p.getRow(), p.getCol(), p.getRow()+1, p.getCol(), p)){
+				if (board.moveValid(p.getRow(), p.getCol(), p.getRow() + 1, p.getCol(), p)) {
 					diceRoll--;
 				}
 				break;
 			case ("S"):
 				// go south
-				if(board.moveValid(p.getRow(), p.getCol(), p.getRow()-1, p.getCol(), p)){
+				if (board.moveValid(p.getRow(), p.getCol(), p.getRow() - 1, p.getCol(), p)) {
 					diceRoll--;
 				}
 				break;
 			case ("E"):
 				// go east
-				if(board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol()+1, p)){
+				if (board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() + 1, p)) {
 					diceRoll--;
 				}
 				break;
 			case ("W"):
 				// go west
-				if(board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol()-1, p)){
+				if (board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() - 1, p)) {
 					diceRoll--;
 				}
 				break;
@@ -149,6 +202,7 @@ public class Game {
 
 	/**
 	 * get input for the weapon and character for this suggestion from the user
+	 *
 	 * @param room
 	 * @param p
 	 */
@@ -165,7 +219,9 @@ public class Game {
 	}
 
 	/**
-	 * get input for the room, weapon, and character for this accusation from the user
+	 * get input for the room, weapon, and character for this accusation from
+	 * the user
+	 *
 	 * @param p
 	 */
 	public void accuse(Player p) {
@@ -188,16 +244,20 @@ public class Game {
 	 * if suggestion is refuted, returns that card, otherwise returns null
 	 */
 	public Card refute(List<Card> suggested) {
-		int current = turnIndex + 1;
+		int current = turnIndex + 1; // start at the index after the player
+										// suggesting
+		// go until we are back at suggesting player
 		while (current != turnIndex) {
 			for (Card c : players.get(current).getHand()) {
 				for (Card s : suggested) {
 					if (c.equals(s)) {
+						checklist.addCard(c);
 						return c;
 					}
 				}
 			}
 			current++;
+			// when we reach the end of the list, start at the beginning
 			if (current == players.size()) {
 				current = 0;
 			}
@@ -206,28 +266,32 @@ public class Game {
 	}
 
 	/**
-	 * return the card whose name matches the input string, null if no match found
+	 * return the card whose name matches the input string, null if no match
+	 * found
+	 *
 	 * @param s
 	 * @return card
 	 */
 	public Card cardFromString(String s) {
-		for (Card c : deck.deck) {
+		for (Card c : deck.getDeck()) {
 			if (c.getName().equalsIgnoreCase(s)) {
 				return c;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Return player from defaults whose name matches input string, null if not match
+	 * Return player from defaults whose name matches input string, null if no
+	 * match found
+	 *
 	 * @param character
 	 * @param characters
 	 * @return
 	 */
-	public Player playerFromString(String character,ArrayList<Player> characters){
-		for(Player p: characters){
-			if(p.getName().equals(character)){
+	public Player playerFromString(String character, ArrayList<Player> characters) {
+		for (Player p : characters) {
+			if (p.getName().equalsIgnoreCase(character)) {
 				return p;
 			}
 		}
@@ -238,7 +302,7 @@ public class Game {
 		TextClient client = new TextClient();
 
 		Game game = new Game(client);
-		game.runGame();
+		// game.runGame();
 	}
 
 }

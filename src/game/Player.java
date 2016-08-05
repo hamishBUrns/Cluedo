@@ -17,16 +17,19 @@ public class Player {
 		this.name =nam;
 	}
 
-	public void setHand(List<Card> cards){
-		hand = cards;
-	}
-
+	/**
+	 * adds a card to this player's hand
+	 * @param card
+	 */
 	public void giveCard(Card card){
 		if(card!=null){
 			hand.add(card);
 		}
 	}
 
+	/**
+	 * prints out the cards in this player's hand
+	 */
 	public void printHand(){
 		for(Card c : hand){
 			System.out.println(c.getName());
@@ -37,6 +40,10 @@ public class Player {
 		return name;
 	}
 
+	/**
+	 * returns this player's hand
+	 * @return
+	 */
 	public List<Card> getHand(){
 		return hand;
 	}

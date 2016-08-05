@@ -3,7 +3,7 @@ package cards;
 import java.util.*;
 
 public class Deck {
-	public ArrayList<Card> deck = new ArrayList<Card>();
+	private ArrayList<Card> deck = new ArrayList<Card>();
 	public ArrayList<Card> characters = new ArrayList<>();
 	public ArrayList<Card> rooms = new ArrayList<>();
 	public ArrayList<Card> weapons = new ArrayList<>();
@@ -12,11 +12,20 @@ public class Deck {
 		setCards();
 
 	}
+
+	/**
+	 * clears and repopulates the various card lists
+	 */
 	public void setCards(){
+		characters.clear();
+		rooms.clear();
+		weapons.clear();
+		deck.clear();
+
 		characters.add(new CharacterCard("Miss Scarlett"));
 		characters.add(new CharacterCard("Colonel Mustard"));
 		characters.add(new CharacterCard("Mrs White"));
-		characters.add(new CharacterCard("The Reverend green"));
+		characters.add(new CharacterCard("The Reverend Green"));
 		characters.add(new CharacterCard("Mrs Peacock"));
 		characters.add(new CharacterCard("Professor Plum"));
 
@@ -37,15 +46,9 @@ public class Deck {
 		weapons.add(new WeaponCard("Rope"));
 		weapons.add(new WeaponCard("Spanner"));
 
-		for(Card c: characters){
-			deck.add(c);
-		}
-		for(Card c: rooms){
-			deck.add(c);
-		}
-		for(Card c: weapons){
-			deck.add(c);
-		}
+		deck.addAll(characters);
+		deck.addAll(rooms);
+		deck.addAll(weapons);
 	}
 
 	public ArrayList<Card> setSolution(){
