@@ -9,11 +9,11 @@ public class Board {
 	private ArrayList<Room> rooms;
 	private String[] hardCodedBoard={
 			"|W|W|W|W|W|W|W|W|W|S|W|W|W|W|W|S|W|W|W|W|W|W|W|W|W|",
-			"|k|k|k|k|k|D|W|_|_|_|b|b|b|b|b|_|_|_|W|c|c|c|c|c|c|",
+			"|k|k|k|k|k|k|W|_|_|_|b|b|b|b|b|_|_|_|W|c|c|c|c|c|c|",
 			"|k|k|k|k|k|k|_|_|b|b|b|b|b|b|b|b|b|_|_|c|c|c|c|c|c|",
 			"|k|k|k|k|k|k|_|_|b|b|b|b|b|b|b|b|b|_|_|c|c|c|c|c|c|",
 			"|k|k|k|k|k|k|_|_|b|b|b|b|b|b|b|b|b|_|_|c|c|c|c|c|c|",
-			"|k|k|k|k|k|k|_|D|b|b|b|b|b|b|b|b|b|D|_|D|c|c|c|D|W|",
+			"|k|k|k|k|k|k|_|D|b|b|b|b|b|b|b|b|b|D|_|D|c|c|c|c|W|",
 			"|W|k|k|k|k|k|_|_|b|b|b|b|b|b|b|b|b|_|_|_|_|_|_|_|S|",
 			"|_|_|_|_|D|_|_|_|b|b|b|b|b|b|b|b|b|_|_|_|_|_|_|_|W|",
 			"|W|_|_|_|_|_|_|_|_|D|_|_|_|_|_|D|_|_|_|r|r|r|r|r|r|",
@@ -27,9 +27,9 @@ public class Board {
 			"|W|_|_|_|_|_|D|_|_|_|W|W|W|W|W|W|_|D|l|l|l|l|l|l|l|",
 			"|S|_|_|_|_|_|_|_|_|_|_|D|D|D|_|_|_|_|l|l|l|l|l|l|l|",
 			"|W|_|_|_|_|_|D|_|_|h|h|h|h|h|h|h|_|_|_|l|l|l|l|l|W|",
-			"|D|n|n|n|n|n|n|_|_|h|h|h|h|h|h|h|_|_|_|_|_|_|_|_|S|",
+			"|n|n|n|n|n|n|n|_|_|h|h|h|h|h|h|h|_|_|_|_|_|_|_|_|S|",
 			"|n|n|n|n|n|n|n|_|_|h|h|h|h|h|h|h|D|_|_|D|_|_|_|_|W|",
-			"|n|n|n|n|n|n|n|_|_|h|h|h|h|h|h|h|_|_|_|s|s|s|s|s|D|",
+			"|n|n|n|n|n|n|n|_|_|h|h|h|h|h|h|h|_|_|_|s|s|s|s|s|s|",
 			"|n|n|n|n|n|n|n|_|_|h|h|h|h|h|h|h|_|_|_|s|s|s|s|s|s|",
 			"|n|n|n|n|n|n|n|_|_|h|h|h|h|h|h|h|_|_|_|s|s|s|s|s|s|",
 			"|n|n|n|n|n|n|W|S|W|h|h|h|h|h|h|h|W|_|_|s|s|s|s|s|s|"};
@@ -59,9 +59,7 @@ public class Board {
 			s.replaceAll("\\s+", "");
 			tokens = s.split(delims);
 			for (col = 0; col < 25; col++) {
-
 				switch (tokens[col + 1]) {
-
 				case "W":
 					board[row][col]= new Tile("wall",null, row, col);
 					break;
@@ -73,6 +71,7 @@ public class Board {
 					break;
 				case "D":
 					board[row][col]= new Tile("door",null, row, col);
+					System.out.println(row +","+ col);
 					break;
 
 				case "k":
@@ -112,10 +111,61 @@ public class Board {
 					rooms.get(8).addTile(board[row][col]);
 					break;
 				}
-
 			}
 			row++;
 		}
+	}
+
+	public void addDoors(){
+		Map<String, Tile> doors = new HashMap<>();
+		doors.put("south", getTile(7,4));
+		doors.put("secret stairs", null);
+		rooms.get(0).addDoors(doors);
+
+		doors.clear();
+		doors.put("west", getTile(5,7));
+		doors.put("south-west", getTile(8,9));
+		doors.put("south-east", getTile(8,15));
+		doors.put("east", getTile(5,17));
+		rooms.get(1).addDoors(doors);
+
+		doors.clear();
+		doors.put("west", getTile(5,19));
+		doors.put("secret stairs", null);
+		rooms.get(2).addDoors(doors);
+
+		doors.clear();
+		doors.put("east", getTile(12,8));
+		doors.put("south", getTile(16,6));
+		rooms.get(3).addDoors(doors);
+
+		doors.clear();
+		doors.put("west", getTile(9,18));
+		doors.put("south", getTile(13,23));
+		rooms.get(4).addDoors(doors);
+
+		doors.clear();
+		doors.put("north", getTile(13,21));
+		doors.put("west", getTile(16,17));
+		rooms.get(5).addDoors(doors);
+
+		doors.clear();
+		doors.put("north", getTile(18,6));
+		doors.put("secret stairs", null);
+		rooms.get(6).addDoors(doors);
+
+		doors.clear();
+		doors.put("north-west", getTile(17,11));
+		doors.put("north-north", getTile(17,12));
+		doors.put("north-east", getTile(17,13));
+		doors.put("east", getTile(20,16));
+		rooms.get(7).addDoors(doors);
+
+		doors.clear();
+		doors.put("north", getTile(20,19));
+		doors.put("secret stairs", null);
+		rooms.get(7).addDoors(doors);
+
 	}
 
 	public Tile getTile(int row, int col){

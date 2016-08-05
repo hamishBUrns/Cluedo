@@ -117,11 +117,15 @@ public class Game {
 		int diceRoll = rand.nextInt(11) + 2; // generate a random number between
 												// 2 and 12
 		System.out.println(p.getName() + " rolled a " + diceRoll);
-
-		move(diceRoll, p);
+		Room playerRoom = board.currentRoom(p);
+		if(playerRoom != null){
+			leaveRoom(diceRoll, playerRoom, p);
+		}else{
+			move(diceRoll, p);
+		}
 		boolean turnEnded = false;
 		while (!turnEnded) {
-			String command = client.readString("what would you like to do?").toLowerCase();
+			String command = client.readString("What would you like to do?").toLowerCase();
 			switch (command) {
 			case ("checklist"):
 				checklist.printChecklist();
@@ -137,7 +141,7 @@ public class Game {
 						System.out.println("Egads! "+p.getName()+"'s got it!");
 						gameStillGoing = false;
 					}else{
-						System.out.println("But wait! There's irrefutable proof against");
+						System.out.println("But wait! There's irrefutable proof that "+c.getName()+" was not involved");
 					}
 					turnEnded = true;
 				}else{
@@ -147,11 +151,12 @@ public class Game {
 			case ("accuse"):
 				if (accusationCorrect(accuse(p))) {
 					gameStillGoing = false;
-					System.out.println("Correct! " + p.getName() + " wins!");
+					System.out.println("By Jove! " + p.getName() + " has solved it!");
 				} else {
-					System.out.println("Incorrect! " + p.getName() + " is out of the game.");
+					System.out.println("What poppycock! " + p.getName() + " is out of the game.");
 					p.setStatus(false);
 				}
+			turnEnded = true;
 				break;
 			case ("end"):
 				turnEnded = true;
@@ -162,6 +167,10 @@ public class Game {
 				System.out.println("Invalid command. Type 'help' to see command list and descriptions");
 			}
 		}
+	}
+
+	public void leaveRoom(int diceRoll, Room room, Player p){
+
 	}
 
 	/**
@@ -327,9 +336,7 @@ public class Game {
 	}
 
 	public static void main(String args[]) {
-		TextClient client = new TextClient();
-
-		Game game = new Game(client);
+		new Game(new TextClient());
 	}
 
 	// ====THE FOLLOWING METHODS ARE FOR TESTING PURPOSES ONLY==== //

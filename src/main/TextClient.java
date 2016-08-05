@@ -31,6 +31,8 @@ public class TextClient {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("I/O Error! " + e.getMessage());
+			} catch (NumberFormatException e){
+				System.out.println("Please input a number");
 			}
 		}
 	}

@@ -6,13 +6,22 @@ public class Room {
 	private String name;
 	private ArrayList<Token> pieces;
 	private ArrayList<Tile> tiles;
+	private Map<String, Tile> doors;
 
 	public Room(String name) {
+		tiles = new ArrayList<>();
+		pieces = new ArrayList<>();
+		doors = new HashMap<>();
 		this.name=name;
 	}
 	public void addTile(Tile t){
 		tiles.add(t);
 	}
+
+	public void addDoors(Map<String, Tile> d){
+		doors.putAll(d);
+	}
+
 	public void putInRoom(Token token){
 		pieces.add(token);
 		Tile place= tiles.get(pieces.indexOf(token));
