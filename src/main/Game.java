@@ -130,10 +130,19 @@ public class Game {
 				p.printHand();
 				break;
 			case ("suggest"):
-				// room checks n stuff, then call suggest
-				// also should check if player has the corresponding room card
-				// in their hand
-				turnEnded = true;
+				Room room = board.currentRoom(p);
+				if(room != null){
+					Card c = refute(suggest(cardFromString(room.toString()), p));
+					if(c == null){
+						System.out.println("Egads! "+p.getName()+"'s got it!");
+						gameStillGoing = false;
+					}else{
+						System.out.println("But wait! There's irrefutable proof against");
+					}
+					turnEnded = true;
+				}else{
+					System.out.println("Must be in room to suggest");
+				}
 				break;
 			case ("accuse"):
 				if (accusationCorrect(accuse(p))) {

@@ -1,6 +1,6 @@
 package game;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Board {
 
@@ -120,6 +120,15 @@ public class Board {
 
 	public Tile getTile(int row, int col){
 		return board[row][col];
+	}
+
+	public Room currentRoom(Token t){
+		for(Room r : rooms){
+			if(r.getTiles().contains(getTile(t.getRow(),t.getCol()))){
+				return r;
+			}
+		}
+		return null;
 	}
 
 	public void printBoard() {
