@@ -9,6 +9,7 @@ public class Game {
 
 	private List<Player> players = new ArrayList<Player>();
 	private List<Card> solution = new ArrayList<Card>();
+	private List<Weapon> weapons = new ArrayList<Weapon>();
 
 	private TextClient client;
 	private Deck deck;
@@ -16,7 +17,7 @@ public class Game {
 	private Board board;
 
 	private int turnIndex;
-	private boolean gameStillGoing;
+	private boolean noWinner;
 
 	/**
 	 * constructor for actually playing the game
@@ -27,18 +28,28 @@ public class Game {
 		client = c;
 		deck = new Deck();
 		checklist = new Checklist();
-		gameStillGoing = true;
+		noWinner = true;
 		board = new Board();
 
 		assignCharacters();
 		dealCards();
+		placeWeapons();
 		client.hashCode();
 		runGame();
 	}
 
+	/**
+	 * Runs through the turns for the players while someone hasn't won and all
+	 * the players haven't lost
+	 */
 	public void runGame() {
+		System.out.println("_ is a floor, W is a wall, D is a door, lowercase letters are rooms");
+		System.out.println(
+				"k is kitchen, b is ballroom, c is conservatory, d is dining room, r is billiard room, l is library, n is lounge, h is hall, s is study");
+		System.out.println("Key:Rope is~, dagger is ^, candlestick is $, Leadpipe is (, revolver is @, Spanner is*");
 		System.out.println("Starting game!");
-		while (gameStillGoing) {
+
+		while (noWinner && playersleft()) {
 			turnIndex = 0;
 			for (Player p : players) {
 				if (p.isStillIn()) {
@@ -46,7 +57,24 @@ public class Game {
 					turnIndex++;
 				}
 			}
+
 		}
+	}
+
+	/**
+	 * Creates the weapons of the game and puts them in rooms
+	 */
+	public void placeWeapons() {
+		weapons.add(new Weapon("candlestick"));
+		weapons.add(new Weapon("rope"));
+		weapons.add(new Weapon("dagger"));
+		weapons.add(new Weapon("leadpipe"));
+		weapons.add(new Weapon("revolver"));
+		weapons.add(new Weapon("spanner"));
+		for (int i = 0; i < weapons.size(); i++) {
+			board.getRooms().get(i).putInRoom(weapons.get(i));
+		}
+
 	}
 
 	/**
@@ -67,6 +95,9 @@ public class Game {
 						// card in the game
 	}
 
+	/**
+	 * Assigns characters depending on how many players there are
+	 */
 	public void assignCharacters() {
 		ArrayList<Player> defaults = new ArrayList<Player>();
 		defaults.add(new Player("Miss Scarlet", 0, 9));
@@ -76,7 +107,7 @@ public class Game {
 		defaults.add(new Player("Mrs Peacock", 19, 24));
 		defaults.add(new Player("Professor Plum", 24, 7));
 
-		for(Player p: defaults){ //Putting players on tiles.
+		for (Player p : defaults) { // Putting players on tiles.
 			board.getTile(p.getRow(), p.getCol()).setToken(p);
 		}
 
@@ -96,7 +127,7 @@ public class Game {
 				character = client.readString("Type out character as shown:");
 			}
 			players.add(playerFromString(character, defaults));
-			players.get(player-1).setPlayerNumber(player);
+			players.get(player - 1).setPlayerNumber(player);
 			defaults.remove(playerFromString(character, defaults));
 			numPlayers--;
 			player++;
@@ -118,9 +149,9 @@ public class Game {
 												// 2 and 12
 		System.out.println(p.getName() + " rolled a " + diceRoll);
 		Room playerRoom = board.currentRoom(p);
-		if(playerRoom != null){
+		if (playerRoom != null) {
 			leaveRoom(diceRoll, playerRoom, p);
-		}else{
+		} else {
 			move(diceRoll, p);
 		}
 		boolean turnEnded = false;
@@ -135,28 +166,29 @@ public class Game {
 				break;
 			case ("suggest"):
 				Room room = board.currentRoom(p);
-				if(room != null){
-					Card c = refute(suggest(cardFromString(room.toString()), p));
-					if(c == null){
-						System.out.println("Egads! "+p.getName()+"'s got it!");
-						gameStillGoing = false;
-					}else{
-						System.out.println("But wait! There's irrefutable proof that "+c.getName()+" was not involved");
+				if (room != null) {
+					Card c = refute(suggest(cardFromString(room.getName()), p));
+					if (c == null) {
+						System.out.println("Egads! " + p.getName() + "'s got it!");
+						noWinner = false;
+					} else {
+						System.out.println(
+								"But wait! There's irrefutable proof that " + c.getName() + " was not involved");
 					}
 					turnEnded = true;
-				}else{
+				} else {
 					System.out.println("Must be in room to suggest");
 				}
 				break;
 			case ("accuse"):
 				if (accusationCorrect(accuse(p))) {
-					gameStillGoing = false;
+					noWinner = false;
 					System.out.println("By Jove! " + p.getName() + " has solved it!");
 				} else {
 					System.out.println("What poppycock! " + p.getName() + " is out of the game.");
 					p.setStatus(false);
 				}
-			turnEnded = true;
+				turnEnded = true;
 				break;
 			case ("end"):
 				turnEnded = true;
@@ -169,7 +201,7 @@ public class Game {
 		}
 	}
 
-	public void leaveRoom(int diceRoll, Room room, Player p){
+	public void leaveRoom(int diceRoll, Room room, Player p) {
 
 	}
 
@@ -210,10 +242,13 @@ public class Game {
 			default:
 				System.out.println("Invalid input. Please use one of the following: N, S, E, W");
 			}
-			// check if player is in a room
-			// if yes return?? i'm guessing here
+			if (board.currentRoom(p) != null) {
+				board.currentRoom(p).putInRoom(p);
+				return;
+			}
 		}
-		return;
+		board.printBoard();
+
 	}
 
 	/**
@@ -225,11 +260,13 @@ public class Game {
 	public List<Card> suggest(Card room, Player p) {
 		Card c = cardFromString(client.readString("Who dunnit?"));
 		while (c == null || !(c instanceof CharacterCard) || p.getHand().contains(c) || checklist.contains(c)) {
-			c = cardFromString(client.readString("Please input the name of a valid character"));
+			c = cardFromString(
+					client.readString("Character must not be in your checklist and must be spelt correctly"));
 		}
 		Card w = cardFromString(client.readString("Murder weapon?"));
 		while (w == null || !(w instanceof WeaponCard) || p.getHand().contains(w) || checklist.contains(w)) {
-			w = cardFromString(client.readString("Please input the name of a valid weapon"));
+			w = cardFromString(
+					client.readString("Character must not be in your checklist and must be spelt correctly"));
 		}
 		System.out.println("Perhaps it was " + c.getName() + " in the " + room.getName() + " with the " + w.getName());
 
@@ -274,15 +311,16 @@ public class Game {
 	public List<Card> accuse(Player p) {
 		Card c = cardFromString(client.readString("Who dunnit?"));
 		while (c == null || !(c instanceof CharacterCard) || p.getHand().contains(c) || checklist.contains(c)) {
-			c = cardFromString(client.readString("Please input the name of a valid character"));
+			c = cardFromString(
+					client.readString("Character must not be in your checklist and must be spelt correctly"));
 		}
 		Card r = cardFromString(client.readString("Scene of the crime?"));
 		while (r == null || !(r instanceof RoomCard) || p.getHand().contains(r) || checklist.contains(r)) {
-			r = cardFromString(client.readString("Please input the name of a valid room"));
+			r = cardFromString(client.readString("Room must not be in your checklist and must be spelt correctly"));
 		}
 		Card w = cardFromString(client.readString("Murder weapon?"));
 		while (w == null || !(w instanceof WeaponCard) || p.getHand().contains(w) || checklist.contains(w)) {
-			w = cardFromString(client.readString("Please input the name of a valid weapon"));
+			w = cardFromString(client.readString("Weapon must not be in your checklist and must be spelt correctly"));
 		}
 		System.out.println("It was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "!");
 
@@ -293,6 +331,12 @@ public class Game {
 		return cards;
 	}
 
+	/**
+	 * Returns true if accusation is correect
+	 *
+	 * @param accusation
+	 * @return
+	 */
 	public boolean accusationCorrect(List<Card> accusation) {
 		for (Card c : accusation) {
 			if (!solution.contains(c)) {
@@ -300,6 +344,21 @@ public class Game {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Returns true if there are still players that are left(Haven't been kicked
+	 * out by wrong accusation)
+	 *
+	 * @return
+	 */
+	public boolean playersleft() {
+		for (Player p : players) {
+			if (p.isStillIn()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -351,7 +410,7 @@ public class Game {
 		client = c;
 		deck = new Deck();
 		checklist = new Checklist();
-		gameStillGoing = true;
+		noWinner = true;
 
 		List<Player> defaults = new ArrayList<Player>();
 		defaults.add(new Player("Miss Scarlet", 0, 9));
@@ -367,7 +426,7 @@ public class Game {
 		}
 	}
 
-	public void setSolution(List<Card> sol){
+	public void setSolution(List<Card> sol) {
 		solution = sol;
 	}
 

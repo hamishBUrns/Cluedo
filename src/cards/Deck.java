@@ -10,7 +10,6 @@ public class Deck {
 
 	public Deck() {
 		setCards();
-
 	}
 
 	/**
@@ -51,24 +50,28 @@ public class Deck {
 		deck.addAll(weapons);
 	}
 
+	/**
+	 * Picks 1 weapon 1 character 1	room as the solution
+	 * @return arraylist of the solution
+	 */
 	public ArrayList<Card> setSolution(){
 		ArrayList<Card> solution = new ArrayList<Card>();
 		while(solution.isEmpty()){
-			Card card= getRandomCard(deck);
+			Card card= deal();
 			if(card instanceof WeaponCard){
 				solution.add(card);
 			}
 			else{deck.add(card);} //need to add card back to deck as getRandomCard removes it.
 		}
 		while(solution.size()==1){
-			Card card= getRandomCard(deck);
+			Card card= deal();
 			if(card instanceof RoomCard){
 				solution.add(card);
 			}
 			else{deck.add(card);}
 		}
 		while(solution.size()==2){
-			Card card= getRandomCard(deck);
+			Card card= deal();
 			if(card instanceof CharacterCard){
 				solution.add(card);
 			}
@@ -77,23 +80,22 @@ public class Deck {
 		return solution;
 
 	}
-	public Card deal(){
-		if(deck.size()==0){
-			System.out.println("no cards in deck");
-			return null;
-		}
-		return getRandomCard(deck);
 
-	}
-	public ArrayList<Card> getDeck(){
-		return deck;
-	}
-	public Card getRandomCard(ArrayList<Card> set){
+	/**
+	 * Deal one card randomly from deck
+	 * @return
+	 */
+	public Card deal(){
 		Random rand = new Random();
-		int index=rand.nextInt(set.size());
-		Card card= set.get(index);
-		set.remove(index);
+		int index=rand.nextInt(deck.size());
+		Card card= deck.get(index);
+		deck.remove(index);
 		return card;
 
+	}
+
+
+	public ArrayList<Card> getDeck(){
+		return deck;
 	}
 }

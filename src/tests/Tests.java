@@ -58,11 +58,6 @@ public class Tests {
 	}
 
 	@Test
-	public void validDeal_4(){
-		Game g= new Game(new TextClient(), 5);
-	}
-
-	@Test
 	public void rightAccusation(){
 		Game g = mock2PlayerGame();
 		List<Card> sol = solutionA();

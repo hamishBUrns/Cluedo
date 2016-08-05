@@ -49,7 +49,10 @@ public class Board {
 		parseBoard();
 
 	}
-
+	/**
+	 * Reads in the hardcoded string array board and creates a 2d array of tiles to use as actual board
+	 * Also when a new roomtile is created, it adds this tile to the room's list of tiles
+	 */
 	public void parseBoard() {
 		int row = 0;
 		int col;
@@ -172,6 +175,11 @@ public class Board {
 		return board[row][col];
 	}
 
+
+	public ArrayList<Room> getRooms(){
+		return rooms;
+	}
+
 	public Room currentRoom(Token t){
 		for(Room r : rooms){
 			if(r.getTiles().contains(getTile(t.getRow(),t.getCol()))){
@@ -179,6 +187,7 @@ public class Board {
 			}
 		}
 		return null;
+
 	}
 
 	public void printBoard() {
@@ -212,8 +221,6 @@ public class Board {
 			System.out.println("Can't go out of bounds");
 			return false;
 		}
-		System.out.println("oldPlace: "+getTile(oldRow,oldCol).getType()+" new place: "+getTile(newRow,newCol).getType());
-		System.out.println("player col: "+ p.getCol()+"player row"+p.getRow());
 		if (board[newRow][newCol].getType().equals("room") && !(board[oldRow][oldCol].getType().equals("door"))) {
 			System.out.println("You must be on a door to enter a room");
 			return false;

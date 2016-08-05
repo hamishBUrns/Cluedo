@@ -18,8 +18,7 @@ public class Player implements Token {
 		this.col = col;
 		this.name =nam;
 		stillIn = true;
-
-	}
+		}
 
 	/**
 	 * adds a card to this player's hand
@@ -32,14 +31,6 @@ public class Player implements Token {
 		}
 	}
 
-	public void setPlayerNumber(int pos){
-		playerNumber=pos;
-	}
-
-	public int getPlayerNumber() {
-		return playerNumber;
-	}
-
 	/**
 	 * prints out the cards in this player's hand
 	 */
@@ -47,10 +38,6 @@ public class Player implements Token {
 		for (Card c : hand) {
 			System.out.println(c.getName());
 		}
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	/**
@@ -71,13 +58,20 @@ public class Player implements Token {
 		stillIn = playStatus;
 	}
 
-	/**
-	 * returns this player's hand
-	 *
-	 * @return
-	 */
 	public List<Card> getHand() {
 		return hand;
+	}
+	
+	public void setPlayerNumber(int pos){
+		playerNumber=pos;
+	}
+
+	public int getPlayerNumber() {
+		return playerNumber;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public int getRow() {
