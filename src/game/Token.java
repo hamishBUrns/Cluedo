@@ -1,9 +1,9 @@
 package game;
 
-public class Token {
-
-	public Token() {
-		// TODO Auto-generated constructor stub
-	}
-
+public interface Token {
+	public int getRow();
+	public int getCol();
+	public String symbol();
+	public void setRow(int row);
+	public void setCol(int col);
 }

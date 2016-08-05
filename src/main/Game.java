@@ -77,7 +77,7 @@ public class Game {
 		defaults.add(new Player("Professor Plum", 24, 7));
 
 		for(Player p: defaults){ //Putting players on tiles.
-			board.getTile(p.getRow(), p.getCol()).setPlayer(p);
+			board.getTile(p.getRow(), p.getCol()).setToken(p);
 		}
 
 		int numPlayers = client.readInt("Hi, How many players?");

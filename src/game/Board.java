@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Board {
 
 	private Tile[][] board;
-	private ArrayList<ArrayList<Tile>> rooms;
+	private ArrayList<Room> rooms;
 	private String[] hardCodedBoard={
 			"|W|W|W|W|W|W|W|W|W|S|W|W|W|W|W|S|W|W|W|W|W|W|W|W|W|",
 			"|k|k|k|k|k|D|W|_|_|_|b|b|b|b|b|_|_|_|W|c|c|c|c|c|c|",
@@ -35,10 +35,18 @@ public class Board {
 
 	public Board() {
 		board= new Tile[25][25];
-		rooms= new ArrayList<ArrayList<Tile>>();
-		for(int i=0;i<9;i++){
-			rooms.add(new ArrayList<Tile>());
-		}
+		rooms= new ArrayList<Room>();
+		rooms.add(new Room("kitchen"));
+		rooms.add(new Room("ballroom"));
+		rooms.add(new Room("conservatory"));
+		rooms.add(new Room("dining room"));
+		rooms.add(new Room("billiard room"));
+		rooms.add(new Room("library"));
+		rooms.add(new Room("lounge"));
+		rooms.add(new Room("hall"));
+		rooms.add(new Room("study"));
+
+
 		parseBoard();
 
 	}
@@ -56,53 +64,53 @@ public class Board {
 				switch(tokens[col+1]){
 
 				case "W":
-					board[row][col]= new Tile("wall",null);
+					board[row][col]= new Tile("wall",null, row, col);
 					break;
 				case "S":
-					board[row][col]= new Tile("start",null);
+					board[row][col]= new Tile("start",null, row, col);
 					break;
 				case "_":
-					board[row][col]= new Tile("floor",null);
+					board[row][col]= new Tile("floor",null, row, col);
 					break;
 				case "D":
-					board[row][col]= new Tile("door",null);
+					board[row][col]= new Tile("door",null, row, col);
 					break;
 
 				case "k":
-					board[row][col]= new Tile("room","kitchen");
-					rooms.get(0).add(board[row][col]);
+					board[row][col]= new Tile("room","kitchen", row, col);
+					rooms.get(0).addTile(board[row][col]);
 					break;
 				case "b":
-					board[row][col]= new Tile("room","ballroom");
-					rooms.get(1).add(board[row][col]);
+					board[row][col]= new Tile("room","ballroom", row, col);
+					rooms.get(1).addTile(board[row][col]);
 					break;
 				case "c":
-					board[row][col]= new Tile("room","conservatory");
-					rooms.get(2).add(board[row][col]);
+					board[row][col]= new Tile("room","conservatory", row, col);
+					rooms.get(2).addTile(board[row][col]);
 					break;
 				case "d":
-					board[row][col]= new Tile("room","dining room");
-					rooms.get(3).add(board[row][col]);
+					board[row][col]= new Tile("room","dining room", row, col);
+					rooms.get(3).addTile(board[row][col]);
 					break;
 				case "r":
-					board[row][col]= new Tile("room","billiard room");
-					rooms.get(4).add(board[row][col]);
+					board[row][col]= new Tile("room","billiard room", col, col);
+					rooms.get(4).addTile(board[row][col]);
 					break;
 				case "l":
-					board[row][col]= new Tile("room","library");
-					rooms.get(5).add(board[row][col]);
+					board[row][col]= new Tile("room","library", row, col);
+					rooms.get(5).addTile(board[row][col]);
 					break;
 				case "n":
-					board[row][col]= new Tile("room","lounge");
-					rooms.get(6).add(board[row][col]);
+					board[row][col]= new Tile("room","lounge", row, col);
+					rooms.get(6).addTile(board[row][col]);
 					break;
 				case "h":
-					board[row][col]= new Tile("room","hall");
-					rooms.get(7).add(board[row][col]);
+					board[row][col]= new Tile("room","hall", row, col);
+					rooms.get(7).addTile(board[row][col]);
 					break;
 				case "s":
-					board[row][col]= new Tile("room","study");
-					rooms.get(8).add(board[row][col]);
+					board[row][col]= new Tile("room","study", row, col);
+					rooms.get(8).addTile(board[row][col]);
 					break;
 				}
 
@@ -156,14 +164,14 @@ public class Board {
 			System.out.println("Can't walk through walls");
 			return false;
 		}
-		if(board[newRow][newCol].getPlayer()!=null){
+		if(board[newRow][newCol].getToken()!=null){
 			System.out.println("Can't walk through players");
 			return false;
 		}
-		board[oldRow][oldCol].setPlayer(null);
+		board[oldRow][oldCol].setToken(null);
 		p.setRow(newRow);
 		p.setCol(newCol);
-		board[newRow][newCol].setPlayer(p);
+		board[newRow][newCol].setToken(p);
 		return true;
 	}
 }

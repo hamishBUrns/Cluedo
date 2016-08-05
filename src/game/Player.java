@@ -4,7 +4,7 @@ import java.util.*;
 
 import cards.Card;
 
-public class Player {
+public class Player implements Token {
 
 	private List<Card> hand= new ArrayList<Card>();
 	private int row,col;
@@ -30,6 +30,8 @@ public class Player {
 			hand.add(card);
 		}
 	}
+
+
 
 	public void setPlayerNumber(int pos){
 		playerNumber=pos;
@@ -90,6 +92,11 @@ public class Player {
 
 	public void setCol(int c){
 		col = c;
+	}
+
+	@Override
+	public String symbol() {
+		return Integer.toString(playerNumber);
 	}
 
 }
