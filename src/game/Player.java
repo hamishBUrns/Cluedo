@@ -9,6 +9,7 @@ public class Player {
 	private List<Card> hand= new ArrayList<Card>();
 	private int row,col;
 	private String name;
+	private boolean stillIn;
 	private int playerNumber;
 
 	public Player(String nam,int row, int col) {
@@ -48,6 +49,22 @@ public class Player {
 
 	public String getName(){
 		return name;
+	}
+
+	/**
+	 * returns true if player is still in the game, otherwise returns false
+	 * @return
+	 */
+	public boolean isStillIn(){
+		return stillIn;
+	}
+
+	/**
+	 * set whether or not this player is still in the game
+	 * @param playStatus
+	 */
+	public void setStatus(boolean playStatus){
+		stillIn = playStatus;
 	}
 
 	/**

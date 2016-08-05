@@ -7,8 +7,8 @@ import game.*;
 
 public class Game {
 
-	private ArrayList<Player> players = new ArrayList<Player>();
-	private ArrayList<Card> solution = new ArrayList<Card>();
+	private List<Player> players = new ArrayList<Player>();
+	private List<Card> solution = new ArrayList<Card>();
 
 	private TextClient client;
 	private Deck deck;
@@ -32,36 +32,19 @@ public class Game {
 
 		assignCharacters();
 		dealCards();
+		client.hashCode();
 		runGame();
-	}
-
-	/**
-	 * constructor that doesn't require user input for testing purposes
-	 *
-	 * @param c
-	 * @param numPlayers
-	 */
-	public Game(TextClient c, int numPlayers) {
-		ArrayList<Player> characters = new ArrayList<Player>();
-		characters.add(new Player("Miss Scarlet", 9, 0));
-		characters.add(new Player("Colonel Mustard", 15, 0));
-		characters.add(new Player("Mrs White", 24, 6));
-		characters.add(new Player("The Reverend Green", 0, 17));
-		characters.add(new Player("Mrs Peacock", 24, 19));
-		characters.add(new Player("Professor Plum", 7, 24));
-
-		while (numPlayers > 0) {
-			numPlayers--;
-			players.add(characters.get(numPlayers));
-		}
 	}
 
 	public void runGame() {
 		System.out.println("Starting game!");
 		while (gameStillGoing) {
+			turnIndex = 0;
 			for (Player p : players) {
-
-				turn(p);
+				if (p.isStillIn()) {
+					turn(p);
+					turnIndex++;
+				}
 			}
 		}
 	}
@@ -137,7 +120,7 @@ public class Game {
 
 		move(diceRoll, p);
 		boolean turnEnded = false;
-		while(!turnEnded){
+		while (!turnEnded) {
 			String command = client.readString("what would you like to do?").toLowerCase();
 			switch (command) {
 			case ("checklist"):
@@ -148,21 +131,28 @@ public class Game {
 				break;
 			case ("suggest"):
 				// room checks n stuff, then call suggest
+				// also should check if player has the corresponding room card
+				// in their hand
 				turnEnded = true;
 				break;
 			case ("accuse"):
-				accuse(p);
-				turnEnded = true;
+				if (accusationCorrect(accuse(p))) {
+					gameStillGoing = false;
+					System.out.println("Correct! " + p.getName() + " wins!");
+				} else {
+					System.out.println("Incorrect! " + p.getName() + " is out of the game.");
+					p.setStatus(false);
+				}
 				break;
+			case ("end"):
+				turnEnded = true;
 			case ("help"):
 				client.help();
 				break;
 			default:
-				System.out.println("Invalid command, type 'help' to see command list and descriptions");
+				System.out.println("Invalid command. Type 'help' to see command list and descriptions");
 			}
 		}
-
-		// suggestion/accusation mechanics go here
 	}
 
 	/**
@@ -213,46 +203,30 @@ public class Game {
 	 * @param room
 	 * @param p
 	 */
-	public void suggest(Card room, Player p) {
+	public List<Card> suggest(Card room, Player p) {
 		Card c = cardFromString(client.readString("Who dunnit?"));
-		while (c == null || !(c instanceof CharacterCard)) {
+		while (c == null || !(c instanceof CharacterCard) || p.getHand().contains(c) || checklist.contains(c)) {
 			c = cardFromString(client.readString("Please input the name of a valid character"));
 		}
 		Card w = cardFromString(client.readString("Murder weapon?"));
-		while (w == null || !(w instanceof WeaponCard)) {
+		while (w == null || !(w instanceof WeaponCard) || p.getHand().contains(w) || checklist.contains(w)) {
 			w = cardFromString(client.readString("Please input the name of a valid weapon"));
 		}
 		System.out.println("Perhaps it was " + c.getName() + " in the " + room.getName() + " with the " + w.getName());
-	}
 
-	/**
-	 * get input for the room, weapon, and character for this accusation from
-	 * the user
-	 *
-	 * @param p
-	 */
-	public void accuse(Player p) {
-		Card c = cardFromString(client.readString("Who dunnit?"));
-		while (c == null || !(c instanceof CharacterCard)) {
-			c = cardFromString(client.readString("Please input the name of a valid character"));
-		}
-		Card r = cardFromString(client.readString("Scene of the crime?"));
-		while (r == null || !(r instanceof RoomCard)) {
-			r = cardFromString(client.readString("Please input the name of a valid room"));
-		}
-		Card w = cardFromString(client.readString("Murder weapon?"));
-		while (w == null || !(w instanceof WeaponCard)) {
-			w = cardFromString(client.readString("Please input the name of a valid weapon"));
-		}
-		System.out.println("It was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "!");
+		List<Card> cards = new ArrayList<>();
+		cards.add(c);
+		cards.add(room);
+		cards.add(w);
+		return cards;
 	}
 
 	/**
 	 * if suggestion is refuted, returns that card, otherwise returns null
 	 */
 	public Card refute(List<Card> suggested) {
-		int current = turnIndex + 1; // start at the index after the player
-										// suggesting
+		// start at the index after the player suggesting
+		int current = turnIndex + 1;
 		// go until we are back at suggesting player
 		while (current != turnIndex) {
 			for (Card c : players.get(current).getHand()) {
@@ -270,6 +244,43 @@ public class Game {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * get input for the room, weapon, and character for this accusation from
+	 * the user
+	 *
+	 * @param p
+	 */
+	public List<Card> accuse(Player p) {
+		Card c = cardFromString(client.readString("Who dunnit?"));
+		while (c == null || !(c instanceof CharacterCard) || p.getHand().contains(c) || checklist.contains(c)) {
+			c = cardFromString(client.readString("Please input the name of a valid character"));
+		}
+		Card r = cardFromString(client.readString("Scene of the crime?"));
+		while (r == null || !(r instanceof RoomCard) || p.getHand().contains(r) || checklist.contains(r)) {
+			r = cardFromString(client.readString("Please input the name of a valid room"));
+		}
+		Card w = cardFromString(client.readString("Murder weapon?"));
+		while (w == null || !(w instanceof WeaponCard) || p.getHand().contains(w) || checklist.contains(w)) {
+			w = cardFromString(client.readString("Please input the name of a valid weapon"));
+		}
+		System.out.println("It was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "!");
+
+		List<Card> cards = new ArrayList<>();
+		cards.add(c);
+		cards.add(r);
+		cards.add(w);
+		return cards;
+	}
+
+	public boolean accusationCorrect(List<Card> accusation) {
+		for (Card c : accusation) {
+			if (!solution.contains(c)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -309,7 +320,52 @@ public class Game {
 		TextClient client = new TextClient();
 
 		Game game = new Game(client);
-		// game.runGame();
+	}
+
+	// ====THE FOLLOWING METHODS ARE FOR TESTING PURPOSES ONLY==== //
+
+	/**
+	 * constructor that doesn't require user input for testing purposes
+	 *
+	 * @param c
+	 * @param numPlayers
+	 */
+	public Game(TextClient c, int numPlayers) {
+		client = c;
+		deck = new Deck();
+		checklist = new Checklist();
+		gameStillGoing = true;
+
+		List<Player> characters = new ArrayList<Player>();
+		characters.add(new Player("Miss Scarlet", 9, 0));
+		characters.add(new Player("Colonel Mustard", 15, 0));
+		characters.add(new Player("Mrs White", 24, 6));
+		characters.add(new Player("The Reverend Green", 0, 17));
+		characters.add(new Player("Mrs Peacock", 24, 19));
+		characters.add(new Player("Professor Plum", 7, 24));
+
+		while (numPlayers >= 0) {
+			players.add(characters.get(numPlayers));
+			numPlayers--;
+		}
+	}
+
+	/**
+	 * returns list of players, for testing only
+	 *
+	 * @return
+	 */
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+	/**
+	 * return checklist, for testing only
+	 *
+	 * @return
+	 */
+	public Checklist getChecklist() {
+		return checklist;
 	}
 
 }
