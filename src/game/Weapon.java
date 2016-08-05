@@ -4,9 +4,7 @@ public class Weapon implements Token {
 	private int row;
 	private int col;
 	private String name;
-	public Weapon(int row, int col,String name) {
-		this.row=row;
-		this.col=col;
+	public Weapon(String name) {
 		this.name=name;
 	}
 

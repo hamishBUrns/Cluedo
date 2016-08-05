@@ -122,6 +122,10 @@ public class Board {
 		return board[row][col];
 	}
 
+	public ArrayList<Room> getRooms(){
+		return rooms;
+	}
+
 	public void printBoard() {
 
 		for (Tile[] tArray : board) {

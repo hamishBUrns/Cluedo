@@ -8,6 +8,8 @@ public class Room {
 	private ArrayList<Tile> tiles;
 
 	public Room(String name) {
+		pieces= new ArrayList<Token>();
+		tiles=new ArrayList<Tile>();
 		this.name=name;
 	}
 	public void addTile(Tile t){

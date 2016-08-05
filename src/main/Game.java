@@ -9,6 +9,7 @@ public class Game {
 
 	private List<Player> players = new ArrayList<Player>();
 	private List<Card> solution = new ArrayList<Card>();
+	private List<Weapon> weapons = new ArrayList<Weapon>();
 
 	private TextClient client;
 	private Deck deck;
@@ -32,12 +33,17 @@ public class Game {
 
 		assignCharacters();
 		dealCards();
+		placeWeapons();
 		client.hashCode();
 		runGame();
 	}
 
 	public void runGame() {
+		System.out.println("_ is a floor, W is a wall, D is a door, lowercase letters are rooms");
+		System.out.println("k is kitchen, b is ballroom, c is conservatory, d is dining room, r is billiard room, l is library, n is lounge, h is hall, s is study");
+		System.out.println("Key:Rope is~, dagger is ^, candlestick is $, Leadpipe is (, revolver is @, Spanner is*");
 		System.out.println("Starting game!");
+
 		while (gameStillGoing) {
 			turnIndex = 0;
 			for (Player p : players) {
@@ -49,6 +55,18 @@ public class Game {
 		}
 	}
 
+	public void placeWeapons(){
+		weapons.add(new Weapon("candlestick"));
+		weapons.add(new Weapon("rope"));
+		weapons.add(new Weapon("dagger"));
+		weapons.add(new Weapon("leadpipe"));
+		weapons.add(new Weapon("revolver"));
+		weapons.add(new Weapon("spanner"));
+		for(int i=0;i<weapons.size();i++){
+			board.getRooms().get(i).putInRoom(weapons.get(i));
+		}
+
+	}
 	/**
 	 * evenly deals cards to the players and add leftovers to checklist
 	 */
