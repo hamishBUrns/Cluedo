@@ -17,6 +17,7 @@ public class Player {
 		this.row = row;
 		this.col = col;
 		this.name =nam;
+		stillIn = true;
 
 	}
 

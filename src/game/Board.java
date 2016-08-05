@@ -110,11 +110,11 @@ public class Board {
 			row++;
 		}
 	}
-	
+
 	public Tile getTile(int row, int col){
 		return board[row][col];
 	}
-	
+
 	public void printBoard(){
 
 		for(Tile[] tArray: board ){
@@ -141,9 +141,13 @@ public class Board {
 	 * @return
 	 */
 	public boolean moveValid(int oldRow, int oldCol, int newRow, int newCol, Player p) {
-		if (newRow < 0 || newRow > board.length || newCol < 0 || newCol > board[0].length) {
+
+		if (newRow < 0 || newRow >= board.length || newCol < 0 || newCol >= board[0].length) {
+			System.out.println("Can't go out of bounds");
 			return false;
 		}
+		System.out.println("oldPlace: "+getTile(oldRow,oldCol).getType()+" new place: "+getTile(newRow,newCol).getType());
+		System.out.println("player col: "+ p.getCol()+"player row"+p.getRow());
 		if (board[newRow][newCol].getType().equals("room") && !(board[oldRow][oldCol].getType().equals("door"))) {
 			System.out.println("You must be on a door to enter a room");
 			return false;
