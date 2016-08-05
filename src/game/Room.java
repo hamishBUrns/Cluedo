@@ -30,7 +30,9 @@ public class Room {
 		pieces.remove(token);
 		//need to move Token col and row in outside method depending on where its going
 	}
-
+	public String getName(){
+		return this.name;
+	}
 	public List<Token> getTokens(){
 		return pieces;
 	}
