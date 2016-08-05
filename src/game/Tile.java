@@ -7,60 +7,76 @@ public class Tile {
 	private String roomLetter;
 	private Player player;
 
-	public Tile(String typ, String roomNam) {
+	private Token token;
+	private int row;
+	private int col;
+
+	public Tile(String typ, String roomNam, int row, int col) {
 		this.type = typ;
 		roomName = roomNam;
-		if(roomName != null){
-			switch(roomName){
-			case("kitchen"):
+		this.row = row;
+		this.col = col;
+		if (roomName != null) {
+			switch (roomName) {
+			case ("kitchen"):
 				roomLetter = "k";
-			break;
-			case("ballroom"):
+				break;
+			case ("ballroom"):
 				roomLetter = "b";
 				break;
-			case("conservatory"):
+			case ("conservatory"):
 				roomLetter = "c";
 				break;
-			case("dining room"):
+			case ("dining room"):
 				roomLetter = "d";
-			break;
-			case("billiard room"):
+				break;
+			case ("billiard room"):
 				roomLetter = "r";
-			break;
-			case("library"):
+				break;
+			case ("library"):
 				roomLetter = "l";
-			break;
-			case("lounge"):
+				break;
+			case ("lounge"):
 				roomLetter = "n";
-			break;
-			case("hall"):
+				break;
+			case ("hall"):
 				roomLetter = "h";
-			break;
-			case("study"):
+				break;
+			case ("study"):
 				roomLetter = "s";
-			break;
+				break;
 			}
 		}
-
-
 	}
 
-	public Player getPlayer() {
-		return player;
+	public int getRow() {
+		return row;
 	}
 
-	public void setPlayer(Player p) {
-		player = p;
+	public int getCol() {
+		return col;
+	}
+
+	public Token getToken() {
+		return token;
+	}
+
+	public void setToken(Token toke) {
+		token = toke;
 	}
 
 	public String getType() {
 		return type;
 	}
 
+	public String getRoomName() {
+		return roomName;
+	}
+
 	@Override
 	public String toString() {
-		if (player != null) {
-			return Integer.toString(player.getPlayerNumber());
+		if (token != null) {
+			return token.symbol();
 		} else {
 			switch (type) {
 			case ("wall"):

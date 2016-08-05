@@ -28,6 +28,7 @@ public class Game {
 		deck = new Deck();
 		checklist = new Checklist();
 		gameStillGoing = true;
+		board = new Board();
 
 		assignCharacters();
 		dealCards();
@@ -67,13 +68,17 @@ public class Game {
 	}
 
 	public void assignCharacters() {
-		ArrayList<Player> characters = new ArrayList<Player>();
-		characters.add(new Player("Miss Scarlet", 9, 0));
-		characters.add(new Player("Colonel Mustard", 15, 0));
-		characters.add(new Player("Mrs White", 24, 6));
-		characters.add(new Player("The Reverend Green", 0, 17));
-		characters.add(new Player("Mrs Peacock", 24, 19));
-		characters.add(new Player("Professor Plum", 7, 24));
+		ArrayList<Player> defaults = new ArrayList<Player>();
+		defaults.add(new Player("Miss Scarlet", 0, 9));
+		defaults.add(new Player("Colonel Mustard", 0, 15));
+		defaults.add(new Player("Mrs White", 6, 24));
+		defaults.add(new Player("The Reverend Green", 17, 0));
+		defaults.add(new Player("Mrs Peacock", 19, 24));
+		defaults.add(new Player("Professor Plum", 24, 7));
+
+		for(Player p: defaults){ //Putting players on tiles.
+			board.getTile(p.getRow(), p.getCol()).setToken(p);
+		}
 
 		int numPlayers = client.readInt("Hi, How many players?");
 		while (numPlayers > 6 || numPlayers < 2) {
@@ -82,17 +87,17 @@ public class Game {
 		int player = 1;
 		while (numPlayers > 0) {
 			System.out.println("Characters left:");
-			for (Player p : characters) {
+			for (Player p : defaults) {
 				System.out.println(p.getName());
 			}
 
 			String character = client.readString("Player" + player + " Type your character");
-			while (playerFromString(character, characters) == null) {
+			while (playerFromString(character, defaults) == null) {
 				character = client.readString("Type out character as shown:");
 			}
-			players.add(playerFromString(character, characters));
+			players.add(playerFromString(character, defaults));
 			players.get(player-1).setPlayerNumber(player);
-			characters.remove(playerFromString(character, characters));
+			defaults.remove(playerFromString(character, defaults));
 			numPlayers--;
 			player++;
 
@@ -156,18 +161,19 @@ public class Game {
 	public void move(int diceRoll, Player p) {
 
 		while (diceRoll > 0) {
+			board.printBoard();
 			System.out.println("Steps left: " + diceRoll);
 			String dir = client.readString("Choose a direction").toUpperCase();
 			switch (dir) {
 			case ("N"):
 				// go north
-				if (board.moveValid(p.getRow(), p.getCol(), p.getRow() + 1, p.getCol(), p)) {
+				if (board.moveValid(p.getRow(), p.getCol(), p.getRow() - 1, p.getCol(), p)) {
 					diceRoll--;
 				}
 				break;
 			case ("S"):
 				// go south
-				if (board.moveValid(p.getRow(), p.getCol(), p.getRow() - 1, p.getCol(), p)) {
+				if (board.moveValid(p.getRow(), p.getCol(), p.getRow() + 1, p.getCol(), p)) {
 					diceRoll--;
 				}
 				break;
@@ -331,16 +337,16 @@ public class Game {
 		checklist = new Checklist();
 		gameStillGoing = true;
 
-		List<Player> characters = new ArrayList<Player>();
-		characters.add(new Player("Miss Scarlet", 9, 0));
-		characters.add(new Player("Colonel Mustard", 15, 0));
-		characters.add(new Player("Mrs White", 24, 6));
-		characters.add(new Player("The Reverend Green", 0, 17));
-		characters.add(new Player("Mrs Peacock", 24, 19));
-		characters.add(new Player("Professor Plum", 7, 24));
+		List<Player> defaults = new ArrayList<Player>();
+		defaults.add(new Player("Miss Scarlet", 0, 9));
+		defaults.add(new Player("Colonel Mustard", 0, 15));
+		defaults.add(new Player("Mrs White", 6, 24));
+		defaults.add(new Player("The Reverend Green", 17, 0));
+		defaults.add(new Player("Mrs Peacock", 19, 24));
+		defaults.add(new Player("Professor Plum", 24, 7));
 
 		while (numPlayers >= 0) {
-			players.add(characters.get(numPlayers));
+			players.add(defaults.get(numPlayers));
 			numPlayers--;
 		}
 	}

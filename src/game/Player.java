@@ -4,7 +4,7 @@ import java.util.*;
 
 import cards.Card;
 
-public class Player {
+public class Player implements Token {
 
 	private List<Card> hand = new ArrayList<Card>();
 	private int row, col;
@@ -16,13 +16,14 @@ public class Player {
 		// TODO Auto-generated constructor stub
 		this.row = row;
 		this.col = col;
-		this.name = nam;
+		this.name =nam;
+		stillIn = true;
 
 	}
 
 	/**
 	 * adds a card to this player's hand
-	 * 
+	 *
 	 * @param card
 	 */
 	public void giveCard(Card card) {
@@ -31,8 +32,8 @@ public class Player {
 		}
 	}
 
-	public void setPlayerNumber(int pos) {
-		playerNumber = pos;
+	public void setPlayerNumber(int pos){
+		playerNumber=pos;
 	}
 
 	public int getPlayerNumber() {
@@ -54,7 +55,7 @@ public class Player {
 
 	/**
 	 * returns true if player is still in the game, otherwise returns false
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isStillIn() {
@@ -63,7 +64,7 @@ public class Player {
 
 	/**
 	 * set whether or not this player is still in the game
-	 * 
+	 *
 	 * @param playStatus
 	 */
 	public void setStatus(boolean playStatus) {
@@ -72,7 +73,7 @@ public class Player {
 
 	/**
 	 * returns this player's hand
-	 * 
+	 *
 	 * @return
 	 */
 	public List<Card> getHand() {
@@ -93,6 +94,11 @@ public class Player {
 
 	public void setCol(int c) {
 		col = c;
+	}
+
+	@Override
+	public String symbol() {
+		return Integer.toString(playerNumber);
 	}
 
 }
