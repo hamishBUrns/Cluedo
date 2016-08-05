@@ -63,8 +63,54 @@ public class Tests {
 	}
 
 	@Test
+	public void rightAccusation(){
+		Game g = mock2PlayerGame();
+		List<Card> sol = solutionA();
+		g.setSolution(sol);
+		assertTrue(g.accusationCorrect(sol));
+	}
+
+	@Test
+	public void wrongAccusation(){
+		Game g = mock2PlayerGame();
+		g.setSolution(solutionB());
+		assertFalse(g.accusationCorrect(solutionA()));
+	}
+
+	@Test
+	public void validMove(){
+
+	}
+
+	@Test
 	public void boardGood_5(){
 		Board board=new Board();
 		board.printBoard();
+	}
+
+	// ========== Helper methods ========== //
+
+	public Game mock2PlayerGame(){
+		Game g = new Game(new TextClient(), 2);
+		List<Player> players = g.getPlayers();
+		players.get(0).giveCard(new WeaponCard("Revolver"));
+		players.get(1).giveCard(new CharacterCard("Mrs White"));
+		return g;
+	}
+
+	public List<Card> solutionA(){
+		List<Card> sol = new ArrayList<>();
+		sol.add(new CharacterCard("Professor Plum"));
+		sol.add(new RoomCard("Study"));
+		sol.add(new WeaponCard("Candlestick"));
+		return sol;
+	}
+
+	public List<Card> solutionB(){
+		List<Card> sol = new ArrayList<>();
+		sol.add(new CharacterCard("Mrs White"));
+		sol.add(new RoomCard("Hall"));
+		sol.add(new WeaponCard("Revolver"));
+		return sol;
 	}
 }

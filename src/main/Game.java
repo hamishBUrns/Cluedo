@@ -54,7 +54,7 @@ public class Game {
 	public void dealCards() {
 		solution = deck.setSolution();
 
-		while (deck.getDeck().size() > players.size()) {
+		while (deck.getDeck().size() >= players.size()) {
 			for (Player p : players) {
 				p.giveCard(deck.deal());
 			}
@@ -154,7 +154,7 @@ public class Game {
 	 * gets user input to move them around the board
 	 */
 	public void move(int diceRoll, Player p) {
-		
+
 		while (diceRoll > 0) {
 			System.out.println("Steps left: " + diceRoll);
 			String dir = client.readString("Choose a direction").toUpperCase();
@@ -343,6 +343,10 @@ public class Game {
 			players.add(characters.get(numPlayers));
 			numPlayers--;
 		}
+	}
+
+	public void setSolution(List<Card> sol){
+		solution = sol;
 	}
 
 	/**

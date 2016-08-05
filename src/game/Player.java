@@ -6,88 +6,92 @@ import cards.Card;
 
 public class Player {
 
-	private List<Card> hand= new ArrayList<Card>();
-	private int row,col;
+	private List<Card> hand = new ArrayList<Card>();
+	private int row, col;
 	private String name;
 	private boolean stillIn;
 	private int playerNumber;
 
-	public Player(String nam,int row, int col) {
+	public Player(String nam, int row, int col) {
 		// TODO Auto-generated constructor stub
 		this.row = row;
 		this.col = col;
-		this.name =nam;
+		this.name = nam;
 
 	}
 
 	/**
 	 * adds a card to this player's hand
+	 * 
 	 * @param card
 	 */
-	public void giveCard(Card card){
-		if(card!=null){
+	public void giveCard(Card card) {
+		if (card != null) {
 			hand.add(card);
 		}
 	}
 
-	public void setPlayerNumber(int pos){
-		playerNumber=pos;
+	public void setPlayerNumber(int pos) {
+		playerNumber = pos;
 	}
 
-	public int getPlayerNumber(){
+	public int getPlayerNumber() {
 		return playerNumber;
 	}
 
 	/**
 	 * prints out the cards in this player's hand
 	 */
-	public void printHand(){
-		for(Card c : hand){
+	public void printHand() {
+		for (Card c : hand) {
 			System.out.println(c.getName());
 		}
 	}
 
-	public String getName(){
+	public String getName() {
 		return name;
 	}
 
 	/**
 	 * returns true if player is still in the game, otherwise returns false
+	 * 
 	 * @return
 	 */
-	public boolean isStillIn(){
+	public boolean isStillIn() {
 		return stillIn;
 	}
 
 	/**
 	 * set whether or not this player is still in the game
+	 * 
 	 * @param playStatus
 	 */
-	public void setStatus(boolean playStatus){
+	public void setStatus(boolean playStatus) {
 		stillIn = playStatus;
 	}
 
 	/**
 	 * returns this player's hand
+	 * 
 	 * @return
 	 */
-	public List<Card> getHand(){
+	public List<Card> getHand() {
 		return hand;
 	}
 
-	public int getRow(){
+	public int getRow() {
 		return row;
 	}
 
-	public int getCol(){
+	public int getCol() {
 		return col;
 	}
 
-	public void setRow(int r){
+	public void setRow(int r) {
 		row = r;
 	}
 
-	public void setCol(int c){
+	public void setCol(int c) {
 		col = c;
 	}
 
