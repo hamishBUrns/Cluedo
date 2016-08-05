@@ -7,6 +7,7 @@ import java.util.*;
 import org.junit.Test;
 
 import cards.*;
+import game.Board;
 import main.*;
 
 public class Tests {
@@ -40,5 +41,11 @@ public class Tests {
 	@Test
 	public void validDeal_4(){
 		Game g= new Game(new TextClient(), 5);
+	}
+
+	@Test
+	public void boardGood_5(){
+		Board board=new Board();
+		board.printBoard();
 	}
 }

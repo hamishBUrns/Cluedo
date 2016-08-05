@@ -58,7 +58,7 @@ public class Deck {
 			if(card instanceof WeaponCard){
 				solution.add(card);
 			}
-			else{deck.add(card);}
+			else{deck.add(card);} //need to add card back to deck as getRandomCard removes it.
 		}
 		while(solution.size()==1){
 			Card card= getRandomCard(deck);

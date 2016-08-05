@@ -9,12 +9,14 @@ public class Player {
 	private List<Card> hand= new ArrayList<Card>();
 	private int row,col;
 	private String name;
+	private int playerNumber;
 
 	public Player(String nam,int row, int col) {
 		// TODO Auto-generated constructor stub
 		this.row = row;
 		this.col = col;
 		this.name =nam;
+
 	}
 
 	/**
@@ -25,6 +27,14 @@ public class Player {
 		if(card!=null){
 			hand.add(card);
 		}
+	}
+
+	public void setPlayerNumber(int pos){
+		playerNumber=pos;
+	}
+
+	public int getPlayerNumber(){
+		return playerNumber;
 	}
 
 	/**
