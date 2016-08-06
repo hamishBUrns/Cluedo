@@ -10,6 +10,14 @@ import cards.*;
 import game.*;
 import main.*;
 
+/**
+ * Tests for Cluedo
+ * NOTE: many of the functions of this program cannot be tested without live user input, therefore these tests
+ * are only of the parts that could be automated, while the rest were tested manually.
+ * ((If there is an easier way do this, please advise.))
+ * @author kraemezoe
+ *
+ */
 public class Tests {
 	@Test
 	public void validCardFromString(){
@@ -73,6 +81,7 @@ public class Tests {
 	}
 
 	@Test
+<<<<<<< HEAD
 	public void validMove(){
 		Game g = mock2PlayerGame();
 		Player player1=g.getPlayers().get(0);
@@ -87,12 +96,23 @@ public class Tests {
 		assertTrue(player1.getCol()==1);//player has registered as moved
 		assertTrue(g.getBoard().getTile(player1.getRow(), player1.getCol()).getToken().equals(player1));//New tile has registered player on it
 		assertNull(g.getBoard().getTile(prevRow, prevCol).getToken());//old tile has registered player has left
+=======
+	public void placeWeapons(){
+		Game g = mock2PlayerGame();
+		g.placeWeapons();
+		Board b = g.getBoard();
+		for(Weapon w : g.getWeapons().values()){
+			//System.out.println(w.symbol());
+			assertTrue(b.currentRoom(w) != null);
+		}
+>>>>>>> 34a5bb196787993cd19a08cb9523b81def6965c8
 	}
 
 	@Test
 	public void boardGood_5(){
 		Board board=new Board();
-		board.printBoard();
+		assertEquals(9, board.getRooms().size());
+		//board.printBoard();
 	}
 
 	// ========== Helper methods ========== //

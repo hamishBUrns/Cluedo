@@ -94,7 +94,7 @@ public class Board {
 					rooms.get(3).addTile(board[row][col]);
 					break;
 				case "r":
-					board[row][col]= new Tile("room","billiard room", col, col);
+					board[row][col]= new Tile("room","billiard room", row, col);
 					rooms.get(4).addTile(board[row][col]);
 					break;
 				case "l":
@@ -133,7 +133,7 @@ public class Board {
 		rooms.get(1).addDoors(doors);
 
 		doors.clear();
-		doors.put("west", getTile(5,19));
+		doors.put("south", getTile(5,19));
 		doors.put("secret stairs", getTile(19,0));
 		rooms.get(2).addDoors(doors);
 
@@ -171,15 +171,6 @@ public class Board {
 
 	}
 
-	public void printBoardKeys(){
-		System.out.println("_ is a floor, W is a wall, D is a door, lowercase letters are rooms");
-		System.out.println(
-				"k is kitchen, b is ballroom, c is conservatory, d is dining room, r is billiard room, l is library, n is lounge, h is hall, s is study");
-		System.out.println("Key:Rope is ~, dagger is ^, candlestick is $, Leadpipe is (, revolver is @, Spanner is*");
-		System.out.println("Players are represented by a number in the order in which they joined.");
-		System.out.println("0 is for unsured characters.");
-	}
-
 	public Tile getTile(int row, int col){
 		return board[row][col];
 	}
@@ -195,6 +186,7 @@ public class Board {
 				return r;
 			}
 		}
+
 		return null;
 
 	}
