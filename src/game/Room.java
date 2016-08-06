@@ -22,6 +22,10 @@ public class Room {
 		doors.putAll(d);
 	}
 
+	public Map<String, Tile> getDoors(){
+		return doors;
+	}
+
 	public void putInRoom(Token token){
 		pieces.add(token);
 		Tile place= tiles.get(pieces.indexOf(token));

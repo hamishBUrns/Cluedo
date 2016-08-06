@@ -47,6 +47,7 @@ public class Board {
 		rooms.add(new Room("hall"));
 		rooms.add(new Room("study"));
 		parseBoard();
+		addDoors();
 
 	}
 	/**
@@ -122,7 +123,7 @@ public class Board {
 	public void addDoors(){
 		Map<String, Tile> doors = new HashMap<>();
 		doors.put("south", getTile(7,4));
-		doors.put("secret stairs", null);
+		doors.put("secret stairs", getTile(24,21));
 		rooms.get(0).addDoors(doors);
 
 		doors.clear();
@@ -134,7 +135,7 @@ public class Board {
 
 		doors.clear();
 		doors.put("west", getTile(5,19));
-		doors.put("secret stairs", null);
+		doors.put("secret stairs", getTile(19,0));
 		rooms.get(2).addDoors(doors);
 
 		doors.clear();
@@ -154,7 +155,7 @@ public class Board {
 
 		doors.clear();
 		doors.put("north", getTile(18,6));
-		doors.put("secret stairs", null);
+		doors.put("secret stairs", getTile(5,23));
 		rooms.get(6).addDoors(doors);
 
 		doors.clear();
@@ -166,9 +167,18 @@ public class Board {
 
 		doors.clear();
 		doors.put("north", getTile(20,19));
-		doors.put("secret stairs", null);
+		doors.put("secret stairs", getTile(1,5));
 		rooms.get(7).addDoors(doors);
 
+	}
+
+	public void printBoardKeys(){
+		System.out.println("_ is a floor, W is a wall, D is a door, lowercase letters are rooms");
+		System.out.println(
+				"k is kitchen, b is ballroom, c is conservatory, d is dining room, r is billiard room, l is library, n is lounge, h is hall, s is study");
+		System.out.println("Key:Rope is ~, dagger is ^, candlestick is $, Leadpipe is (, revolver is @, Spanner is*");
+		System.out.println("Players are represented by a number in the order in which they joined.");
+		System.out.println("0 is for unsured characters.");
 	}
 
 	public Tile getTile(int row, int col){

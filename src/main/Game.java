@@ -9,7 +9,7 @@ public class Game {
 
 	private List<Player> players = new ArrayList<Player>();
 	private List<Card> solution = new ArrayList<Card>();
-	private List<Weapon> weapons = new ArrayList<Weapon>();
+	private Map<String, Weapon> weapons = new HashMap<>();
 
 	private TextClient client;
 	private Deck deck;
@@ -43,10 +43,6 @@ public class Game {
 	 * the players haven't lost
 	 */
 	public void runGame() {
-		System.out.println("_ is a floor, W is a wall, D is a door, lowercase letters are rooms");
-		System.out.println(
-				"k is kitchen, b is ballroom, c is conservatory, d is dining room, r is billiard room, l is library, n is lounge, h is hall, s is study");
-		System.out.println("Key:Rope is~, dagger is ^, candlestick is $, Leadpipe is (, revolver is @, Spanner is*");
 		System.out.println("Starting game!");
 
 		while (noWinner && playersleft()) {
@@ -65,16 +61,24 @@ public class Game {
 	 * Creates the weapons of the game and puts them in rooms
 	 */
 	public void placeWeapons() {
-		weapons.add(new Weapon("candlestick"));
-		weapons.add(new Weapon("rope"));
-		weapons.add(new Weapon("dagger"));
-		weapons.add(new Weapon("leadpipe"));
-		weapons.add(new Weapon("revolver"));
-		weapons.add(new Weapon("spanner"));
-		for (int i = 0; i < weapons.size(); i++) {
-			board.getRooms().get(i).putInRoom(weapons.get(i));
-		}
+		weapons.put("candlestick",new Weapon("candlestick"));
+		weapons.put("rope",new Weapon("rope"));
+		weapons.put("dagger",new Weapon("dagger"));
+		weapons.put("leadpipe",new Weapon("leadpipe"));
+		weapons.put("revolver",new Weapon("revolver"));
+		weapons.put("spanner",new Weapon("spanner"));
 
+		List<Room> rooms = new ArrayList<>(board.getRooms());
+		Random rand = new Random();
+		int index = rand.nextInt(rooms.size());
+
+		for(Weapon w : weapons.values()){
+
+			rooms.get(index);
+		}
+	//	for (int i = 0; i < weapons.size(); i++) {
+	//		board.getRooms().get(i).putInRoom(weapons.get(i));
+	//	}
 	}
 
 	/**
@@ -148,9 +152,9 @@ public class Game {
 		int diceRoll = rand.nextInt(11) + 2; // generate a random number between
 												// 2 and 12
 		System.out.println(p.getName() + " rolled a " + diceRoll);
-		Room playerRoom = board.currentRoom(p);
-		if (playerRoom != null) {
-			leaveRoom(diceRoll, playerRoom, p);
+		Room startRoom = board.currentRoom(p);
+		if (startRoom != null) {
+			leaveRoom(diceRoll, startRoom, p);
 		} else {
 			move(diceRoll, p);
 		}
@@ -202,14 +206,31 @@ public class Game {
 	}
 
 	public void leaveRoom(int diceRoll, Room room, Player p) {
-
+		Map<String, Tile> doors = room.getDoors();
+		System.out.println("Exits from the " + room.getName() + " are:");
+		for (String s : doors.keySet()) {
+			System.out.println(s);
+		}
+		String exit = client.readString("How would you like to leave?");
+		while (!doors.containsKey(exit)) {
+			exit = client.readString("Please choose an exit from the list");
+		}
+		room.takeFromRoom(p);
+		Tile destination = doors.get(exit);
+		p.setRow(destination.getRow());
+		p.setCol(destination.getCol());
+		Room newRoom = board.currentRoom(p);
+		if (newRoom != null) {
+			newRoom.putInRoom(p);
+		} else {
+			move(diceRoll, p);
+		}
 	}
 
 	/**
 	 * gets user input to move them around the board
 	 */
 	public void move(int diceRoll, Player p) {
-
 		while (diceRoll > 0) {
 			board.printBoard();
 			System.out.println("Steps left: " + diceRoll);
@@ -258,17 +279,16 @@ public class Game {
 	 * @param p
 	 */
 	public List<Card> suggest(Card room, Player p) {
-		Card c = cardFromString(client.readString("Who dunnit?"));
-		while (c == null || !(c instanceof CharacterCard) || p.getHand().contains(c) || checklist.contains(c)) {
-			c = cardFromString(
-					client.readString("Character must not be in your checklist and must be spelt correctly"));
-		}
+		Card c = askCharacter(p);
 		Card w = cardFromString(client.readString("Murder weapon?"));
 		while (w == null || !(w instanceof WeaponCard) || p.getHand().contains(w) || checklist.contains(w)) {
 			w = cardFromString(
 					client.readString("Character must not be in your checklist and must be spelt correctly"));
 		}
-		System.out.println("Perhaps it was " + c.getName() + " in the " + room.getName() + " with the " + w.getName());
+		System.out.println(
+				"Perhaps it was " + c.getName() + " in the " + room.getName() + " with the " + w.getName() + "?");
+
+
 
 		List<Card> cards = new ArrayList<>();
 		cards.add(c);
@@ -309,19 +329,12 @@ public class Game {
 	 * @param p
 	 */
 	public List<Card> accuse(Player p) {
-		Card c = cardFromString(client.readString("Who dunnit?"));
-		while (c == null || !(c instanceof CharacterCard) || p.getHand().contains(c) || checklist.contains(c)) {
-			c = cardFromString(
-					client.readString("Character must not be in your checklist and must be spelt correctly"));
-		}
+		Card c = askCharacter(p);
 		Card r = cardFromString(client.readString("Scene of the crime?"));
 		while (r == null || !(r instanceof RoomCard) || p.getHand().contains(r) || checklist.contains(r)) {
 			r = cardFromString(client.readString("Room must not be in your checklist and must be spelt correctly"));
 		}
-		Card w = cardFromString(client.readString("Murder weapon?"));
-		while (w == null || !(w instanceof WeaponCard) || p.getHand().contains(w) || checklist.contains(w)) {
-			w = cardFromString(client.readString("Weapon must not be in your checklist and must be spelt correctly"));
-		}
+		Card w = askWeapon(p);
 		System.out.println("It was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "!");
 
 		List<Card> cards = new ArrayList<>();
@@ -331,8 +344,29 @@ public class Game {
 		return cards;
 	}
 
+	public Card askCharacter(Player p) {
+		System.out.println("Characters on checklist: ");
+		checklist.printCheckedCharas();
+		Card c = cardFromString(client.readString("Who dunnit?"));
+		while (c == null || !(c instanceof CharacterCard) || p.getHand().contains(c) || checklist.contains(c)) {
+			c = cardFromString(
+					client.readString("Character must not be in your checklist and must be spelt correctly"));
+		}
+		return c;
+	}
+
+	public Card askWeapon(Player p) {
+		System.out.println("Weapons on checklist: ");
+		checklist.printCheckedWeaps();
+		Card w = cardFromString(client.readString("Murder weapon?"));
+		while (w == null || !(w instanceof WeaponCard) || p.getHand().contains(w) || checklist.contains(w)) {
+			w = cardFromString(client.readString("Weapon must not be in your checklist and must be spelt correctly"));
+		}
+		return w;
+	}
+
 	/**
-	 * Returns true if accusation is correect
+	 * Returns true if accusation matches the solution
 	 *
 	 * @param accusation
 	 * @return
