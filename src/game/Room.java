@@ -7,6 +7,7 @@ public class Room {
 	private ArrayList<Token> pieces;
 	private ArrayList<Tile> tiles;
 	private Map<String, Tile> doors;
+	private int index;
 
 	public Room(String name) {
 		tiles = new ArrayList<>();

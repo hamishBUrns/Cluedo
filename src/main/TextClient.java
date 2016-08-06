@@ -1,14 +1,15 @@
 package main;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class TextClient {
 
-	public String readString(String msg){
+	public String readString(String msg) {
 		System.out.println(msg);
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-		while(true){
+		while (true) {
 			try {
 				return input.readLine();
 			} catch (IOException e) {
@@ -18,31 +19,43 @@ public class TextClient {
 		}
 	}
 
-	public int readInt(String msg){
+	public int readInt(String msg) {
 		System.out.println(msg);
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-		while(true){
+		while (true) {
 			try {
 				String num = input.readLine();
-				if(num == null){
+				if (num == null) {
 					throw new IOException();
 				}
 				return Integer.parseInt(num);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("I/O Error! " + e.getMessage());
-			} catch (NumberFormatException e){
+			} catch (NumberFormatException e) {
 				System.out.println("Please input a number");
 			}
 		}
 	}
 
-	public void help(){
+	public void printBoardKeys() {
+		System.out.println("//Board Kyes//");
+		System.out.println("_ is a floor, W is a wall, D is a door, lowercase letters are rooms");
+		System.out.println(
+				"k is kitchen, b is ballroom, c is conservatory, d is dining room, r is billiard room, l is library, n is lounge, h is hall, s is study");
+		System.out.println("Rope is ~, dagger is ^, candlestick is $, Leadpipe is (, revolver is @, Spanner is *");
+		System.out.println("Players are represented by a number in the order in which they joined.");
+		System.out.println("0 for NPCs.");
+	}
+
+	public void help() {
 		System.out.println("Command list:");
 		System.out.println("checklist: see cards that have been checked and cannot be part of the solution");
 		System.out.println("hand: see what cards are in your hand");
 		System.out.println("suggest: make a suggestion by stating a character and weapon (must be in a room)");
 		System.out.println("accuse: make an accusation by stating a character, room, and weapon");
 		System.out.println("end: ends your turn");
+		System.out.println("keys: show board keys");
+		System.out.println("help: show command list");
 	}
 }

@@ -50,7 +50,7 @@ public class Player implements Token {
 	}
 
 	/**
-	 * set whether or not this player is still in the game
+	 * set if this player is still in the game; true if still playing, otherwise false
 	 *
 	 * @param playStatus
 	 */
@@ -61,7 +61,7 @@ public class Player implements Token {
 	public List<Card> getHand() {
 		return hand;
 	}
-	
+
 	public void setPlayerNumber(int pos){
 		playerNumber=pos;
 	}

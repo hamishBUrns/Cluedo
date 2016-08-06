@@ -10,6 +10,14 @@ import cards.*;
 import game.*;
 import main.*;
 
+/**
+ * Tests for Cluedo
+ * NOTE: many of the functions of this program cannot be tested without live user input, therefore these tests
+ * are only of the parts that could be automated, while the rest were tested manually.
+ * ((If there is an easier way do this, please advise.))
+ * @author kraemezoe
+ *
+ */
 public class Tests {
 	@Test
 	public void validCardFromString(){
@@ -73,14 +81,21 @@ public class Tests {
 	}
 
 	@Test
-	public void validMove(){
-
+	public void placeWeapons(){
+		Game g = mock2PlayerGame();
+		g.placeWeapons();
+		Board b = g.getBoard();
+		for(Weapon w : g.getWeapons().values()){
+			//System.out.println(w.symbol());
+			assertTrue(b.currentRoom(w) != null);
+		}
 	}
 
 	@Test
 	public void boardGood_5(){
 		Board board=new Board();
-		board.printBoard();
+		assertEquals(9, board.getRooms().size());
+		//board.printBoard();
 	}
 
 	// ========== Helper methods ========== //
