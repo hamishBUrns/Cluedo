@@ -45,9 +45,9 @@ public class Game {
 	public void runGame() {
 		System.out.println("Starting game!");
 
-		while (noWinner && playersleft()) {
-			turnIndex = 0;
-			for (Player p : players) {
+		turnIndex = 0;
+		for (Player p : players) {
+			if(noWinner&&playersleft()){
 				if (p.isStillIn()) {
 					turn(p);
 					turnIndex++;
@@ -445,6 +445,7 @@ public class Game {
 		deck = new Deck();
 		checklist = new Checklist();
 		noWinner = true;
+		board = new Board();
 
 		List<Player> defaults = new ArrayList<Player>();
 		defaults.add(new Player("Miss Scarlet", 0, 9));
@@ -454,10 +455,16 @@ public class Game {
 		defaults.add(new Player("Mrs Peacock", 19, 24));
 		defaults.add(new Player("Professor Plum", 24, 7));
 
+		for (Player p : defaults) { // Putting players on tiles.
+			board.getTile(p.getRow(), p.getCol()).setToken(p);
+		}
+
 		while (numPlayers >= 0) {
 			players.add(defaults.get(numPlayers));
 			numPlayers--;
 		}
+
+
 	}
 
 	public void setSolution(List<Card> sol) {
@@ -471,6 +478,13 @@ public class Game {
 	 */
 	public List<Player> getPlayers() {
 		return players;
+	}
+	/**
+	 * returns board for testing
+	 * @return
+	 */
+	public Board getBoard(){
+		return board;
 	}
 
 	/**

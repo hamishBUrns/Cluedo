@@ -74,7 +74,19 @@ public class Tests {
 
 	@Test
 	public void validMove(){
+		Game g = mock2PlayerGame();
+		Player player1=g.getPlayers().get(0);
+		player1.setRow(7);
+		player1.setCol(0);
+		int prevRow=player1.getRow();
+		int prevCol=player1.getCol();
+		//Move east
+		g.getBoard().moveValid(player1.getRow(), player1.getCol(),player1.getRow(), player1.getCol()+1, player1);
 
+		assertTrue(player1.getRow()==7);
+		assertTrue(player1.getCol()==1);//player has registered as moved
+		assertTrue(g.getBoard().getTile(player1.getRow(), player1.getCol()).getToken().equals(player1));//New tile has registered player on it
+		assertNull(g.getBoard().getTile(prevRow, prevCol).getToken());//old tile has registered player has left
 	}
 
 	@Test

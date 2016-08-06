@@ -75,7 +75,6 @@ public class Board {
 					break;
 				case "D":
 					board[row][col]= new Tile("door",null, row, col);
-					System.out.println(row +","+ col);
 					break;
 
 				case "k":
