@@ -228,6 +228,7 @@ public class Game {
 	}
 
 	public void leaveRoom(int diceRoll, Room room, Player p) {
+		board.printBoard();
 		Map<String, Tile> doors = room.getDoors();
 		System.out.println("Exits from the " + room.getName() + " are:");
 		for (String s : doors.keySet()) {
@@ -286,6 +287,7 @@ public class Game {
 				System.out.println("Invalid input. Please use one of the following: N, S, E, W");
 			}
 			if (board.currentRoom(p) != null) {
+				board.getTile(p.getRow(), p.getCol()).setToken(null);
 				board.currentRoom(p).putInRoom(p);
 				board.printBoard();
 				return;
@@ -302,6 +304,8 @@ public class Game {
 	 * @param p
 	 */
 	public List<Card> suggest(Room room, Card r, Player p) {
+		System.out.println("Cards in hand: ");
+		p.printHand();
 		Card c = askCharacter(p);
 		Card w = askWeapon(p);
 		System.out.println(
@@ -310,6 +314,7 @@ public class Game {
 		Player suspect = playerFromString(c.getName(), allCharas);
 		Room susRoom = board.currentRoom(suspect);
 		if(susRoom != null){
+			board.getTile(suspect.getRow(), suspect.getCol()).setToken(null);
 			susRoom.takeFromRoom(suspect);
 		}
 		room.putInRoom(suspect);
