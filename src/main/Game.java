@@ -183,6 +183,14 @@ public class Game {
 			move(diceRoll, p);
 		}
 		board.printBoard();
+		askCommand(p);
+	}
+
+	/**
+	 * gets and handles a command from the user, and ends a player's turn
+	 * @param p
+	 */
+	public void askCommand(Player p){
 		boolean turnEnded = false;
 		while (!turnEnded) {
 			String command = client.readString("What would you like to do?").toLowerCase();
@@ -194,6 +202,7 @@ public class Game {
 				p.printHand();
 				break;
 			case ("suggest"):
+				//check if a player can make a suggestion
 				Room room = board.currentRoom(p);
 				if (room != null) {
 					Card card = cardFromString(room.getName());
@@ -601,6 +610,10 @@ public class Game {
 		return checklist;
 	}
 
+	/**
+	 * returns the board
+	 * @return
+	 */
 	public Board getBoard() {
 		return board;
 	}
