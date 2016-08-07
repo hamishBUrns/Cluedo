@@ -110,6 +110,23 @@ public class Tests {
 	}
 
 	@Test
+	public void invalidMove() {
+		Game g = mock2PlayerGame();
+		Player p1 = g.getPlayers().get(0);
+		p1.setRow(7);
+		p1.setCol(0);
+		g.getBoard().getTile(7, 0).setToken(p1);
+		Player p2 = g.getPlayers().get(1);
+		p2.setRow(7);
+		p2.setCol(1);
+		g.getBoard().getTile(7, 1).setToken(p2);
+		assertFalse(canGoEast(g, p1));
+		assertFalse(canGoWest(g, p2));
+		assertFalse(canGoSouth(g, p1));
+		assertFalse(canGoNorth(g, p2));
+	}
+
+	@Test
 	public void placeWeapons() {
 		Game g = mock2PlayerGame();
 		g.placeWeapons();
@@ -117,7 +134,6 @@ public class Tests {
 		for (Weapon w : g.getWeapons().values()) {
 			assertTrue(b.currentRoom(w) != null);
 		}
-
 	}
 
 	@Test
@@ -154,5 +170,21 @@ public class Tests {
 		sol.add(new RoomCard("Hall"));
 		sol.add(new WeaponCard("revolver"));
 		return sol;
+	}
+
+	public boolean canGoNorth(Game g, Player p) {
+		return g.getBoard().moveValid(p.getRow(), p.getCol(), p.getRow() - 1, p.getCol(), p);
+	}
+
+	public boolean canGoSouth(Game g, Player p) {
+		return g.getBoard().moveValid(p.getRow(), p.getCol(), p.getRow() + 1, p.getCol(), p);
+	}
+
+	public boolean canGoWest(Game g, Player p) {
+		return g.getBoard().moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() - 1, p);
+	}
+
+	public boolean canGoEast(Game g, Player p) {
+		return g.getBoard().moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() + 1, p);
 	}
 }
