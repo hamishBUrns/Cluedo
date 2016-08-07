@@ -81,7 +81,7 @@ public class Tests {
 	}
 
 	@Test
-<<<<<<< HEAD
+
 	public void validMove(){
 		Game g = mock2PlayerGame();
 		Player player1=g.getPlayers().get(0);
@@ -96,7 +96,7 @@ public class Tests {
 		assertTrue(player1.getCol()==1);//player has registered as moved
 		assertTrue(g.getBoard().getTile(player1.getRow(), player1.getCol()).getToken().equals(player1));//New tile has registered player on it
 		assertNull(g.getBoard().getTile(prevRow, prevCol).getToken());//old tile has registered player has left
-=======
+	}	
 	public void placeWeapons(){
 		Game g = mock2PlayerGame();
 		g.placeWeapons();
@@ -105,7 +105,7 @@ public class Tests {
 			//System.out.println(w.symbol());
 			assertTrue(b.currentRoom(w) != null);
 		}
->>>>>>> 34a5bb196787993cd19a08cb9523b81def6965c8
+
 	}
 
 	@Test

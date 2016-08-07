@@ -30,7 +30,7 @@ public class Room {
 	public void putInRoom(Token token){
 		pieces.add(token);
 		Tile place= tiles.get(pieces.indexOf(token));
-
+		
 		place.setToken(token);
 		token.setRow(place.getRow());
 		token.setCol(place.getCol());
