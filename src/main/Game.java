@@ -2,8 +2,8 @@ package main;
 
 import java.util.*;
 
+import board.*;
 import cards.*;
-import game.*;
 
 public class Game {
 

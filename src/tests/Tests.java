@@ -6,8 +6,8 @@ import java.util.*;
 
 import org.junit.Test;
 
+import board.*;
 import cards.*;
-import game.*;
 import main.*;
 
 /**
