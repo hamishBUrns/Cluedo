@@ -5,7 +5,6 @@ public class Tile {
 	private String type;
 	private String roomName;
 	private String roomLetter;
-	private Player player;
 
 	private Token token;
 	private int row;

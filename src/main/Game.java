@@ -57,6 +57,7 @@ public class Game {
 					System.out.println("Wow, you all suck at this. Game over, I guess.");
 					break play;
 				}
+
 				if (p.isStillIn()) {
 					System.out.println();
 					client.readString(p.getName() + "'s turn. Ready?");
@@ -71,28 +72,28 @@ public class Game {
 	 * Creates the weapons of the game and puts them in rooms
 	 */
 	public void placeWeapons() {
-		for(Card c : deck.weapons){
+		for (Card c : deck.weapons) {
 			weapons.put(c.getName(), new Weapon(c.getName()));
 		}
-	//	weapons.put("candlestick", new Weapon("candlestick"));
-	//	weapons.put("rope", new Weapon("rope"));
-	//	weapons.put("dagger", new Weapon("dagger"));
-	//	weapons.put("leadpipe", new Weapon("leadpipe"));
-	//	weapons.put("revolver", new Weapon("revolver"));
-	//	weapons.put("spanner", new Weapon("spanner"));
+		// weapons.put("candlestick", new Weapon("candlestick"));
+		// weapons.put("rope", new Weapon("rope"));
+		// weapons.put("dagger", new Weapon("dagger"));
+		// weapons.put("leadpipe", new Weapon("leadpipe"));
+		// weapons.put("revolver", new Weapon("revolver"));
+		// weapons.put("spanner", new Weapon("spanner"));
 
 		List<Room> rooms = new ArrayList<>();
 		rooms.addAll(board.getRooms());
 		Random rand = new Random();
 		int index = rand.nextInt(rooms.size());
-		//int i = 0;
+		// int i = 0;
 
 		for (Weapon w : weapons.values()) {
-			//System.out.println(w.symbol());
+			// System.out.println(w.symbol());
 			Room r = rooms.get(index);
-			//System.out.println(r.getName());
-			r.putInRoom(w);
-			//i++;
+			// System.out.println(r.getName());
+			r.putInRoom(w, board);
+			// i++;
 			rooms.remove(r);
 			index = rand.nextInt(rooms.size());
 		}
@@ -124,7 +125,7 @@ public class Game {
 	 */
 	public void assignCharacters() {
 		ArrayList<Player> defaults = new ArrayList<Player>();
-		defaults.add(new Player("Miss Scarlet", 0, 9));
+		defaults.add(new Player("Miss Scarlett", 0, 9));
 		defaults.add(new Player("Colonel Mustard", 0, 15));
 		defaults.add(new Player("Mrs White", 6, 24));
 		defaults.add(new Player("The Reverend Green", 17, 0));
@@ -160,13 +161,15 @@ public class Game {
 		allCharas.addAll(players);
 	}
 
+	// ===== turn logic starts here ==== //
+
 	/**
 	 * Runs through actions taken on a players turn
 	 *
 	 * @param p
 	 */
 	public void turn(Player p) {
-		System.out.print("Cards in "+p.getName() + "'s hand are:");
+		System.out.println("Cards in " + p.getName() + "'s hand are: ");
 		p.printHand();
 
 		Random rand = new Random();
@@ -179,6 +182,7 @@ public class Game {
 		} else {
 			move(diceRoll, p);
 		}
+		board.printBoard();
 		boolean turnEnded = false;
 		while (!turnEnded) {
 			String command = client.readString("What would you like to do?").toLowerCase();
@@ -192,7 +196,12 @@ public class Game {
 			case ("suggest"):
 				Room room = board.currentRoom(p);
 				if (room != null) {
-					Card c = refute(suggest(room, cardFromString(room.getName()), p));
+					Card card = cardFromString(room.getName());
+					if(p.getHand().contains(card) || checklist.contains(card)){
+						System.out.println("Cannot suggest a room in checklist or hand");
+						break;
+					}
+					Card c = refute(suggest(room, card, p));
 					if (c == null) {
 						System.out.println("Egads! " + p.getName() + "'s got it!");
 						noWinner = false;
@@ -202,7 +211,7 @@ public class Game {
 					}
 					turnEnded = true;
 				} else {
-					System.out.println("Must be in room to suggest");
+					System.out.println("Must be in a room to suggest");
 				}
 				break;
 			case ("accuse"):
@@ -216,6 +225,7 @@ public class Game {
 				turnEnded = true;
 				break;
 			case ("end"):
+				client.printLines();
 				turnEnded = true;
 				break;
 			case ("help"):
@@ -230,6 +240,17 @@ public class Game {
 		}
 	}
 
+	/**
+	 * prints game dialog to be seen by all players by first clearing the
+	 * console with blank lines to hide the player's secret information
+	 *
+	 * @param s
+	 */
+	public void printPublicDialog(String s) {
+		client.printLines();
+		System.out.println(s);
+	}
+
 	public void leaveRoom(int diceRoll, Room room, Player p) {
 		board.printBoard();
 		Map<String, Tile> doors = room.getDoors();
@@ -241,13 +262,14 @@ public class Game {
 		while (!doors.containsKey(exit)) {
 			exit = client.readString("Please choose an exit from the list");
 		}
-		room.takeFromRoom(p);
+		room.takeFromRoom(p, board);
 		Tile destination = doors.get(exit);
 		p.setRow(destination.getRow());
 		p.setCol(destination.getCol());
+		board.getTile(p.getRow(), p.getCol()).setToken(p);
 		Room newRoom = board.currentRoom(p);
 		if (newRoom != null) {
-			newRoom.putInRoom(p);
+			newRoom.putInRoom(p, board);
 		} else {
 			move(diceRoll, p);
 		}
@@ -290,13 +312,12 @@ public class Game {
 				System.out.println("Invalid input. Please use one of the following: N, S, E, W");
 			}
 			if (board.currentRoom(p) != null) {
-				board.getTile(p.getRow(), p.getCol()).setToken(null);
-				board.currentRoom(p).putInRoom(p);
-				board.printBoard();
+				board.currentRoom(p).putInRoom(p, board);
+				//board.printBoard();
 				return;
 			}
 		}
-		board.printBoard();
+		// board.printBoard();
 
 	}
 
@@ -311,20 +332,19 @@ public class Game {
 		p.printHand();
 		Card c = askCharacter(p);
 		Card w = askWeapon(p);
-		System.out.println(
-				"Perhaps it was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "?");
+		printPublicDialog(
+				"\"Perhaps it was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "?\"");
 
 		Player suspect = playerFromString(c.getName(), allCharas);
 		Room susRoom = board.currentRoom(suspect);
-		if(susRoom != null){
-			board.getTile(suspect.getRow(), suspect.getCol()).setToken(null);
-			susRoom.takeFromRoom(suspect);
+		if (susRoom != null) {
+			susRoom.takeFromRoom(suspect, board);
 		}
-		room.putInRoom(suspect);
+		room.putInRoom(suspect, board);
 
 		Weapon weap = weapons.get(w.getName());
-		board.currentRoom(weap).takeFromRoom(weap);
-		room.putInRoom(weap);
+		board.currentRoom(weap).takeFromRoom(weap, board);
+		room.putInRoom(weap, board);
 
 		board.printBoard();
 
@@ -341,6 +361,9 @@ public class Game {
 	public Card refute(List<Card> suggested) {
 		// start at the index after the player suggesting
 		int current = turnIndex + 1;
+		if (current == players.size()) {
+			current = 0;
+		}
 		// go until we are back at suggesting player
 		while (current != turnIndex) {
 			for (Card c : players.get(current).getHand()) {
@@ -367,10 +390,12 @@ public class Game {
 	 * @param p
 	 */
 	public List<Card> accuse(Player p) {
+		System.out.println("Cards in hand: ");
+		p.printHand();
 		Card c = askCharacter(p);
 		Card r = askRoom(p);
 		Card w = askWeapon(p);
-		System.out.println("It was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "!");
+		printPublicDialog("\"It was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "!\"");
 
 		List<Card> cards = new ArrayList<>();
 		cards.add(c);
@@ -379,6 +404,14 @@ public class Game {
 		return cards;
 	}
 
+	/**
+	 * Gets a string input from the user and returns the corresponding character
+	 * card Will not return until a matching card is found that is not in the
+	 * players checklist or hand
+	 *
+	 * @param p
+	 * @return
+	 */
 	public Card askCharacter(Player p) {
 		System.out.println("Characters on checklist: ");
 		checklist.printCheckedCharas();
@@ -390,6 +423,14 @@ public class Game {
 		return c;
 	}
 
+	/**
+	 * Gets a string input from the user and returns the corresponding room card
+	 * Will not return until a matching card is found that is not in the players
+	 * checklist or hand
+	 *
+	 * @param p
+	 * @return
+	 */
 	public Card askRoom(Player p) {
 		System.out.println("Rooms on checklist: ");
 		checklist.printCheckedRooms();
@@ -401,6 +442,14 @@ public class Game {
 		return r;
 	}
 
+	/**
+	 * Gets a string input from the user and returns the corresponding weapon
+	 * card Will not return until a matching card is found that is not in the
+	 * players checklist or hand
+	 *
+	 * @param p
+	 * @return
+	 */
 	public Card askWeapon(Player p) {
 		System.out.println("Weapons on checklist: ");
 		checklist.printCheckedWeaps();
@@ -425,21 +474,6 @@ public class Game {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Returns true if there are still players that are left(Haven't been kicked
-	 * out by wrong accusation)
-	 *
-	 * @return
-	 */
-	public boolean playersleft() {
-		for (Player p : players) {
-			if (p.isStillIn()) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -475,6 +509,21 @@ public class Game {
 		return null;
 	}
 
+	/**
+	 * Returns true if there are still players that are left(Haven't been kicked
+	 * out by wrong accusation)
+	 *
+	 * @return
+	 */
+	public boolean playersleft() {
+		for (Player p : players) {
+			if (p.isStillIn()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static void main(String args[]) {
 		new Game(new TextClient());
 	}
@@ -493,6 +542,7 @@ public class Game {
 		board = new Board();
 		checklist = new Checklist();
 		noWinner = true;
+		board = new Board();
 
 		List<Player> defaults = new ArrayList<Player>();
 		defaults.add(new Player("Miss Scarlet", 0, 9));
@@ -502,10 +552,15 @@ public class Game {
 		defaults.add(new Player("Mrs Peacock", 19, 24));
 		defaults.add(new Player("Professor Plum", 24, 7));
 
+		for (Player p : defaults) { // Putting players on tiles.
+			board.getTile(p.getRow(), p.getCol()).setToken(p);
+		}
+
 		while (numPlayers >= 0) {
 			players.add(defaults.get(numPlayers));
 			numPlayers--;
 		}
+
 	}
 
 	public void setSolution(List<Card> sol) {
@@ -523,9 +578,10 @@ public class Game {
 
 	/**
 	 * return the map of strings to weapons
+	 *
 	 * @return
 	 */
-	public Map<String,Weapon> getWeapons() {
+	public Map<String, Weapon> getWeapons() {
 		return weapons;
 	}
 
@@ -538,11 +594,11 @@ public class Game {
 		return checklist;
 	}
 
-	public Board getBoard(){
+	public Board getBoard() {
 		return board;
 	}
 
-	public Deck getDeck(){
+	public Deck getDeck() {
 		return deck;
 	}
 

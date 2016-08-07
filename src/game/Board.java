@@ -167,7 +167,7 @@ public class Board {
 		doors.clear();
 		doors.put("north", getTile(20,19));
 		doors.put("secret stairs", getTile(1,5));
-		rooms.get(7).addDoors(doors);
+		rooms.get(8).addDoors(doors);
 
 	}
 

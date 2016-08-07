@@ -11,16 +11,17 @@ import game.*;
 import main.*;
 
 /**
- * Tests for Cluedo
- * NOTE: many of the functions of this program cannot be tested without live user input, therefore these tests
- * are only of the parts that could be automated, while the rest were tested manually.
+ * Tests for Cluedo NOTE: due to how it was implemented, many of the functions
+ * of this program cannot be tested without live user input, therefore these
+ * tests are only of the parts that do not, while the rest were tested manually.
  * ((If there is an easier way do this, please advise.))
+ *
  * @author kraemezoe
  *
  */
 public class Tests {
 	@Test
-	public void validCardFromString(){
+	public void validCardFromString() {
 		Game g = new Game(new TextClient(), 2);
 		Card c = g.cardFromString("professor plum");
 		assertEquals((CharacterCard) c, new CharacterCard("Professor Plum"));
@@ -31,7 +32,7 @@ public class Tests {
 	}
 
 	@Test
-	public void invalidCardFromString(){
+	public void invalidCardFromString() {
 		Game g = new Game(new TextClient(), 2);
 		Card c = g.cardFromString("butts");
 		assertTrue(c == null);
@@ -40,7 +41,7 @@ public class Tests {
 	}
 
 	@Test
-	public void isRefuted(){
+	public void isRefuted() {
 		Game g = new Game(new TextClient(), 2);
 		List<Player> players = g.getPlayers();
 		Card c = new CharacterCard("Mrs White");
@@ -54,7 +55,7 @@ public class Tests {
 	}
 
 	@Test
-	public void notRefuted(){
+	public void notRefuted() {
 		Game g = new Game(new TextClient(), 2);
 		List<Player> players = g.getPlayers();
 		players.get(1).giveCard(new CharacterCard("Mrs White"));
@@ -66,7 +67,7 @@ public class Tests {
 	}
 
 	@Test
-	public void rightAccusation(){
+	public void rightAccusation() {
 		Game g = mock2PlayerGame();
 		List<Card> sol = solutionA();
 		g.setSolution(sol);
@@ -74,42 +75,64 @@ public class Tests {
 	}
 
 	@Test
-	public void wrongAccusation(){
+	public void wrongAccusation() {
 		Game g = mock2PlayerGame();
 		g.setSolution(solutionB());
 		assertFalse(g.accusationCorrect(solutionA()));
 	}
 
 	@Test
-	public void makeWeaponMap(){
+	public void makeWeaponMap() {
 		Game g = mock2PlayerGame();
 		g.placeWeapons();
-		for(Card c : g.getDeck().weapons){
+		for (Card c : g.getDeck().weapons) {
 			assertTrue(g.getWeapons().get(c.getName()) != null);
 		}
 	}
 
 	@Test
-	public void placeWeapons(){
+	public void validMove() {
 		Game g = mock2PlayerGame();
-		g.placeWeapons();
-		Board b = g.getBoard();
-		for(Weapon w : g.getWeapons().values()){
-			//System.out.println(w.symbol());
-			assertTrue(b.currentRoom(w) != null);
-		}
+		Player player1 = g.getPlayers().get(0);
+		player1.setRow(7);
+		player1.setCol(0);
+		int prevRow = player1.getRow();
+		int prevCol = player1.getCol();
+		// Move east
+		g.getBoard().moveValid(player1.getRow(), player1.getCol(), player1.getRow(), player1.getCol() + 1, player1);
+
+		assertTrue(player1.getRow() == 7);
+		assertTrue(player1.getCol() == 1);// player has registered as moved
+		// New tile has registered player on it
+		assertTrue(g.getBoard().getTile(player1.getRow(), player1.getCol()).getToken().equals(player1));
+		// old tile has registered player has left
+		assertNull(g.getBoard().getTile(prevRow, prevCol).getToken());
 	}
 
 	@Test
-	public void boardGood_5(){
-		Board board=new Board();
+	public void placeWeapons() {
+		Game g = mock2PlayerGame();
+		g.placeWeapons();
+		Board b = g.getBoard();
+		for (Weapon w : g.getWeapons().values()) {
+			assertTrue(b.currentRoom(w) != null);
+		}
+
+	}
+
+	@Test
+	public void boardGood() {
+		Game g = mock2PlayerGame();
+		Board board = g.getBoard();
 		assertEquals(9, board.getRooms().size());
-		//board.printBoard();
+		for (Room r : board.getRooms()) {
+			assertTrue(g.cardFromString(r.getName()) != null);
+		}
 	}
 
 	// ========== Helper methods ========== //
 
-	public Game mock2PlayerGame(){
+	public Game mock2PlayerGame() {
 		Game g = new Game(new TextClient(), 2);
 		List<Player> players = g.getPlayers();
 		players.get(0).giveCard(new WeaponCard("revolver"));
@@ -117,7 +140,7 @@ public class Tests {
 		return g;
 	}
 
-	public List<Card> solutionA(){
+	public List<Card> solutionA() {
 		List<Card> sol = new ArrayList<>();
 		sol.add(new CharacterCard("Professor Plum"));
 		sol.add(new RoomCard("Study"));
@@ -125,7 +148,7 @@ public class Tests {
 		return sol;
 	}
 
-	public List<Card> solutionB(){
+	public List<Card> solutionB() {
 		List<Card> sol = new ArrayList<>();
 		sol.add(new CharacterCard("Mrs White"));
 		sol.add(new RoomCard("Hall"));
