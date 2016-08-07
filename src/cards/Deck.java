@@ -40,7 +40,7 @@ public class Deck {
 
 		weapons.add(new WeaponCard("candlestick"));
 		weapons.add(new WeaponCard("dagger"));
-		weapons.add(new WeaponCard("leadpipe"));
+		weapons.add(new WeaponCard("lead pipe"));
 		weapons.add(new WeaponCard("revolver"));
 		weapons.add(new WeaponCard("rope"));
 		weapons.add(new WeaponCard("spanner"));

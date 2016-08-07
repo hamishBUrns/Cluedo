@@ -58,4 +58,13 @@ public class TextClient {
 		System.out.println("keys: show board keys");
 		System.out.println("help: show command list");
 	}
+
+	/**
+	 * print a bunch of blank lines to pseudo-clear the console
+	 */
+	public void printLines(){
+		for(int i=0; i<50; i++){
+			System.out.println();
+		}
+	}
 }

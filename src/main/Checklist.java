@@ -38,18 +38,21 @@ public class Checklist {
 	}
 
 	public void printCheckedCharas(){
+		if(characters.isEmpty()){System.out.println("[none]");}
 		for(CharacterCard c : characters){
 			System.out.println(c.getName());
 		}
 	}
 
 	public void printCheckedRooms(){
+		if(rooms.isEmpty()){System.out.println("[none]");}
 		for(RoomCard r : rooms){
 			System.out.println(r.getName());
 		}
 	}
 
 	public void printCheckedWeaps(){
+		if(weapons.isEmpty()){System.out.println("[none]");}
 		for(WeaponCard w : weapons){
 			System.out.println(w.getName());
 		}
