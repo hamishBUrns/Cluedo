@@ -251,6 +251,12 @@ public class Game {
 		System.out.println(s);
 	}
 
+	/**
+	 * allows the user to choose how they leave a room and places them in the new location
+	 * @param diceRoll
+	 * @param room
+	 * @param p
+	 */
 	public void leaveRoom(int diceRoll, Room room, Player p) {
 		board.printBoard();
 		Map<String, Tile> doors = room.getDoors();
@@ -545,7 +551,7 @@ public class Game {
 		board = new Board();
 
 		List<Player> defaults = new ArrayList<Player>();
-		defaults.add(new Player("Miss Scarlet", 0, 9));
+		defaults.add(new Player("Miss Scarlett", 0, 9));
 		defaults.add(new Player("Colonel Mustard", 0, 15));
 		defaults.add(new Player("Mrs White", 6, 24));
 		defaults.add(new Player("The Reverend Green", 17, 0));
