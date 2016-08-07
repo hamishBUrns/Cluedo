@@ -47,7 +47,7 @@ public class Tests {
 		players.get(1).giveCard(c);
 		List<Card> cards = new ArrayList<>();
 		cards.add(c);
-		cards.add(new WeaponCard("Rope"));
+		cards.add(new WeaponCard("rope"));
 		cards.add(new RoomCard("Hall"));
 		assertEquals(g.refute(cards), c);
 		assertTrue(g.getChecklist().contains(c));
@@ -60,7 +60,7 @@ public class Tests {
 		players.get(1).giveCard(new CharacterCard("Mrs White"));
 		List<Card> cards = new ArrayList<>();
 		cards.add(new CharacterCard("The Reverend Green"));
-		cards.add(new WeaponCard("Rope"));
+		cards.add(new WeaponCard("rope"));
 		cards.add(new RoomCard("Hall"));
 		assertTrue(g.refute(cards) == null);
 	}
@@ -78,6 +78,15 @@ public class Tests {
 		Game g = mock2PlayerGame();
 		g.setSolution(solutionB());
 		assertFalse(g.accusationCorrect(solutionA()));
+	}
+
+	@Test
+	public void makeWeaponMap(){
+		Game g = mock2PlayerGame();
+		g.placeWeapons();
+		for(Card c : g.getDeck().weapons){
+			assertTrue(g.getWeapons().get(c.getName()) != null);
+		}
 	}
 
 	@Test
@@ -103,7 +112,7 @@ public class Tests {
 	public Game mock2PlayerGame(){
 		Game g = new Game(new TextClient(), 2);
 		List<Player> players = g.getPlayers();
-		players.get(0).giveCard(new WeaponCard("Revolver"));
+		players.get(0).giveCard(new WeaponCard("revolver"));
 		players.get(1).giveCard(new CharacterCard("Mrs White"));
 		return g;
 	}
@@ -112,7 +121,7 @@ public class Tests {
 		List<Card> sol = new ArrayList<>();
 		sol.add(new CharacterCard("Professor Plum"));
 		sol.add(new RoomCard("Study"));
-		sol.add(new WeaponCard("Candlestick"));
+		sol.add(new WeaponCard("candlestick"));
 		return sol;
 	}
 
@@ -120,7 +129,7 @@ public class Tests {
 		List<Card> sol = new ArrayList<>();
 		sol.add(new CharacterCard("Mrs White"));
 		sol.add(new RoomCard("Hall"));
-		sol.add(new WeaponCard("Revolver"));
+		sol.add(new WeaponCard("revolver"));
 		return sol;
 	}
 }

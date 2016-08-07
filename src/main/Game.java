@@ -46,7 +46,6 @@ public class Game {
 	public void runGame() {
 		client.printBoardKeys();
 		System.out.println("Starting game!");
-		// noWinner && playersleft()
 		play: while (true) {
 			turnIndex = 0;
 			for (Player p : players) {
@@ -60,6 +59,7 @@ public class Game {
 				}
 				if (p.isStillIn()) {
 					System.out.println();
+					client.readString(p.getName() + "'s turn. Ready?");
 					turn(p);
 					turnIndex++;
 				}
@@ -71,12 +71,15 @@ public class Game {
 	 * Creates the weapons of the game and puts them in rooms
 	 */
 	public void placeWeapons() {
-		weapons.put("candlestick", new Weapon("candlestick"));
-		weapons.put("rope", new Weapon("rope"));
-		weapons.put("dagger", new Weapon("dagger"));
-		weapons.put("leadpipe", new Weapon("leadpipe"));
-		weapons.put("revolver", new Weapon("revolver"));
-		weapons.put("spanner", new Weapon("spanner"));
+		for(Card c : deck.weapons){
+			weapons.put(c.getName(), new Weapon(c.getName()));
+		}
+	//	weapons.put("candlestick", new Weapon("candlestick"));
+	//	weapons.put("rope", new Weapon("rope"));
+	//	weapons.put("dagger", new Weapon("dagger"));
+	//	weapons.put("leadpipe", new Weapon("leadpipe"));
+	//	weapons.put("revolver", new Weapon("revolver"));
+	//	weapons.put("spanner", new Weapon("spanner"));
 
 		List<Room> rooms = new ArrayList<>();
 		rooms.addAll(board.getRooms());
@@ -163,7 +166,7 @@ public class Game {
 	 * @param p
 	 */
 	public void turn(Player p) {
-		System.out.print(p.getName() + "'s turn, cards in hand are:");
+		System.out.print("Cards in "+p.getName() + "'s hand are:");
 		p.printHand();
 
 		Random rand = new Random();
@@ -320,8 +323,8 @@ public class Game {
 		room.putInRoom(suspect);
 
 		Weapon weap = weapons.get(w.getName());
-		//board.currentRoom(weap).takeFromRoom(weap);
-		//room.putInRoom(weap);
+		board.currentRoom(weap).takeFromRoom(weap);
+		room.putInRoom(weap);
 
 		board.printBoard();
 
@@ -537,6 +540,10 @@ public class Game {
 
 	public Board getBoard(){
 		return board;
+	}
+
+	public Deck getDeck(){
+		return deck;
 	}
 
 }

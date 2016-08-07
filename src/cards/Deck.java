@@ -38,12 +38,12 @@ public class Deck {
 		rooms.add(new RoomCard("Lounge"));
 		rooms.add(new RoomCard("Dining room"));
 
-		weapons.add(new WeaponCard("Candlestick"));
-		weapons.add(new WeaponCard("Dagger"));
-		weapons.add(new WeaponCard("Lead Pipe"));
-		weapons.add(new WeaponCard("Revolver"));
-		weapons.add(new WeaponCard("Rope"));
-		weapons.add(new WeaponCard("Spanner"));
+		weapons.add(new WeaponCard("candlestick"));
+		weapons.add(new WeaponCard("dagger"));
+		weapons.add(new WeaponCard("lead pipe"));
+		weapons.add(new WeaponCard("revolver"));
+		weapons.add(new WeaponCard("rope"));
+		weapons.add(new WeaponCard("spanner"));
 
 		deck.addAll(characters);
 		deck.addAll(rooms);
