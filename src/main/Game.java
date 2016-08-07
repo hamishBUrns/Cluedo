@@ -319,6 +319,7 @@ public class Game {
 			}
 			if (board.currentRoom(p) != null) {
 				board.currentRoom(p).putInRoom(p, board);
+				System.out.println(p.getName()+"entered"+board.currentRoom(p).getName());
 				//board.printBoard();
 				return;
 			}
