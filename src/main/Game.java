@@ -90,7 +90,7 @@ public class Game {
 			//System.out.println(w.symbol());
 			Room r = rooms.get(index);
 			//System.out.println(r.getName());
-			r.putInRoom(w);
+			r.putInRoom(w, board);
 			//i++;
 			rooms.remove(r);
 			index = rand.nextInt(rooms.size());
@@ -240,13 +240,13 @@ public class Game {
 		while (!doors.containsKey(exit)) {
 			exit = client.readString("Please choose an exit from the list");
 		}
-		room.takeFromRoom(p);
+		room.takeFromRoom(p,board);
 		Tile destination = doors.get(exit);
 		p.setRow(destination.getRow());
 		p.setCol(destination.getCol());
 		Room newRoom = board.currentRoom(p);
 		if (newRoom != null) {
-			newRoom.putInRoom(p);
+			newRoom.putInRoom(p, board);
 		} else {
 			move(diceRoll, p);
 		}
@@ -289,8 +289,7 @@ public class Game {
 				System.out.println("Invalid input. Please use one of the following: N, S, E, W");
 			}
 			if (board.currentRoom(p) != null) {
-				board.getTile(p.getRow(), p.getCol()).setToken(null);
-				board.currentRoom(p).putInRoom(p);
+				board.currentRoom(p).putInRoom(p, board);
 				board.printBoard();
 				return;
 			}
@@ -315,15 +314,14 @@ public class Game {
 
 		Player suspect = playerFromString(c.getName(), allCharas);
 		Room susRoom = board.currentRoom(suspect);
-		if(susRoom != null){
-			board.getTile(suspect.getRow(), suspect.getCol()).setToken(null);
-			susRoom.takeFromRoom(suspect);
+		if(susRoom!=null){
+			susRoom.takeFromRoom(suspect,board);
 		}
-		room.putInRoom(suspect);
+		room.putInRoom(suspect,board);
 
 		Weapon weap = weapons.get(w.getName());
-		//board.currentRoom(weap).takeFromRoom(weap);
-		//room.putInRoom(weap);
+		board.currentRoom(weap).takeFromRoom(weap,board);
+		room.putInRoom(weap, board);
 
 		board.printBoard();
 
@@ -340,6 +338,9 @@ public class Game {
 	public Card refute(List<Card> suggested) {
 		// start at the index after the player suggesting
 		int current = turnIndex + 1;
+		if (current == players.size()) {
+			current = 0;
+		}
 		// go until we are back at suggesting player
 		while (current != turnIndex) {
 			for (Card c : players.get(current).getHand()) {

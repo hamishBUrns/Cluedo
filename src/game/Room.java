@@ -14,6 +14,7 @@ public class Room {
 		pieces = new ArrayList<>();
 		doors = new HashMap<>();
 		this.name=name;
+		index=0;
 	}
 	public void addTile(Tile t){
 		tiles.add(t);
@@ -27,18 +28,22 @@ public class Room {
 		return doors;
 	}
 
-	public void putInRoom(Token token){
+	public void putInRoom(Token token, Board board){
 		pieces.add(token);
-		Tile place= tiles.get(pieces.indexOf(token));
-		
-		place.setToken(token);
-		token.setRow(place.getRow());
-		token.setCol(place.getCol());
+
+		Tile oldTile=board.getTile(token.getRow(), token.getCol());
+		oldTile.setToken(null);
+
+		Tile newTile= tiles.get(index+7);
+		index++;
+		newTile.setToken(token);
+		token.setRow(newTile.getRow());
+		token.setCol(newTile.getCol());
 
 	}
-	public void takeFromRoom(Token token){
-		Tile place=tiles.get(pieces.indexOf(token));
-		place.setToken(null);
+	public void takeFromRoom(Token token, Board board){
+		Tile oldTile=board.getTile(token.getRow(), token.getCol());
+		oldTile.setToken(null);
 		pieces.remove(token);
 		//need to move Token col and row in outside method depending on where its going
 	}
