@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 
 public class TextClient {
 
+	/**
+	 * reads and returns a string from the user
+	 * @param msg
+	 * @return
+	 */
 	public String readString(String msg) {
 		System.out.println(msg);
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -19,6 +24,11 @@ public class TextClient {
 		}
 	}
 
+	/**
+	 * reads and returns an int from the user
+	 * @param msg
+	 * @return
+	 */
 	public int readInt(String msg) {
 		System.out.println(msg);
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -38,6 +48,9 @@ public class TextClient {
 		}
 	}
 
+	/**
+	 * print the list of keys used to represent the board
+	 */
 	public void printBoardKeys() {
 		System.out.println("//Board Keys//");
 		System.out.println("_ is a floor, W is a wall, D is a door, lowercase letters are rooms");
@@ -48,6 +61,9 @@ public class TextClient {
 		System.out.println("0 for NPCs.");
 	}
 
+	/**
+	 * print out the help list of commands
+	 */
 	public void help() {
 		System.out.println("Command list:");
 		System.out.println("checklist: see cards that have been checked and cannot be part of the solution");
