@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+
 import javax.swing.*;
 
 import main.Game;
@@ -64,9 +66,14 @@ public class BoardFrame extends JFrame{
 
 	private JPanel testPanel(){
 		JPanel test = new JPanel();
-		test.add(new JButton("Suggest"));
+
+		JButton sug = new JButton("Suggest");
+		sug.setMnemonic(KeyEvent.VK_S);
+
+		test.add(sug);
 		test.add(new JButton("Accuse"));
 		test.add(new JButton("End Turn"));
+		test.add(suspects());
 		return test;
 	}
 
@@ -80,6 +87,12 @@ public class BoardFrame extends JFrame{
 		JPanel hand = new JPanel();
 		hand.add(new JTextArea("the hand goes here"));
 		return hand;
+	}
+
+	private JComboBox suspects(){
+		String [] items = {"a", "b", "c"};
+		JComboBox sus = new JComboBox(items);
+		return sus;
 	}
 
 	public static void main(String args[]){
