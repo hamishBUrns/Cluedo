@@ -73,9 +73,10 @@ public class BoardFrame extends JFrame{
 		sug.setMnemonic(KeyEvent.VK_S);//need key listener obvs
 		sug.setActionCommand("suggest");
 		sug.addActionListener(control);
+		sug.addKeyListener(control);
 
 		JButton acc = new JButton("Accuse");
-		acc.setMnemonic(KeyEvent.VK_A);
+		acc.setMnemonic(KeyEvent.VK_A);//key listener here too lol
 		acc.setActionCommand("accuse");
 		acc.addActionListener(control);
 

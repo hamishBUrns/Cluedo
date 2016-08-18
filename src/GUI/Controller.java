@@ -1,9 +1,8 @@
 package GUI;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class Controller implements ActionListener{
+public class Controller implements ActionListener, KeyListener{
 
 	BoardFrame view;
 
@@ -19,6 +18,22 @@ public class Controller implements ActionListener{
 			//do accuse things
 		}
 
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
 	}
 
 }
