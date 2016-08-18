@@ -328,7 +328,7 @@ public class Game {
 			}
 			if (board.currentRoom(p) != null) {
 				board.currentRoom(p).putInRoom(p, board);
-				System.out.println(p.getName()+"entered"+board.currentRoom(p).getName());
+				System.out.println(p.getName()+" entered the "+board.currentRoom(p).getName());
 				//board.printBoard();
 				return;
 			}
@@ -477,7 +477,7 @@ public class Game {
 		return w;
 	}
 
-	/**
+	/**sequence diagram
 	 * Returns true if accusation matches the solution
 	 *
 	 * @param accusation
