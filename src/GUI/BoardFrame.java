@@ -32,11 +32,13 @@ public class BoardFrame extends JFrame{
 
 	//STEP 7: profit
 
+	Controller control;
 	JMenuBar menuBar;
 
 	public BoardFrame() {
 		super("Cluedo");
 
+		control = new Controller(this);
 		menuBar = new JMenuBar();
 		menuBar.add(menu());
 
@@ -68,10 +70,17 @@ public class BoardFrame extends JFrame{
 		JPanel test = new JPanel();
 
 		JButton sug = new JButton("Suggest");
-		sug.setMnemonic(KeyEvent.VK_S);
+		sug.setMnemonic(KeyEvent.VK_S);//need key listener obvs
+		sug.setActionCommand("suggest");
+		sug.addActionListener(control);
+
+		JButton acc = new JButton("Accuse");
+		acc.setMnemonic(KeyEvent.VK_A);
+		acc.setActionCommand("accuse");
+		acc.addActionListener(control);
 
 		test.add(sug);
-		test.add(new JButton("Accuse"));
+		test.add(acc);
 		test.add(new JButton("End Turn"));
 		test.add(suspects());
 		return test;
