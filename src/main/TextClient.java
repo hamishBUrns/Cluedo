@@ -52,7 +52,7 @@ public class TextClient {
 	 * print the list of keys used to represent the board
 	 */
 	public void printBoardKeys() {
-		System.out.println("//Board Kyes//");
+		System.out.println("//Board Keys//");
 		System.out.println("_ is a floor, W is a wall, D is a door, lowercase letters are rooms");
 		System.out.println(
 				"k is kitchen, b is ballroom, c is conservatory, d is dining room, r is billiard room, l is library, n is lounge, h is hall, s is study");

@@ -1,4 +1,4 @@
-package game;
+package board;
 
 public interface Token {
 	public int getRow();

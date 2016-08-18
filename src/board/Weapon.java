@@ -1,4 +1,4 @@
-package game;
+package board;
 
 public class Weapon implements Token {
 	private int row;

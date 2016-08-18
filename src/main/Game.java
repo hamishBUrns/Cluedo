@@ -2,8 +2,8 @@ package main;
 
 import java.util.*;
 
+import board.*;
 import cards.*;
-import game.*;
 
 public class Game {
 
@@ -328,6 +328,7 @@ public class Game {
 			}
 			if (board.currentRoom(p) != null) {
 				board.currentRoom(p).putInRoom(p, board);
+				System.out.println(p.getName()+"entered"+board.currentRoom(p).getName());
 				//board.printBoard();
 				return;
 			}
