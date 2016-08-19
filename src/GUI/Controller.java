@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.event.*;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -10,10 +11,12 @@ public class Controller implements ActionListener, KeyListener{
 
 	Game game;
 	BoardFrame view;
+	StartDialog startDialog;
 
 	public Controller(BoardFrame view, Game game){
 		this.game = game;
 		this.view = view;
+		this.startDialog = new StartDialog(view);
 	}
 
 	/**
@@ -22,6 +25,7 @@ public class Controller implements ActionListener, KeyListener{
 	 */
 	public Controller(BoardFrame view){
 		this.view = view;
+
 	}
 
 	@Override
@@ -49,6 +53,10 @@ public class Controller implements ActionListener, KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+	}
+
+	public List<String> getAllCharacters(List<String> charas){
+		return charas;
 	}
 
 	public String getSuspect(){

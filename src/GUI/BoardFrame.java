@@ -129,7 +129,7 @@ public class BoardFrame extends JFrame{
 		//JComboBox<String> sus = new JComboBox<String>(options);
 		String s = (String) JOptionPane.showInputDialog(
 				(JFrame) this,
-				"testing",
+				"Who dunnit?",
 				"u talkin to ME??",
 				JOptionPane.QUESTION_MESSAGE,
 				null,
