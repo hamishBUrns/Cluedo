@@ -2,10 +2,24 @@ package GUI;
 
 import java.awt.event.*;
 
+import javax.swing.JOptionPane;
+
+import main.Game;
+
 public class Controller implements ActionListener, KeyListener{
 
+	Game game;
 	BoardFrame view;
 
+	public Controller(BoardFrame view, Game game){
+		this.game = game;
+		this.view = view;
+	}
+
+	/**
+	 * for testing the view/controller interaction without worrying game logic yet
+	 * @param view
+	 */
 	public Controller(BoardFrame view){
 		this.view = view;
 	}
@@ -14,6 +28,7 @@ public class Controller implements ActionListener, KeyListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("suggest")){
 			//do suggest things
+			System.out.println(getSuspect());
 		}else if(e.getActionCommand().equals("accuse")){
 			//do accuse things
 		}
@@ -34,6 +49,11 @@ public class Controller implements ActionListener, KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+	}
+
+	public String getSuspect(){
+		String[] options = {"is", "this","working", "?"};
+		return view.suspectDialog(options);
 	}
 
 }

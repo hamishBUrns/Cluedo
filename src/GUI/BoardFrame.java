@@ -34,6 +34,7 @@ public class BoardFrame extends JFrame{
 
 	Controller control;
 	JMenuBar menuBar;
+	JTextArea checklist;
 
 	public BoardFrame() {
 		super("Cluedo");
@@ -50,6 +51,10 @@ public class BoardFrame extends JFrame{
 		setVisible(true);
 	}
 
+	/**
+	 * set up the menu
+	 * @return
+	 */
 	private JMenu menu(){
 		JMenu menu = new JMenu("File");
 		menu.add(new JMenuItem("Help"));
@@ -57,6 +62,10 @@ public class BoardFrame extends JFrame{
 		return menu;
 	}
 
+	/**
+	 * set up the tapped pane
+	 * @return
+	 */
 	private JTabbedPane createTabbedPane(){
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(300,500));
@@ -70,39 +79,63 @@ public class BoardFrame extends JFrame{
 		JPanel test = new JPanel();
 
 		JButton sug = new JButton("Suggest");
-		sug.setMnemonic(KeyEvent.VK_S);//need key listener obvs
+		sug.setMnemonic(KeyEvent.VK_S);//actually alt + s bc weird swing stuff??
 		sug.setActionCommand("suggest");
 		sug.addActionListener(control);
-		sug.addKeyListener(control);
 
 		JButton acc = new JButton("Accuse");
-		acc.setMnemonic(KeyEvent.VK_A);//key listener here too lol
+		acc.setMnemonic(KeyEvent.VK_A);//actually alt + a
 		acc.setActionCommand("accuse");
 		acc.addActionListener(control);
 
+		JButton end = new JButton("End Turn");
+		end.setMnemonic(KeyEvent.VK_E);
+		end.setActionCommand("end");
+		end.addActionListener(control);
+
 		test.add(sug);
 		test.add(acc);
-		test.add(new JButton("End Turn"));
-		test.add(suspects());
+		test.add(end);
 		return test;
 	}
 
+	/**
+	 * set up the checklist tab panel
+	 * @return
+	 */
 	private JPanel checklistPanel(){
-		JPanel checklist = new JPanel();
-		checklist.add(new JTextArea("the checklist goes here"));
-		return checklist;
+		JPanel checkPanel = new JPanel();
+		checklist = new JTextArea("the checklist goes here");
+		checklist.setEditable(false);
+		checkPanel.add(checklist);
+		return checkPanel;
 	}
 
+	/**
+	 * set up the player hand tab panel
+	 * @return
+	 */
 	private JPanel handPanel(){
 		JPanel hand = new JPanel();
 		hand.add(new JTextArea("the hand goes here"));
 		return hand;
 	}
 
-	private JComboBox suspects(){
-		String [] items = {"a", "b", "c"};
-		JComboBox sus = new JComboBox(items);
-		return sus;
+	public void updateChecklist(String text){
+		checklist.setText(text);
+	}
+
+	public String suspectDialog(String [] options){
+		//JComboBox<String> sus = new JComboBox<String>(options);
+		String s = (String) JOptionPane.showInputDialog(
+				(JFrame) this,
+				"testing",
+				"u talkin to ME??",
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]);
+		return s;
 	}
 
 	public static void main(String args[]){
