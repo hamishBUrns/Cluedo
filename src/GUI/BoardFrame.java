@@ -7,6 +7,11 @@ import javax.swing.*;
 
 import main.Game;
 
+/**
+ * Main GUI for the Cluedo game
+ * @author kraemezoe
+ *
+ */
 public class BoardFrame extends JFrame{
 	//selector fields for choosing character/room/weapons?
 	//draw board from images essentially replacing the toString bits
@@ -41,7 +46,6 @@ public class BoardFrame extends JFrame{
 		super("Cluedo");
 
 		control = new Controller(this);
-		PlayerSetupDialog playerSetup = new PlayerSetupDialog(this, control, psdRadioGroup);
 		menuBar = new JMenuBar();
 		menuBar.add(menu());
 
@@ -51,17 +55,17 @@ public class BoardFrame extends JFrame{
 		add(createTabbedPane());
 		pack();
 		setVisible(true);
+
+		startGameSetup();
+	}
+
+	public void startGameSetup(){
+		setUpPSDButtons();
+		PlayerSetupDialog playerSetup = new PlayerSetupDialog(this, control, psdRadioGroup);
 	}
 
 	public void setUpPSDButtons(){
-		//list of characters
-		//create one button for each, set actionCommand to chara name
-		//should probs get button name direct from one of the player objects
-		//???
-		//profit
-
 		psdRadioGroup = new ButtonGroup();
-
 		for(String s : control.getAllCharacters()){
 			JRadioButton newButt = new JRadioButton(s);
 			newButt.setActionCommand(s);

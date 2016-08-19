@@ -8,6 +8,11 @@ import javax.swing.JOptionPane;
 import board.Player;
 import main.Game;
 
+/**
+ * i'll do this later
+ * @author kraemezoe
+ *
+ */
 public class Controller implements ActionListener, KeyListener{
 
 	Game game;
@@ -55,6 +60,10 @@ public class Controller implements ActionListener, KeyListener{
 		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * returns a list of name strings of all the characters in the game
+	 * @return
+	 */
 	public List<String> getAllCharacters(){
 		List<String> charas = new ArrayList<>();
 		for(Player p : game.getPlayers()){
