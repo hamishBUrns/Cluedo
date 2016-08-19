@@ -1,22 +1,22 @@
 package GUI;
 
 import java.awt.event.*;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
+import board.Player;
 import main.Game;
 
 public class Controller implements ActionListener, KeyListener{
 
 	Game game;
 	BoardFrame view;
-	StartDialog startDialog;
+	PlayerSetupDialog playerSetup;
 
 	public Controller(BoardFrame view, Game game){
 		this.game = game;
 		this.view = view;
-		this.startDialog = new StartDialog(view);
 	}
 
 	/**
@@ -55,7 +55,11 @@ public class Controller implements ActionListener, KeyListener{
 		// TODO Auto-generated method stub
 	}
 
-	public List<String> getAllCharacters(List<String> charas){
+	public List<String> getAllCharacters(){
+		List<String> charas = new ArrayList<>();
+		for(Player p : game.getPlayers()){
+			charas.add(p.getName());
+		}
 		return charas;
 	}
 

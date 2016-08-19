@@ -35,11 +35,13 @@ public class BoardFrame extends JFrame{
 	Controller control;
 	JMenuBar menuBar;
 	JTextArea checklist;
+	private ButtonGroup psdRadioGroup;
 
 	public BoardFrame() {
 		super("Cluedo");
 
 		control = new Controller(this);
+		PlayerSetupDialog playerSetup = new PlayerSetupDialog(this, control, psdRadioGroup);
 		menuBar = new JMenuBar();
 		menuBar.add(menu());
 
@@ -49,6 +51,26 @@ public class BoardFrame extends JFrame{
 		add(createTabbedPane());
 		pack();
 		setVisible(true);
+	}
+
+	public void setUpPSDButtons(){
+		//list of characters
+		//create one button for each, set actionCommand to chara name
+		//should probs get button name direct from one of the player objects
+		//???
+		//profit
+
+		psdRadioGroup = new ButtonGroup();
+
+		for(String s : control.getAllCharacters()){
+			JRadioButton newButt = new JRadioButton(s);
+			newButt.setActionCommand(s);
+			psdRadioGroup.add(newButt);
+		}
+	}
+
+	public void updatePSDOptions(){
+		psdRadioGroup.getSelection().setEnabled(false);
 	}
 
 	/**
