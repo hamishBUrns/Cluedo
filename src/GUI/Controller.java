@@ -6,13 +6,9 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import board.Player;
-<<<<<<< HEAD
 import board.Tile;
 import main.Game;
 import main.TextClient;
-=======
-import main.Game;
->>>>>>> 3211853901dd5c05f14444ba8bc7b587b6ebabd6
 
 /**
  * i'll do this later
@@ -25,15 +21,15 @@ public class Controller implements ActionListener, KeyListener{
 	BoardFrame view;
 	PlayerSetupDialog playerSetup;
 
-<<<<<<< HEAD
 	public Controller(){
 		this.game = new Game(new TextClient(),3);
 		this.view = new BoardFrame(this);
-=======
+		doPlayerSetupView();
+	}
+
 	public Controller(BoardFrame view, Game game){
 		this.game = game;
 		this.view = view;
->>>>>>> 3211853901dd5c05f14444ba8bc7b587b6ebabd6
 	}
 
 	/**
@@ -45,8 +41,20 @@ public class Controller implements ActionListener, KeyListener{
 
 	}
 
+	public void doPlayerSetupView(){
+		playerSetup = new PlayerSetupDialog(view, this);
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("playerSetup")){
+			if(playerSetup.returnChara() != null && !playerSetup.returnNick().isEmpty()){
+				System.out.println(playerSetup.returnNick());
+				System.out.println(playerSetup.returnChara());
+				playerSetup.resetDialog();
+			}
+
+		}
 		if(e.getActionCommand().equals("suggest")){
 			//do suggest things
 			System.out.println(getSuspect());
@@ -78,13 +86,12 @@ public class Controller implements ActionListener, KeyListener{
 	 */
 	public List<String> getAllCharacters(){
 		List<String> charas = new ArrayList<>();
-		for(Player p : game.getPlayers()){
+		for(Player p : game.getAllCharas()){
 			charas.add(p.getName());
 		}
 		return charas;
 	}
 
-<<<<<<< HEAD
 	public Tile[][] getTiles(){
 		for(Tile[] rows:game.getBoard().getTiles()){
 			for(Tile t: rows ){
@@ -95,17 +102,12 @@ public class Controller implements ActionListener, KeyListener{
 		return game.getBoard().getTiles();
 	}
 
-=======
->>>>>>> 3211853901dd5c05f14444ba8bc7b587b6ebabd6
 	public String getSuspect(){
 		String[] options = {"is", "this","working", "?"};
 		return view.suspectDialog(options);
 	}
 
-<<<<<<< HEAD
 	public static void main(String args[]){
 		new Controller();
 	}
-=======
->>>>>>> 3211853901dd5c05f14444ba8bc7b587b6ebabd6
 }

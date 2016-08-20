@@ -32,11 +32,13 @@ public class Game {
 		noWinner = true;
 		board = new Board();
 
-		assignCharacters();
-		dealCards();
-		placeWeapons();
-		client.hashCode();
-		runGame();
+		//assignCharacters();
+		//dealCards();
+		//placeWeapons();
+		//client.hashCode();
+		//runGame();
+
+
 	}
 
 	/**
@@ -567,6 +569,13 @@ public class Game {
 		defaults.add(new Player("Mrs Peacock", 19, 24));
 		defaults.add(new Player("Professor Plum", 24, 7));
 
+		allCharas.add(new Player("Miss Scarlett", 0, 9));
+		allCharas.add(new Player("Colonel Mustard", 0, 15));
+		allCharas.add(new Player("Mrs White", 6, 24));
+		allCharas.add(new Player("The Reverend Green", 17, 0));
+		allCharas.add(new Player("Mrs Peacock", 19, 24));
+		allCharas.add(new Player("Professor Plum", 24, 7));
+
 		for (Player p : defaults) { // Putting players on tiles.
 			board.getTile(p.getRow(), p.getCol()).setToken(p);
 		}
@@ -589,6 +598,10 @@ public class Game {
 	 */
 	public List<Player> getPlayers() {
 		return players;
+	}
+
+	public List<Player> getAllCharas() {
+		return allCharas;
 	}
 
 	/**
