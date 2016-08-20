@@ -18,6 +18,7 @@ public class Game {
 	private Board board;
 
 	private int turnIndex;
+	private int diceRoll;
 	private boolean noWinner;
 
 	/**
@@ -31,42 +32,16 @@ public class Game {
 		checklist = new Checklist();
 		noWinner = true;
 		board = new Board();
+		diceRoll=0;
+		turnIndex=0;
 
 		assignCharacters();
 		dealCards();
 		placeWeapons();
 		client.hashCode();
-		runGame();
+
 	}
 
-	/**
-	 * Runs through the turns for the players while someone hasn't won and all
-	 * the players haven't lost
-	 */
-	public void runGame() {
-		client.printBoardKeys();
-		System.out.println("Starting game!");
-		play: while (true) {
-			turnIndex = 0;
-			for (Player p : players) {
-				if (!noWinner) {
-					System.out.println("GAME WON!!!");
-					break play;
-				}
-				if (!playersleft()) {
-					System.out.println("Wow, you all suck at this. Game over, I guess.");
-					break play;
-				}
-
-				if (p.isStillIn()) {
-					System.out.println();
-					client.readString(p.getName() + "'s turn. Ready?");
-					turn(p);
-					turnIndex++;
-				}
-			}
-		}
-	}
 
 	/**
 	 * Creates the weapons of the game and puts them in rooms
@@ -75,31 +50,18 @@ public class Game {
 		for (Card c : deck.weapons) {
 			weapons.put(c.getName(), new Weapon(c.getName()));
 		}
-		// weapons.put("candlestick", new Weapon("candlestick"));
-		// weapons.put("rope", new Weapon("rope"));
-		// weapons.put("dagger", new Weapon("dagger"));
-		// weapons.put("leadpipe", new Weapon("leadpipe"));
-		// weapons.put("revolver", new Weapon("revolver"));
-		// weapons.put("spanner", new Weapon("spanner"));
 
 		List<Room> rooms = new ArrayList<>();
 		rooms.addAll(board.getRooms());
 		Random rand = new Random();
 		int index = rand.nextInt(rooms.size());
-		// int i = 0;
 
 		for (Weapon w : weapons.values()) {
-			// System.out.println(w.symbol());
 			Room r = rooms.get(index);
-			// System.out.println(r.getName());
 			r.putInRoom(w, board);
-			// i++;
 			rooms.remove(r);
 			index = rand.nextInt(rooms.size());
 		}
-		// for (int i = 0; i < weapons.size(); i++) {
-		// board.getRooms().get(i).putInRoom(weapons.get(i));
-		// }
 	}
 
 	/**
@@ -162,29 +124,47 @@ public class Game {
 	}
 
 	// ===== turn logic starts here ==== //
-
-	/**
-	 * Runs through actions taken on a players turn
-	 *
-	 * @param p
-	 */
-	public void turn(Player p) {
-		System.out.println("Cards in " + p.getName() + "'s hand are: ");
-		p.printHand();
-
+	public void rollDice(){
 		Random rand = new Random();
-		int diceRoll = rand.nextInt(11) + 2; // generate a random number between
+		diceRoll = rand.nextInt(11) + 2; // generate a random number between
 												// 2 and 12
-		System.out.println(p.getName() + " rolled a " + diceRoll);
-		Room startRoom = board.currentRoom(p);
-		if (startRoom != null) {
-			leaveRoom(diceRoll, startRoom, p);
-		} else {
-			move(diceRoll, p);
-		}
-		board.printBoard();
-		askCommand(p);
 	}
+
+	public void endTurn(){
+		if(turnIndex==players.size()){
+			turnIndex=0;
+		}
+		else{
+			turnIndex++;
+		}
+	}
+
+	public boolean canMove(){
+		Player currentPlayer=players.get(turnIndex);
+		if(!currentPlayer.isStillIn()){
+			return false;
+		}
+		if(diceRoll==0){
+			return false;
+		}
+		if(!noWinner){
+			return false;
+		}
+		if(board.currentRoom(currentPlayer)!=null){
+			return false;
+		}
+		return true;
+	}
+
+	public void tryMove(String dir){
+		Player currentPlayer = players.get(turnIndex);
+		if(!canMove()){
+			System.out.println("cant move");
+			return;
+		}
+		move(players.get(turnIndex),dir);
+	}
+
 
 	/**
 	 * gets and handles a command from the user, and ends a player's turn
@@ -286,55 +266,48 @@ public class Game {
 		if (newRoom != null) {
 			newRoom.putInRoom(p, board);
 		} else {
-			move(diceRoll, p);
+			//move(diceRoll, p);
 		}
 	}
 
 	/**
 	 * gets user input to move them around the board
 	 */
-	public void move(int diceRoll, Player p) {
-		while (diceRoll > 0) {
-			board.printBoard();
-			System.out.println("Steps left: " + diceRoll);
-			String dir = client.readString("Choose a direction").toUpperCase();
-			switch (dir) {
-			case ("N"):
-				// go north
-				if (board.moveValid(p.getRow(), p.getCol(), p.getRow() - 1, p.getCol(), p)) {
-					diceRoll--;
-				}
-				break;
-			case ("S"):
-				// go south
-				if (board.moveValid(p.getRow(), p.getCol(), p.getRow() + 1, p.getCol(), p)) {
-					diceRoll--;
-				}
-				break;
-			case ("E"):
-				// go east
-				if (board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() + 1, p)) {
-					diceRoll--;
-				}
-				break;
-			case ("W"):
-				// go west
-				if (board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() - 1, p)) {
-					diceRoll--;
-				}
-				break;
-			default:
-				System.out.println("Invalid input. Please use one of the following: N, S, E, W");
-			}
-			if (board.currentRoom(p) != null) {
-				board.currentRoom(p).putInRoom(p, board);
-				System.out.println(p.getName()+" entered the "+board.currentRoom(p).getName());
-				//board.printBoard();
-				return;
-			}
-		}
-		// board.printBoard();
+	public void move(Player p,String dir) {
+		dir=dir.toUpperCase();
 
+		switch (dir) {
+		case ("N"):
+			// go north
+			if (board.moveValid(p.getRow(), p.getCol(), p.getRow() - 1, p.getCol(), p)) {
+				diceRoll--;
+			}
+		break;
+		case ("S"):
+			// go south
+			if (board.moveValid(p.getRow(), p.getCol(), p.getRow() + 1, p.getCol(), p)) {
+				diceRoll--;
+			}
+		break;
+		case ("E"):
+			// go east
+			if (board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() + 1, p)) {
+				diceRoll--;
+			}
+		break;
+		case ("W"):
+			// go west
+			if (board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() - 1, p)) {
+				diceRoll--;
+			}
+		break;
+		default:
+			System.out.println("Invalid input. Please use one of the following: N, S, E, W");
+		}
+		if (board.currentRoom(p) != null) {
+			board.currentRoom(p).putInRoom(p, board);
+			return;
+			}
 	}
 
 	/**
@@ -575,6 +548,7 @@ public class Game {
 			players.add(defaults.get(numPlayers));
 			numPlayers--;
 		}
+		placeWeapons();
 
 	}
 
