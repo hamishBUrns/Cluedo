@@ -1,10 +1,17 @@
 package GUI;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+
 import javax.swing.*;
 
 import main.Game;
 
+/**
+ * Main GUI for the Cluedo game
+ * @author kraemezoe
+ *
+ */
 public class BoardFrame extends JFrame{
 	//selector fields for choosing character/room/weapons?
 	//draw board from images essentially replacing the toString bits
@@ -41,11 +48,15 @@ public class BoardFrame extends JFrame{
 	//STEP 8: Change logic of checklist to be personal
 			//Display Checklist
 
+	Controller control;
 	JMenuBar menuBar;
+	JTextArea checklist;
+	private ButtonGroup psdRadioGroup;
 
 	public BoardFrame() {
 		super("Cluedo");
 
+		control = new Controller(this);
 		menuBar = new JMenuBar();
 		menuBar.add(menu());
 
@@ -55,8 +66,32 @@ public class BoardFrame extends JFrame{
 		add(createTabbedPane());
 		pack();
 		setVisible(true);
+
+		startGameSetup();
 	}
 
+	public void startGameSetup(){
+		setUpPSDButtons();
+		PlayerSetupDialog playerSetup = new PlayerSetupDialog(this, control, psdRadioGroup);
+	}
+
+	public void setUpPSDButtons(){
+		psdRadioGroup = new ButtonGroup();
+		for(String s : control.getAllCharacters()){
+			JRadioButton newButt = new JRadioButton(s);
+			newButt.setActionCommand(s);
+			psdRadioGroup.add(newButt);
+		}
+	}
+
+	public void updatePSDOptions(){
+		psdRadioGroup.getSelection().setEnabled(false);
+	}
+
+	/**
+	 * set up the menu
+	 * @return
+	 */
 	private JMenu menu(){
 		JMenu menu = new JMenu("File");
 		menu.add(new JMenuItem("Help"));
@@ -64,6 +99,10 @@ public class BoardFrame extends JFrame{
 		return menu;
 	}
 
+	/**
+	 * set up the tapped pane
+	 * @return
+	 */
 	private JTabbedPane createTabbedPane(){
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(300,500));
@@ -75,22 +114,65 @@ public class BoardFrame extends JFrame{
 
 	private JPanel testPanel(){
 		JPanel test = new JPanel();
-		test.add(new JButton("Suggest"));
-		test.add(new JButton("Accuse"));
-		test.add(new JButton("End Turn"));
+
+		JButton sug = new JButton("Suggest");
+		sug.setMnemonic(KeyEvent.VK_S);//actually alt + s bc weird swing stuff??
+		sug.setActionCommand("suggest");
+		sug.addActionListener(control);
+
+		JButton acc = new JButton("Accuse");
+		acc.setMnemonic(KeyEvent.VK_A);//actually alt + a
+		acc.setActionCommand("accuse");
+		acc.addActionListener(control);
+
+		JButton end = new JButton("End Turn");
+		end.setMnemonic(KeyEvent.VK_E);
+		end.setActionCommand("end");
+		end.addActionListener(control);
+
+		test.add(sug);
+		test.add(acc);
+		test.add(end);
 		return test;
 	}
 
+	/**
+	 * set up the checklist tab panel
+	 * @return
+	 */
 	private JPanel checklistPanel(){
-		JPanel checklist = new JPanel();
-		checklist.add(new JTextArea("the checklist goes here"));
-		return checklist;
+		JPanel checkPanel = new JPanel();
+		checklist = new JTextArea("the checklist goes here");
+		checklist.setEditable(false);
+		checkPanel.add(checklist);
+		return checkPanel;
 	}
 
+	/**
+	 * set up the player hand tab panel
+	 * @return
+	 */
 	private JPanel handPanel(){
 		JPanel hand = new JPanel();
 		hand.add(new JTextArea("the hand goes here"));
 		return hand;
+	}
+
+	public void updateChecklist(String text){
+		checklist.setText(text);
+	}
+
+	public String suspectDialog(String [] options){
+		//JComboBox<String> sus = new JComboBox<String>(options);
+		String s = (String) JOptionPane.showInputDialog(
+				(JFrame) this,
+				"Who dunnit?",
+				"u talkin to ME??",
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]);
+		return s;
 	}
 
 	public static void main(String args[]){
