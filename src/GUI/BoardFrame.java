@@ -13,22 +13,33 @@ public class BoardFrame extends JFrame{
 	//keyListener to handle movement
 
 	//STEP 1: set up pop-up dialogues that start the game
+			//Players put in name //text field
+			// players choose character //radio box
 
-	//STEP 1.5: get the board drawing again + the skeleton of the rest of the GUI
-
+	//STEP 1.5: Board drawing
+			//Drawing weapon and players
+			//Drawing on weapon and player movement
+	
 	//STEP 2: change move to use key listener
 
-	//STEP 2.5: get end turn button to work
+	//STEP 2.5: End Turn
+			// integrate logic
 
-	//STEP 3: add dialogue pop-ups that the start of turns
+	//STEP 3: Dialogue boxes at start of turn with information
+			//Dialogue box at end of game
 
-	//STEP 4: get suggestion n accusation pop-ups/buttons working
+	//STEP 4: Suggestion/accuse
+			//Pop ups with combo boxes or text fields
+	
+	//STEP 5: Dialogue box when attempting to close main window/ new game etc
 
-	//STEP 5: figure out how we're doing the hands???
+	//STEP 6: When exiting room select door with mouse to choose
 
-	//STEP 6: ???
-
-	//STEP 7: profit
+	//STEP 7: Displaying hand as images
+			//Otherwise text
+	
+	//STEP 8: Change logic of checklist to be personal
+			//Display Checklist
 
 	JMenuBar menuBar;
 
