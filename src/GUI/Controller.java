@@ -26,8 +26,12 @@ public class Controller implements ActionListener, KeyListener{
 	public Controller(){
 		this.game = new Game(new TextClient());
 		this.view = new BoardFrame(this);
-		System.out.println("comments work");
-		view.addKeyListener(this);
+		doPlayerSetupView();
+	}
+
+	public Controller(BoardFrame view, Game game){
+		this.game = game;
+		this.view = view;
 
 	}
 
@@ -40,8 +44,20 @@ public class Controller implements ActionListener, KeyListener{
 
 	}
 
+	public void doPlayerSetupView(){
+		playerSetup = new PlayerSetupDialog(view, this);
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("playerSetup")){
+			if(playerSetup.returnChara() != null && !playerSetup.returnNick().isEmpty()){
+				System.out.println(playerSetup.returnNick());
+				System.out.println(playerSetup.returnChara());
+				playerSetup.resetDialog();
+			}
+
+		}
 		if(e.getActionCommand().equals("suggest")){
 			//do suggest things
 			System.out.println(getSuspect());
@@ -89,7 +105,7 @@ public class Controller implements ActionListener, KeyListener{
 	 */
 	public List<String> getAllCharacters(){
 		List<String> charas = new ArrayList<>();
-		for(Player p : game.getPlayers()){
+		for(Player p : game.getAllCharas()){
 			charas.add(p.getName());
 		}
 		return charas;
@@ -107,6 +123,7 @@ public class Controller implements ActionListener, KeyListener{
 		String[] options = {"is", "this","working", "?"};
 		return view.suspectDialog(options);
 	}
+
 
 	public void printBoard(){
 		game.getBoard().printBoard();

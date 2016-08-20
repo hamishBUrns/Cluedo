@@ -48,12 +48,10 @@ public class BoardFrame extends JFrame{
 	//STEP 8: Change logic of checklist to be personal
 			//Display Checklist
 
-	Controller control;
-	JMenuBar menuBar;
-	JTextArea checklist;
-	MyCanvas canvas;
-
-	private ButtonGroup psdRadioGroup;
+	private Controller control;
+	private JMenuBar menuBar;
+	private JTextArea checklist;
+	private MyCanvas canvas;
 
 	public BoardFrame(Controller ctrl) {
 		super("Cluedo");
@@ -77,22 +75,18 @@ public class BoardFrame extends JFrame{
 
 	}
 
-	public void startGameSetup(){
-		setUpPSDButtons();
-		PlayerSetupDialog playerSetup = new PlayerSetupDialog(this, control, psdRadioGroup);
-	}
-
-	public void setUpPSDButtons(){
-		psdRadioGroup = new ButtonGroup();
-		for(String s : control.getAllCharacters()){
-			JRadioButton newButt = new JRadioButton(s);
-			newButt.setActionCommand(s);
-			psdRadioGroup.add(newButt);
-		}
-	}
-
-	public void updatePSDOptions(){
-		psdRadioGroup.getSelection().setEnabled(false);
+	public int getNumPlayers(){
+		//setUpPSDPanel();
+		Object [] options = {2, 3, 4, 5, 6};
+		int numPlayers = (int) JOptionPane.showInputDialog(
+				(JFrame) this,
+				"How many players?",
+				"Welcome to Cluedo!",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				options,
+				options[0]);
+		return numPlayers;
 	}
 
 	/**
@@ -161,7 +155,9 @@ public class BoardFrame extends JFrame{
 	 */
 	private JPanel handPanel(){
 		JPanel hand = new JPanel();
-		hand.add(new JTextArea("the hand goes here"));
+		JTextArea cards = new JTextArea("the hand goes here");
+		cards.setEditable(false);
+		hand.add(cards);
 		return hand;
 	}
 
