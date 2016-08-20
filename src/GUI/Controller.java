@@ -6,9 +6,13 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import board.Player;
+<<<<<<< HEAD
 import board.Tile;
 import main.Game;
 import main.TextClient;
+=======
+import main.Game;
+>>>>>>> 3211853901dd5c05f14444ba8bc7b587b6ebabd6
 
 /**
  * i'll do this later
@@ -21,9 +25,15 @@ public class Controller implements ActionListener, KeyListener{
 	BoardFrame view;
 	PlayerSetupDialog playerSetup;
 
+<<<<<<< HEAD
 	public Controller(){
 		this.game = new Game(new TextClient(),3);
 		this.view = new BoardFrame(this);
+=======
+	public Controller(BoardFrame view, Game game){
+		this.game = game;
+		this.view = view;
+>>>>>>> 3211853901dd5c05f14444ba8bc7b587b6ebabd6
 	}
 
 	/**
@@ -74,6 +84,7 @@ public class Controller implements ActionListener, KeyListener{
 		return charas;
 	}
 
+<<<<<<< HEAD
 	public Tile[][] getTiles(){
 		for(Tile[] rows:game.getBoard().getTiles()){
 			for(Tile t: rows ){
@@ -84,12 +95,17 @@ public class Controller implements ActionListener, KeyListener{
 		return game.getBoard().getTiles();
 	}
 
+=======
+>>>>>>> 3211853901dd5c05f14444ba8bc7b587b6ebabd6
 	public String getSuspect(){
 		String[] options = {"is", "this","working", "?"};
 		return view.suspectDialog(options);
 	}
 
+<<<<<<< HEAD
 	public static void main(String args[]){
 		new Controller();
 	}
+=======
+>>>>>>> 3211853901dd5c05f14444ba8bc7b587b6ebabd6
 }

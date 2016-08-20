@@ -52,10 +52,12 @@ public class BoardFrame extends JFrame{
 	JMenuBar menuBar;
 	JTextArea checklist;
 	MyCanvas canvas;
+
 	private ButtonGroup psdRadioGroup;
 
 	public BoardFrame(Controller ctrl) {
 		super("Cluedo");
+
 
 		control = ctrl;
 		menuBar = new JMenuBar();
@@ -72,6 +74,7 @@ public class BoardFrame extends JFrame{
 		setVisible(true);
 
 		//startGameSetup();
+
 	}
 
 	public void startGameSetup(){
