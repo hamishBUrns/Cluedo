@@ -26,7 +26,7 @@ public class BoardFrame extends JFrame{
 	//STEP 1.5: Board drawing
 			//Drawing weapon and players
 			//Drawing on weapon and player movement
-	
+
 	//STEP 2: change move to use key listener
 
 	//STEP 2.5: End Turn
@@ -37,37 +37,41 @@ public class BoardFrame extends JFrame{
 
 	//STEP 4: Suggestion/accuse
 			//Pop ups with combo boxes or text fields
-	
+
 	//STEP 5: Dialogue box when attempting to close main window/ new game etc
 
 	//STEP 6: When exiting room select door with mouse to choose
 
 	//STEP 7: Displaying hand as images
 			//Otherwise text
-	
+
 	//STEP 8: Change logic of checklist to be personal
 			//Display Checklist
 
 	Controller control;
 	JMenuBar menuBar;
 	JTextArea checklist;
+	MyCanvas canvas;
 	private ButtonGroup psdRadioGroup;
 
-	public BoardFrame() {
+	public BoardFrame(Controller ctrl) {
 		super("Cluedo");
 
-		control = new Controller(this);
+		control = ctrl;
 		menuBar = new JMenuBar();
+		canvas = new MyCanvas(control);
 		menuBar.add(menu());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 		setJMenuBar(menuBar);
+
 		add(createTabbedPane());
+		add(canvas,BorderLayout.WEST);
 		pack();
 		setVisible(true);
 
-		startGameSetup();
+		//startGameSetup();
 	}
 
 	public void startGameSetup(){
@@ -175,7 +179,5 @@ public class BoardFrame extends JFrame{
 		return s;
 	}
 
-	public static void main(String args[]){
-		new BoardFrame();
-	}
+
 }

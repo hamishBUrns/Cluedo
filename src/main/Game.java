@@ -558,7 +558,6 @@ public class Game {
 		board = new Board();
 		checklist = new Checklist();
 		noWinner = true;
-		board = new Board();
 
 		List<Player> defaults = new ArrayList<Player>();
 		defaults.add(new Player("Miss Scarlett", 0, 9));

@@ -6,7 +6,9 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import board.Player;
+import board.Tile;
 import main.Game;
+import main.TextClient;
 
 /**
  * i'll do this later
@@ -19,9 +21,9 @@ public class Controller implements ActionListener, KeyListener{
 	BoardFrame view;
 	PlayerSetupDialog playerSetup;
 
-	public Controller(BoardFrame view, Game game){
-		this.game = game;
-		this.view = view;
+	public Controller(){
+		this.game = new Game(new TextClient(),3);
+		this.view = new BoardFrame(this);
 	}
 
 	/**
@@ -72,9 +74,22 @@ public class Controller implements ActionListener, KeyListener{
 		return charas;
 	}
 
+	public Tile[][] getTiles(){
+		for(Tile[] rows:game.getBoard().getTiles()){
+			for(Tile t: rows ){
+				System.out.print(t.getType());
+			}
+			System.out.println();
+		}
+		return game.getBoard().getTiles();
+	}
+
 	public String getSuspect(){
 		String[] options = {"is", "this","working", "?"};
 		return view.suspectDialog(options);
 	}
 
+	public static void main(String args[]){
+		new Controller();
+	}
 }

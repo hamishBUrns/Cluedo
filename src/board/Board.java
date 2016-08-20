@@ -175,6 +175,10 @@ public class Board {
 		return tiles[row][col];
 	}
 
+	public Tile[][] getTiles(){
+		return tiles;
+	}
+
 
 	public ArrayList<Room> getRooms(){
 		return rooms;
