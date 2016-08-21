@@ -15,7 +15,6 @@ import javax.swing.*;
  */
 public class PlayerSetupDialog extends JDialog {
 
-	private static final int VK_ENTER = 0;
 	private ButtonGroup psdRadioGroup;
 	private JPanel panel;
 	private JTextField nickInput;

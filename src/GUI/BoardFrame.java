@@ -66,8 +66,8 @@ public class BoardFrame extends JFrame{
 		setLayout(new BorderLayout());
 		setJMenuBar(menuBar);
 
-		add(createTabbedPane());
-		add(canvas,BorderLayout.WEST);
+		add(createTabbedPane(), BorderLayout.EAST);
+		add(canvas,BorderLayout.CENTER);
 		pack();
 		setVisible(true);
 

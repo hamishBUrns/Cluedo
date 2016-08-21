@@ -350,6 +350,32 @@ public class Game {
 		return cards;
 	}
 
+	public boolean canSuggest(String s, String w){
+		Room room = board.currentRoom(currentPlayer);
+		Card r = cardFromString(room.getName());
+		if(room == null){
+			return false;
+		}
+
+		return true;
+	}
+
+	public void suggest(Room room, Card s, Card r, Card w){
+
+
+		List<Card> sug = new ArrayList<>();
+		sug.add(s);
+		sug.add(r);
+		sug.add(w);
+
+		Player suspect = playerFromString(s.getName());
+		Room susRoom = board.currentRoom(suspect);
+		if (susRoom != null) {
+			susRoom.takeFromRoom(suspect, board);
+		}
+		room.putInRoom(suspect, board);
+	}
+
 	/**
 	 * if suggestion is refuted, returns that card, otherwise returns null
 	 */
@@ -364,34 +390,6 @@ public class Game {
 			for (Card c : players.get(current).getHand()) {
 				for (Card s : suggested) {
 					if (c.equals(s)) {
-						checklist.addCard(c);
-						return c;
-					}
-				}
-			}
-			current++;
-			// when we reach the end of the list, start at the beginning
-			if (current == players.size()) {
-				current = 0;
-			}
-		}
-		return null;
-	}
-
-	public Card refute(String s, String w) {
-		List<Card> sug = new ArrayList<>();
-		sug.add(cardFromString(s));
-		sug.add(cardFromString(w));
-		// start at the index after the player suggesting
-		int current = turnIndex + 1;
-		if (current == players.size()) {
-			current = 0;
-		}
-		// go until we are back at suggesting player
-		while (current != turnIndex) {
-			for (Card c : players.get(current).getHand()) {
-				for (Card o : sug) {
-					if (c.equals(o)) {
 						checklist.addCard(c);
 						return c;
 					}
