@@ -89,13 +89,16 @@ public class BoardFrame extends JFrame {
 	 */
 	public int getNumPlayers() {
 		Object[] options = { 2, 3, 4, 5, 6 };
-		int numPlayers = (int) JOptionPane.showInputDialog(
+		Object numPlayers = JOptionPane.showInputDialog(
 				(JFrame) this,
 				"How many players?",
 				"Welcome to Cluedo!",
 				JOptionPane.PLAIN_MESSAGE,
-				null, options, options[0]);
-		return numPlayers;
+				null,
+				options,
+				options[0]);
+		if(numPlayers == null){System.exit(0);}//exit if canceled
+		return (int) numPlayers;
 	}
 
 	/**
