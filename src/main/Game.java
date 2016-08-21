@@ -20,6 +20,7 @@ public class Game {
 	private int turnIndex;
 	private int diceRoll;
 	private boolean noWinner;
+	private Player currentPlayer;
 
 	/**
 	 * constructor for actually playing the game
@@ -83,6 +84,11 @@ public class Game {
 						// card in the game
 	}
 
+	public void addPlayer(Player p, String nick){
+		p.setNick(nick);
+		players.add(p);
+	}
+
 	/**
 	 * Assigns characters depending on how many players there are
 	 */
@@ -138,10 +144,10 @@ public class Game {
 		else{
 			turnIndex++;
 		}
+		currentPlayer=players.get(turnIndex);
 	}
 
 	public boolean canMove(){
-		Player currentPlayer=players.get(turnIndex);
 		if(!currentPlayer.isStillIn()){
 			return false;
 		}
@@ -158,12 +164,11 @@ public class Game {
 	}
 
 	public void tryMove(String dir){
-		Player currentPlayer = players.get(turnIndex);
 		if(!canMove()){
 			System.out.println("cant move");
 			return;
 		}
-		move(players.get(turnIndex),dir);
+		move(currentPlayer,dir);
 	}
 
 
@@ -205,13 +210,13 @@ public class Game {
 				}
 				break;
 			case ("accuse"):
-				if (accusationCorrect(accuse(p))) {
-					noWinner = false;
-					System.out.println("By Jove! " + p.getName() + " has solved it!");
-				} else {
-					System.out.println("What poppycock! " + p.getName() + " is out of the game.");
-					p.setStatus(false);
-				}
+				//if (accusationCorrect(accuse(p))) {
+				//	noWinner = false;
+				//	System.out.println("By Jove! " + p.getName() + " has solved it!");
+				//} else {
+				//	System.out.println("What poppycock! " + p.getName() + " is out of the game.");
+				//	p.setStatus(false);
+				//}
 				turnEnded = true;
 				break;
 			case ("end"):
@@ -373,6 +378,34 @@ public class Game {
 		return null;
 	}
 
+	public Card refute(String s, String w) {
+		List<Card> sug = new ArrayList<>();
+		sug.add(cardFromString(s));
+		sug.add(cardFromString(w));
+		// start at the index after the player suggesting
+		int current = turnIndex + 1;
+		if (current == players.size()) {
+			current = 0;
+		}
+		// go until we are back at suggesting player
+		while (current != turnIndex) {
+			for (Card c : players.get(current).getHand()) {
+				for (Card o : sug) {
+					if (c.equals(o)) {
+						checklist.addCard(c);
+						return c;
+					}
+				}
+			}
+			current++;
+			// when we reach the end of the list, start at the beginning
+			if (current == players.size()) {
+				current = 0;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * get input for the room, weapon, and character for this accusation from
 	 * the user
@@ -457,8 +490,12 @@ public class Game {
 	 * @param accusation
 	 * @return
 	 */
-	public boolean accusationCorrect(List<Card> accusation) {
-		for (Card c : accusation) {
+	public boolean accusationCorrect(String s, String r, String w) {
+		List<Card> acc = new ArrayList<>();
+		acc.add(cardFromString(s));
+		acc.add(cardFromString(r));
+		acc.add(cardFromString(w));
+		for (Card c : acc) {
 			if (!solution.contains(c)) {
 				return false;
 			}
@@ -492,6 +529,15 @@ public class Game {
 	 */
 	public Player playerFromString(String character, List<Player> characters) {
 		for (Player p : characters) {
+			if (p.getName().equalsIgnoreCase(character)) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	public Player playerFromString(String character) {
+		for (Player p : allCharas) {
 			if (p.getName().equalsIgnoreCase(character)) {
 				return p;
 			}

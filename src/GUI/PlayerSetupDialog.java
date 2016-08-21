@@ -9,18 +9,20 @@ import javax.swing.*;
 
 /**
  * Pop up dialog that allows players to choose their nickname and character
+ *
  * @author kraemezoe
  *
  */
 public class PlayerSetupDialog extends JDialog {
 
+	private static final int VK_ENTER = 0;
 	private ButtonGroup psdRadioGroup;
 	private JPanel panel;
 	private JTextField nickInput;
 
 	private Controller control;
 
-	public PlayerSetupDialog(JFrame frame, Controller control){
+	public PlayerSetupDialog(JFrame frame, Controller control) {
 		super(frame, "Welcome to Cluedo!");
 
 		this.control = control;
@@ -34,7 +36,7 @@ public class PlayerSetupDialog extends JDialog {
 		setVisible(true);
 	}
 
-	public void setUpPanel(){
+	public void setUpPanel() {
 		panel = new JPanel(new BorderLayout());
 
 		nickInput = new JTextField("select a nickname");
@@ -45,7 +47,7 @@ public class PlayerSetupDialog extends JDialog {
 
 		psdRadioGroup = new ButtonGroup();
 		JRadioButton newButt;
-		for(String s : control.getAllCharacters()){
+		for (String s : control.getAllCharacters()) {
 			System.out.println(s);
 			newButt = new JRadioButton(s);
 			newButt.setActionCommand(s);
@@ -56,22 +58,23 @@ public class PlayerSetupDialog extends JDialog {
 		panel.add(rbs, BorderLayout.CENTER);
 
 		JButton confirm = new JButton("Confirm");
-		confirm.setActionCommand("playerSetup");
+		confirm.setActionCommand("setUpPlayer");
 		confirm.addActionListener(control);
 
 		panel.add(confirm, BorderLayout.SOUTH);
 	}
 
-	public String returnNick(){
+	public String returnNick() {
 		return nickInput.getText();
 	}
 
-	public String returnChara(){
-		return psdRadioGroup.getSelection().getActionCommand();
+	public ButtonModel returnCharaSelection() {
+		return psdRadioGroup.getSelection();
 	}
 
-	public void resetDialog(){
+	public void resetDialog() {
 		psdRadioGroup.getSelection().setEnabled(false);
+		psdRadioGroup.clearSelection();
 		nickInput.setText("select a nickname");
 	}
 
