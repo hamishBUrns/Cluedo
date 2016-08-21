@@ -19,7 +19,6 @@ public class MyCanvas extends JPanel {
         setFocusable(true);
         addKeyListener(control);
         addMouseListener(control);
-
     }
 
 	public Dimension getPreferredSize() {

@@ -33,14 +33,15 @@ public class Game {
 		checklist = new Checklist();
 		noWinner = true;
 		board = new Board();
-		diceRoll=10;
+		diceRoll=100;
 		turnIndex=0;
+
 
 		assignCharacters();
 		dealCards();
 		placeWeapons();
 		client.hashCode();
-
+		currentPlayer=players.get(turnIndex);
 
 	}
 
@@ -138,7 +139,7 @@ public class Game {
 	}
 
 	public void endTurn(){
-		if(turnIndex==players.size()){
+		if(turnIndex==players.size()-1){
 			turnIndex=0;
 		}
 		else{
@@ -168,7 +169,7 @@ public class Game {
 			System.out.println("cant move");
 			return;
 		}
-		move(currentPlayer,dir);
+		move(dir);
 
 	}
 
@@ -178,16 +179,21 @@ public class Game {
 			System.out.println("can't leave room");
 			return;
 		}
-
 		leaveRoom(door);
 	}
 
 	public boolean canLeaveRoom(Tile door){
 		Room room = board.currentRoom(currentPlayer);
 		if(room==null){//if player isn't in a room
+			System.out.println("player not in room");
 			return false;
 		}
 		if(!room.getDoors().containsValue(door)){ //if the door selected isn't a door of the players current room
+			for(Tile t: room.getDoors().values()){
+				System.out.println("Door:"+t.getRow()+","+t.getCol());
+			}
+			System.out.println("actual door is:"+door.getRow()+","+door.getCol());
+			System.out.println("door is not of this room");
 			return false;
 		}
 		return true;
@@ -282,19 +288,15 @@ public class Game {
 		p.setCol(destination.getCol());
 		board.getTile(p.getRow(), p.getCol()).setToken(p);
 		Room newRoom = board.currentRoom(p);
-		if (newRoom != null) {
-			newRoom.putInRoom(p, board);
-		} else {
-			//move(diceRoll, p);
-		}
+		move("null");
 	}
 
 	/**
 	 * gets user input to move them around the board
 	 */
-	public void move(Player p,String dir) {
+	public void move(String dir) {
 		dir=dir.toUpperCase();
-
+		Player p=currentPlayer;
 		switch (dir) {
 		case ("N"):
 			// go north
@@ -325,7 +327,7 @@ public class Game {
 		}
 		if (board.currentRoom(p) != null) {
 			board.currentRoom(p).putInRoom(p, board);
-			diceRoll=0;
+			//diceRoll=0;
 			return;
 			}
 		board.printBoard();

@@ -23,13 +23,13 @@ public class BoardFrame extends JFrame{
 			//Players put in name //text field
 			// players choose character //radio box
 
-	//STEP 1.5: Board drawing
+	//DONE: Board drawing
 			//Drawing weapon and players
 			//Drawing on weapon and player movement
 
-	//STEP 2: change move to use key listener
+	//DONE: change move to use key listener
 
-	//STEP 2.5: End Turn
+	//DONE: End Turn
 			// integrate logic
 
 	//STEP 3: Dialogue boxes at start of turn with information
@@ -40,7 +40,7 @@ public class BoardFrame extends JFrame{
 
 	//STEP 5: Dialogue box when attempting to close main window/ new game etc
 
-	//STEP 6: When exiting room select door with mouse to choose
+	//DONE: When exiting room select door with mouse to choose
 
 	//STEP 7: Displaying hand as images
 			//Otherwise text
@@ -70,7 +70,6 @@ public class BoardFrame extends JFrame{
 		add(canvas,BorderLayout.CENTER);
 		pack();
 		setVisible(true);
-
 		//startGameSetup();
 
 	}

@@ -25,7 +25,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 	PlayerSetupDialog playerSetup;
 
 	public Controller() {
-		this.game = new Game(new TextClient(), 3);
+		this.game = new Game(new TextClient());
 		this.view = new BoardFrame(this);
 		//doPlayerSetupView();
 	}
@@ -33,6 +33,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 	public Controller(BoardFrame view, Game game) {
 		this.game = game;
 		this.view = view;
+
 
 	}
 
@@ -109,16 +110,20 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		view.findComponentAt(e.getPoint()).requestFocus();
+		
 		System.out.println("x is:"+e.getX()+"y is:"+e.getY()+"width is:"+view.getCanvas().getWidth());
 		int col = pointToPos(e.getX());
 		int row = pointToPos(e.getY());
 		System.out.println("row, col"+row+","+col);
 		if(0<col&&col<26&&0<row&&row<26){
-			game.tryLeaveRoom(col, row);
+			game.tryLeaveRoom(row, col);
 		}
 		else {
 			System.out.println("outside of canvas");
 		}
+		view.repaint();
+
 	}
 
 	private int pointToPos(int point) {
@@ -128,6 +133,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+
 
 	}
 
