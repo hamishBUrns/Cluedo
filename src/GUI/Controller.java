@@ -60,22 +60,31 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			}
 
 		}
+
 		if (e.getActionCommand().equals("suggest")) {
 			// do suggest things
 			// System.out.println(getSuspect());
 			String s = getSuspect();
+			if (s == null){return;}
 			String w = getMurderWeapon();
+			if (w == null){return;}
 			if (game.canSuggest(s, w)) {
 				String result = game.refute(game.suggest(s, w));
 				if (result == null) {
 					// game won stuff
 				} else {
-
+					// refuted dialog
 				}
 			}
 		} else if (e.getActionCommand().equals("accuse")) {
 			// do accuse things
-			game.accusationCorrect(getSuspect(), getCrimeScene(), getMurderWeapon());
+			String s = getSuspect();
+			if (s == null){return;}
+			String r = getCrimeScene();
+			if (r == null){return;}
+			String w = getMurderWeapon();
+			if (w == null){return;}
+			game.accusationCorrect(s, r, w);
 		} else if (e.getActionCommand().equals("end")) {
 			game.endTurn();
 			updateChecklist();
@@ -186,7 +195,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * @return
 	 */
 	public String getSuspect() {
-		String[] options = (String[]) game.allCharaNames().toArray();
+		Object[] options = game.allCharaNames().toArray();
 		return view.guessDialog("Choose a character", "Who dunnit?", options);
 	}
 
@@ -197,7 +206,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * @return
 	 */
 	public String getCrimeScene() {
-		String[] options = (String[]) game.allRoomNames().toArray();
+		Object[] options = game.allRoomNames().toArray();
 		return view.guessDialog("Choose a room", "Scene of the crime?", options);
 	}
 
@@ -208,7 +217,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * @return
 	 */
 	public String getMurderWeapon() {
-		String[] options = (String[]) game.allWeapNames().toArray();
+		Object[] options = game.allWeapNames().toArray();
 		return view.guessDialog("Choose a weapon", "Murder weapon?", options);
 	}
 

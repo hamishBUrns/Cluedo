@@ -167,7 +167,7 @@ public class BoardFrame extends JFrame{
 		checklist.setText(text);
 	}
 
-	public String guessDialog(String title, String msg, String [] options){
+	public String guessDialog(String title, String msg, Object[] options){
 		String s = (String) JOptionPane.showInputDialog(
 				(JFrame) this,
 				msg,

@@ -32,6 +32,7 @@ public class Player implements Token {
 	public void giveCard(Card card) {
 		if (card != null) {
 			hand.add(card);
+			checklist.addCard(card);
 		}
 	}
 

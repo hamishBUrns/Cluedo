@@ -140,7 +140,7 @@ public class Game {
 	}
 
 	public void endTurn(){
-		if(turnIndex==players.size()){
+		if(turnIndex==players.size()-1){
 			turnIndex=0;
 		}
 		else{
@@ -616,7 +616,7 @@ public class Game {
 			board.getTile(p.getRow(), p.getCol()).setToken(p);
 		}
 
-		while (numPlayers >= 0) {
+		while (numPlayers > 0) {
 			players.add(defaults.get(numPlayers));
 			numPlayers--;
 		}
@@ -687,8 +687,8 @@ public class Game {
 	}
 
 	public String currentPlayerChecklist(){
-		String s = currentPlayer.getNick() + "'s Checklist \n\n";
-		s += "Characters: \n";
+		String s = currentPlayer.getNick() + "'s Checklist \n";
+		s += "\nCharacters: \n";
 		for(Card c : deck.characters){
 			if(currentPlayer.getChecklist().contains(c)){
 				s += c.getName() + "[X]\n";
@@ -696,7 +696,7 @@ public class Game {
 				s += c.getName() + "[ ]\n";
 			}
 		}
-		s += "Rooms: \n";
+		s += "\nRooms: \n";
 		for(Card r : deck.rooms){
 			if(currentPlayer.getChecklist().contains(r)){
 				s += r.getName() + "[X]\n";
@@ -704,7 +704,7 @@ public class Game {
 				s += r.getName() + "[ ]\n";
 			}
 		}
-		s += "Weapons: \n";
+		s += "\nWeapons: \n";
 		for(Card w : deck.weapons){
 			if(currentPlayer.getChecklist().contains(w)){
 				s += w.getName() + "[X]\n";
