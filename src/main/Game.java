@@ -641,14 +641,6 @@ public class Game {
 		return allCharas;
 	}
 
-	public List<String> allRoomNames(){
-		List<String> roomNames = new ArrayList<>();
-		for(Card r : deck.rooms){
-			roomNames.add(r.getName());
-		}
-		return roomNames;
-	}
-
 	public List<String> allCharaNames(){
 		List<String> charaNames = new ArrayList<>();
 		for(Card c : deck.characters){
@@ -657,10 +649,32 @@ public class Game {
 		return charaNames;
 	}
 
-	public List<String> allWeapNames(){
+	public List<String> allValidRoomNames(){
+		List<String> roomNames = new ArrayList<>();
+		for(Card r : deck.rooms){
+			if(!currentPlayer.getChecklist().contains(r)){
+				roomNames.add(r.getName());
+			}
+		}
+		return roomNames;
+	}
+
+	public List<String> allValidCharaNames(){
+		List<String> charaNames = new ArrayList<>();
+		for(Card c : deck.characters){
+			if(!currentPlayer.getChecklist().contains(c)){
+				charaNames.add(c.getName());
+			}
+		}
+		return charaNames;
+	}
+
+	public List<String> allValidWeapNames(){
 		List<String> weapNames = new ArrayList<>();
 		for(Card w : deck.weapons){
-			weapNames.add(w.getName());
+			if(!currentPlayer.getChecklist().contains(w)){
+				weapNames.add(w.getName());
+			}
 		}
 		return weapNames;
 	}

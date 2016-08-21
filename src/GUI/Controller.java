@@ -195,7 +195,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * @return
 	 */
 	public String getSuspect() {
-		Object[] options = game.allCharaNames().toArray();
+		Object[] options = game.allValidCharaNames().toArray();
 		return view.guessDialog("Choose a character", "Who dunnit?", options);
 	}
 
@@ -206,7 +206,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * @return
 	 */
 	public String getCrimeScene() {
-		Object[] options = game.allRoomNames().toArray();
+		Object[] options = game.allValidRoomNames().toArray();
 		return view.guessDialog("Choose a room", "Scene of the crime?", options);
 	}
 
@@ -217,7 +217,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * @return
 	 */
 	public String getMurderWeapon() {
-		Object[] options = game.allWeapNames().toArray();
+		Object[] options = game.allValidWeapNames().toArray();
 		return view.guessDialog("Choose a weapon", "Murder weapon?", options);
 	}
 
