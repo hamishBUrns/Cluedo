@@ -60,8 +60,11 @@ public class MyCanvas extends JPanel {
 				}
 
 				g.fillRect(i,z, squaresize,squaresize);
+
 				g.setColor(Color.lightGray);
-				g.drawRect(i,z, squaresize,squaresize);
+				g.drawRect(i,z, squaresize,squaresize);	
+
+
 				g.setColor(Color.blue);
 				g.setFont(new Font("TimesRoman", Font.PLAIN, squaresize));
 				if(control.getTile(row, col).getToken()!=null){

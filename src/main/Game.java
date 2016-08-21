@@ -27,32 +27,22 @@ public class Game {
 	 *
 	 * @param c
 	 */
-	public Game(TextClient c) {
-		client = c;
-		deck = new Deck();
-		checklist = new Checklist();
-		noWinner = true;
-		board = new Board();
-		diceRoll=100;
-		turnIndex=0;
 
-
-		assignCharacters();
-		dealCards();
-		placeWeapons();
-		client.hashCode();
-		currentPlayer=players.get(turnIndex);
-
-	}
 
 	public Game() {
 		deck = new Deck();
 		noWinner = true;
 		board = new Board();
-		diceRoll=10;
+		diceRoll=100;
 		turnIndex=0;
 
 		//populate the array that holds all characters in the game
+
+		placeCharacters();
+		placeWeapons();
+	}
+
+	public void placeCharacters(){
 		allCharas.add(new Player("Miss Scarlett", 0, 9));
 		allCharas.add(new Player("Colonel Mustard", 0, 15));
 		allCharas.add(new Player("Mrs White", 6, 24));
@@ -60,9 +50,10 @@ public class Game {
 		allCharas.add(new Player("Mrs Peacock", 19, 24));
 		allCharas.add(new Player("Professor Plum", 24, 7));
 
-		placeWeapons();
+		for(Player p: allCharas){
+			board.getTile(p.getRow(), p.getCol()).setToken(p);
+		}
 	}
-
 
 	/**
 	 * Creates the weapons of the game and puts them in rooms
@@ -108,48 +99,9 @@ public class Game {
 	public void addPlayer(Player p, String nick){
 		p.setNick(nick);
 		players.add(p);
+		p.setPlayerNumber(players.size());
 	}
 
-	/**
-	 * Assigns characters depending on how many players there are
-	 */
-	public void assignCharacters() {
-		ArrayList<Player> defaults = new ArrayList<Player>();
-		defaults.add(new Player("Miss Scarlett", 0, 9));
-		defaults.add(new Player("Colonel Mustard", 0, 15));
-		defaults.add(new Player("Mrs White", 6, 24));
-		defaults.add(new Player("The Reverend Green", 17, 0));
-		defaults.add(new Player("Mrs Peacock", 19, 24));
-		defaults.add(new Player("Professor Plum", 24, 7));
-
-		for (Player p : defaults) { // Putting players on tiles.
-			board.getTile(p.getRow(), p.getCol()).setToken(p);
-		}
-
-		int numPlayers = client.readInt("Hi, How many players?");
-		while (numPlayers > 6 || numPlayers < 2) {
-			numPlayers = client.readInt("Must have between 2 and 6 players");
-		}
-		int player = 1;
-		while (numPlayers > 0) {
-			System.out.println("Characters left:");
-			for (Player p : defaults) {
-				System.out.println(p.getName());
-			}
-
-			String character = client.readString("Player" + player + " Type your character");
-			while (playerFromString(character, defaults) == null) {
-				character = client.readString("Type out character as shown:");
-			}
-			players.add(playerFromString(character, defaults));
-			players.get(player - 1).setPlayerNumber(player);
-			defaults.remove(playerFromString(character, defaults));
-			numPlayers--;
-			player++;
-		}
-		allCharas.addAll(defaults);
-		allCharas.addAll(players);
-	}
 
 	// ===== turn logic starts here ==== //
 	public void rollDice(){
@@ -196,16 +148,7 @@ public class Game {
 		move(dir);
 
 	}
-
-	public void tryLeaveRoom(int row, int col){
-		Tile door = board.getTile(row, col);
-		if(!canLeaveRoom(door)){
-			System.out.println("can't leave room");
-			return;
-		}
-		leaveRoom(door);
-	}
-
+	
 	public boolean canLeaveRoom(Tile door){
 		Room room = board.currentRoom(currentPlayer);
 		if(room==null){//if player isn't in a room
@@ -223,82 +166,18 @@ public class Game {
 		return true;
 	}
 
-//	/**
-//	 * gets and handles a command from the user, and ends a player's turn
-//	 * @param p
-//	 */
-//	public void askCommand(Player p){
-//		boolean turnEnded = false;
-//		while (!turnEnded) {
-//			String command = client.readString("What would you like to do?").toLowerCase();
-//			switch (command) {
-//			case ("checklist"):
-//				checklist.printChecklist();
-//				break;
-//			case ("hand"):
-//				p.printHand();
-//				break;
-//			case ("suggest"):
-//				//check if a player can make a suggestion
-//				Room room = board.currentRoom(p);
-//				if (room != null) {
-//					Card card = cardFromString(room.getName());
-//					if(p.getHand().contains(card) || checklist.contains(card)){
-//						System.out.println("Cannot suggest a room in checklist or hand");
-//						break;
-//					}
-//					Card c = null;//refute(suggest(room, card, p));
-//					if (c == null) {
-//						System.out.println("Egads! " + p.getName() + "'s got it!");
-//						noWinner = false;
-//					} else {
-//						System.out.println(
-//								"But wait! There's irrefutable proof that '" + c.getName() + "' was not involved");
-//					}
-//					turnEnded = true;
-//				} else {
-//					System.out.println("Must be in a room to suggest");
-//				}
-//				break;
-//			case ("accuse"):
-//				//if (accusationCorrect(accuse(p))) {
-//				//	noWinner = false;
-//				//	System.out.println("By Jove! " + p.getName() + " has solved it!");
-//				//} else {
-//				//	System.out.println("What poppycock! " + p.getName() + " is out of the game.");
-//				//	p.setStatus(false);
-//				//}
-//				turnEnded = true;
-//				break;
-//			case ("end"):
-//				client.printLines();
-//				turnEnded = true;
-//				break;
-//			case ("help"):
-//				client.help();
-//				break;
-//			case ("keys"):
-//				client.printBoardKeys();
-//				break;
-//			default:
-//				System.out.println("Invalid command. Type 'help' to see command list and descriptions");
-//			}
-//		}
-//	}
 
-	/**
-	 * prints game dialog to be seen by all players by first clearing the
-	 * console with blank lines to hide the player's secret information
-	 *
-	 * @param s
-	 */
-	public void printPublicDialog(String s) {
-		client.printLines();
-		System.out.println(s);
+	public void tryLeaveRoom(int row, int col){
+		Tile door = board.getTile(row, col);
+		if(!canLeaveRoom(door)){
+			System.out.println("can't leave room");
+			return;
+		}
+		leaveRoom(door);
 	}
 
 	/**
-	 * allows the user to choose how they leave a room and places them in the new location
+	 * current player leaves room by specified door
 	 * @param diceRoll
 	 * @param room
 	 * @param p
@@ -351,45 +230,11 @@ public class Game {
 		}
 		if (board.currentRoom(p) != null) {
 			board.currentRoom(p).putInRoom(p, board);
-			//diceRoll=0;
+			diceRoll=0;
 			return;
 			}
 		board.printBoard();
 	}
-
-//	/**
-//	 * get input for the weapon and character for this suggestion from the user
-//	 *
-//	 * @param room
-//	 * @param p
-//	 */
-//	public List<Card> suggest(Room room, Card r, Player p) {
-//		System.out.println("Cards in hand: ");
-//		p.printHand();
-//		Card c = askCharacter(p);
-//		Card w = askWeapon(p);
-//		printPublicDialog(
-//				"\"Perhaps it was " + c.getName() + " in the " + r.getName() + " with the " + w.getName() + "?\"");
-//
-//		Player suspect = playerFromString(c.getName(), allCharas);
-//		Room susRoom = board.currentRoom(suspect);
-//		if (susRoom != null) {
-//			susRoom.takeFromRoom(suspect, board);
-//		}
-//		room.putInRoom(suspect, board);
-//
-//		Weapon weap = weapons.get(w.getName());
-//		board.currentRoom(weap).takeFromRoom(weap, board);
-//		room.putInRoom(weap, board);
-//
-//		board.printBoard();
-//
-//		List<Card> cards = new ArrayList<>();
-//		cards.add(c);
-//		cards.add(r);
-//		cards.add(w);
-//		return cards;
-//	}
 
 	public boolean canSuggest(String s, String w){
 		Room room = board.currentRoom(currentPlayer);
@@ -600,10 +445,6 @@ public class Game {
 			}
 		}
 		return false;
-	}
-
-	public static void main(String args[]) {
-		new Game(new TextClient());
 	}
 
 	// ====THE FOLLOWING METHODS ARE FOR TESTING PURPOSES ONLY==== //

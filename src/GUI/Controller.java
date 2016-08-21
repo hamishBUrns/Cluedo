@@ -24,11 +24,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	int numPlayers;
 
 	public Controller() {
-<<<<<<< HEAD
-		this.game = new Game(new TextClient());
-=======
 		this.game = new Game();
->>>>>>> f4711d4e42c1eb6ee83e9254744bde7dabd02be1
 		this.view = new BoardFrame(this);
 		doGameSetup();
 	}
@@ -144,9 +140,8 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-<<<<<<< HEAD
 		view.findComponentAt(e.getPoint()).requestFocus();
-		
+
 		System.out.println("x is:"+e.getX()+"y is:"+e.getY()+"width is:"+view.getCanvas().getWidth());
 		int col = pointToPos(e.getX());
 		int row = pointToPos(e.getY());
@@ -155,15 +150,6 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			game.tryLeaveRoom(row, col);
 		}
 		else {
-=======
-		System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
-		int col = pointToPos(e.getX());
-		int row = pointToPos(e.getY());
-		System.out.println("row, col" + row + "," + col);
-		if (0 < col && col < 26 && 0 < row && row < 26) {
-			game.tryLeaveRoom(col, row);
-		} else {
->>>>>>> f4711d4e42c1eb6ee83e9254744bde7dabd02be1
 			System.out.println("outside of canvas");
 		}
 		view.repaint();
@@ -261,6 +247,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		view.updateNick(game.getCurrentNick());
 		view.updateChara(game.getCurrentChara());
 		view.updateChecklist(game.currentPlayerChecklist());
+		view.repaint();
 	}
 
 	public void printBoard() {
