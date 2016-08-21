@@ -20,6 +20,7 @@ public class Game {
 	private int turnIndex;
 	private int diceRoll;
 	private boolean noWinner;
+	private Player currentPlayer;
 
 	/**
 	 * constructor for actually playing the game
@@ -83,6 +84,11 @@ public class Game {
 						// card in the game
 	}
 
+	public void addPlayer(Player p, String nick){
+		p.setNick(nick);
+		players.add(p);
+	}
+
 	/**
 	 * Assigns characters depending on how many players there are
 	 */
@@ -138,10 +144,10 @@ public class Game {
 		else{
 			turnIndex++;
 		}
+		currentPlayer=players.get(turnIndex);
 	}
 
 	public boolean canMove(){
-		Player currentPlayer=players.get(turnIndex);
 		if(!currentPlayer.isStillIn()){
 			return false;
 		}
@@ -158,29 +164,30 @@ public class Game {
 	}
 
 	public void tryMove(String dir){
-		Player currentPlayer = players.get(turnIndex);
 		if(!canMove()){
 			System.out.println("cant move");
 			return;
 		}
-		System.out.println("was allowed to move");
-		move(players.get(turnIndex),dir);
+		move(currentPlayer,dir);
+
 	}
 
 	public void tryLeaveRoom(int row, int col){
-		if(!canLeaveRoom()){
+		Tile door = board.getTile(row, col);
+		if(!canLeaveRoom(door)){
 			System.out.println("can't leave room");
 			return;
 		}
-		Tile door = board.getTile(row, col);
+
 		leaveRoom(door);
 	}
-	public boolean canLeaveRoom(){
+
+	public boolean canLeaveRoom(Tile door){
 		Room room = board.currentRoom(currentPlayer);
 		if(room==null){//if player isn't in a room
 			return false;
 		}
-		if(!room.getDoors().containsValue(board.getTile(row, col))){ //if the door selected isn't a door of the players current room
+		if(!room.getDoors().containsValue(door)){ //if the door selected isn't a door of the players current room
 			return false;
 		}
 		return true;
@@ -224,13 +231,13 @@ public class Game {
 				}
 				break;
 			case ("accuse"):
-				if (accusationCorrect(accuse(p))) {
-					noWinner = false;
-					System.out.println("By Jove! " + p.getName() + " has solved it!");
-				} else {
-					System.out.println("What poppycock! " + p.getName() + " is out of the game.");
-					p.setStatus(false);
-				}
+				//if (accusationCorrect(accuse(p))) {
+				//	noWinner = false;
+				//	System.out.println("By Jove! " + p.getName() + " has solved it!");
+				//} else {
+				//	System.out.println("What poppycock! " + p.getName() + " is out of the game.");
+				//	p.setStatus(false);
+				//}
 				turnEnded = true;
 				break;
 			case ("end"):
@@ -268,6 +275,7 @@ public class Game {
 	 */
 	public void leaveRoom(Tile door) {
 		Player p=currentPlayer;
+		Room room =getBoard().currentRoom(p);
 		room.takeFromRoom(p, board);
 		Tile destination = door;
 		p.setRow(destination.getRow());
@@ -355,6 +363,32 @@ public class Game {
 		cards.add(r);
 		cards.add(w);
 		return cards;
+	}
+
+	public boolean canSuggest(String s, String w){
+		Room room = board.currentRoom(currentPlayer);
+		Card r = cardFromString(room.getName());
+		if(room == null){
+			return false;
+		}
+
+		return true;
+	}
+
+	public void suggest(Room room, Card s, Card r, Card w){
+
+
+		List<Card> sug = new ArrayList<>();
+		sug.add(s);
+		sug.add(r);
+		sug.add(w);
+
+		Player suspect = playerFromString(s.getName());
+		Room susRoom = board.currentRoom(suspect);
+		if (susRoom != null) {
+			susRoom.takeFromRoom(suspect, board);
+		}
+		room.putInRoom(suspect, board);
 	}
 
 	/**
@@ -469,8 +503,12 @@ public class Game {
 	 * @param accusation
 	 * @return
 	 */
-	public boolean accusationCorrect(List<Card> accusation) {
-		for (Card c : accusation) {
+	public boolean accusationCorrect(String s, String r, String w) {
+		List<Card> acc = new ArrayList<>();
+		acc.add(cardFromString(s));
+		acc.add(cardFromString(r));
+		acc.add(cardFromString(w));
+		for (Card c : acc) {
 			if (!solution.contains(c)) {
 				return false;
 			}
@@ -504,6 +542,15 @@ public class Game {
 	 */
 	public Player playerFromString(String character, List<Player> characters) {
 		for (Player p : characters) {
+			if (p.getName().equalsIgnoreCase(character)) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	public Player playerFromString(String character) {
+		for (Player p : allCharas) {
 			if (p.getName().equalsIgnoreCase(character)) {
 				return p;
 			}

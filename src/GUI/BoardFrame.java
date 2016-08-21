@@ -66,8 +66,8 @@ public class BoardFrame extends JFrame{
 		setLayout(new BorderLayout());
 		setJMenuBar(menuBar);
 
-		add(createTabbedPane());
-		add(canvas,BorderLayout.WEST);
+		add(createTabbedPane(), BorderLayout.EAST);
+		add(canvas,BorderLayout.CENTER);
 		pack();
 		setVisible(true);
 
@@ -129,7 +129,7 @@ public class BoardFrame extends JFrame{
 		acc.addActionListener(control);
 
 		JButton end = new JButton("End Turn");
-		end.setMnemonic(KeyEvent.VK_E);
+		end.setMnemonic(KeyEvent.VK_E);//actually alt + e
 		end.setActionCommand("end");
 		end.addActionListener(control);
 
@@ -167,18 +167,16 @@ public class BoardFrame extends JFrame{
 		checklist.setText(text);
 	}
 
-	public String suspectDialog(String [] options){
-		//JComboBox<String> sus = new JComboBox<String>(options);
+	public String guessDialog(String title, String msg, String [] options){
 		String s = (String) JOptionPane.showInputDialog(
 				(JFrame) this,
-				"Who dunnit?",
-				"u talkin to ME??",
+				msg,
+				title,
 				JOptionPane.QUESTION_MESSAGE,
 				null,
 				options,
 				options[0]);
 		return s;
 	}
-
 
 }

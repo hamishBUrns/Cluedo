@@ -3,6 +3,7 @@ package GUI;
 import java.awt.event.*;
 import java.util.*;
 
+import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
 
 import board.Player;
@@ -11,9 +12,9 @@ import board.Tile;
 import main.Game;
 import main.TextClient;
 
-
 /**
  * i'll do this later
+ *
  * @author kraemezoe
  *
  */
@@ -23,48 +24,53 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 	BoardFrame view;
 	PlayerSetupDialog playerSetup;
 
-	public Controller(){
-		this.game = new Game(new TextClient());
+	public Controller() {
+		this.game = new Game(new TextClient(), 3);
 		this.view = new BoardFrame(this);
 		//doPlayerSetupView();
 	}
 
-	public Controller(BoardFrame view, Game game){
+	public Controller(BoardFrame view, Game game) {
 		this.game = game;
 		this.view = view;
 
 	}
 
 	/**
-	 * for testing the view/controller interaction without worrying game logic yet
+	 * for testing the view/controller interaction without worrying game logic
+	 * yet
+	 *
 	 * @param view
 	 */
-	public Controller(BoardFrame view){
+	public Controller(BoardFrame view) {
 		this.view = view;
 
 	}
 
-	public void doPlayerSetupView(){
+	public void doPlayerSetupView() {
 		playerSetup = new PlayerSetupDialog(view, this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("playerSetup")){
-			if(playerSetup.returnChara() != null && !playerSetup.returnNick().isEmpty()){
-				System.out.println(playerSetup.returnNick());
-				System.out.println(playerSetup.returnChara());
+		if (e.getActionCommand().equals("setUpPlayer")) {
+			ButtonModel chara = playerSetup.returnCharaSelection();
+			String nick = playerSetup.returnNick();
+			if (chara != null && !nick.isEmpty()) {
+				game.addPlayer(game.playerFromString(chara.getActionCommand()), nick);
 				playerSetup.resetDialog();
 			}
 
 		}
-		if(e.getActionCommand().equals("suggest")){
-			//do suggest things
+		if (e.getActionCommand().equals("suggest")) {
+			// do suggest things
 			System.out.println(getSuspect());
-		}else if(e.getActionCommand().equals("accuse")){
-			//do accuse things
+		} else if (e.getActionCommand().equals("accuse")) {
+			// do accuse things
+			game.accusationCorrect(getSuspect(), getCrimeScene(), getMurderWeapon());
+		}else if(e.getActionCommand().equals("end")){
+			game.endTurn();
 		}
-
 	}
 
 	@Override
@@ -92,6 +98,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 			game.tryMove("E");
 			break;
 		case(KeyEvent.VK_UP):
+
 			game.tryMove("N");
 			break;
 		default:
@@ -144,35 +151,45 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 
 	/**
 	 * returns a list of name strings of all the characters in the game
+	 *
 	 * @return
 	 */
-	public List<String> getAllCharacters(){
+	public List<String> getAllCharacters() {
 		List<String> charas = new ArrayList<>();
-		for(Player p : game.getAllCharas()){
+		for (Player p : game.getAllCharas()) {
 			charas.add(p.getName());
 		}
 		return charas;
 	}
 
-	public Tile[][] getTiles(){
+	public Tile[][] getTiles() {
 		return game.getBoard().getTiles();
 	}
 
-	public Tile getTile(int row, int col){
+	public Tile getTile(int row, int col) {
 		return game.getBoard().getTile(row, col);
 	}
 
-	public String getSuspect(){
-		String[] options = {"is", "this","working", "?"};
-		return view.suspectDialog(options);
+	public String getSuspect() {
+		String[] options = { "is", "this", "working", "?" };
+		return view.guessDialog("Choose a character", "Who dunnit?", options);
 	}
 
+	public String getCrimeScene() {
+		String[] options = { "is", "this", "working", "?" };
+		return view.guessDialog("Choose a room", "Scene of the crime?", options);
+	}
 
-	public void printBoard(){
+	public String getMurderWeapon(){
+		String[] options = { "walla", "wall-a", "bing", "bang"};
+		return view.guessDialog("Choose a weapon", "Murder weapon?", options);
+	}
+
+	public void printBoard() {
 		game.getBoard().printBoard();
 	}
 
-	public static void main(String args[]){
+	public static void main(String args[]) {
 		new Controller();
 	}
 

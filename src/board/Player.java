@@ -9,6 +9,7 @@ public class Player implements Token {
 	private List<Card> hand = new ArrayList<Card>();
 	private int row, col;
 	private String name;
+	private String nick;
 	private boolean stillIn;
 	private int playerNumber;
 
@@ -88,6 +89,14 @@ public class Player implements Token {
 
 	public void setCol(int c) {
 		col = c;
+	}
+
+	public void setNick(String s){
+		nick = s;
+	}
+
+	public String getNick(){
+		return nick;
 	}
 
 	@Override
