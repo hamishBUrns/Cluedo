@@ -54,7 +54,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	public void finishGameSetup(){
 		game.dealCards();
 		game.setCurrentPlayer();
-		updateChecklist();
+		updateView();
 		playerSetup.dispose();
 	}
 
@@ -99,7 +99,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			game.accusationCorrect(s, r, w);
 		} else if (e.getActionCommand().equals("end")) {
 			game.endTurn();
-			updateChecklist();
+			updateView();
 		}
 	}
 
@@ -236,7 +236,9 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	/**
 	 * updates the view's checklist to display that of the current player
 	 */
-	public void updateChecklist() {
+	public void updateView() {
+		view.updateNick(game.getCurrentNick());
+		view.updateChara(game.getCurrentChara());
 		view.updateChecklist(game.currentPlayerChecklist());
 	}
 

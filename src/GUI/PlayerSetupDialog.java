@@ -47,7 +47,6 @@ public class PlayerSetupDialog extends JDialog {
 		psdRadioGroup = new ButtonGroup();
 		JRadioButton newButt;
 		for (String s : control.getAllCharacters()) {
-			System.out.println(s);
 			newButt = new JRadioButton(s);
 			newButt.setActionCommand(s);
 			psdRadioGroup.add(newButt);

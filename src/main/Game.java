@@ -722,6 +722,14 @@ public class Game {
 		return deck;
 	}
 
+	public String getCurrentChara(){
+		return currentPlayer.getName();
+	}
+
+	public String getCurrentNick(){
+		return currentPlayer.getNick();
+	}
+
 	public String currentPlayerChecklist(){
 		String s = currentPlayer.getNick() + "'s Checklist \n";
 		s += "\nCharacters: \n";
