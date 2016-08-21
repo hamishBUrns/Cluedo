@@ -148,7 +148,7 @@ public class Game {
 		move(dir);
 
 	}
-	
+
 	public boolean canLeaveRoom(Tile door){
 		Room room = board.currentRoom(currentPlayer);
 		if(room==null){//if player isn't in a room

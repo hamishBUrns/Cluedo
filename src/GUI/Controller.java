@@ -33,7 +33,6 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		this.game = game;
 		this.view = view;
 
-
 	}
 
 	/**
@@ -52,7 +51,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		playerSetup = new PlayerSetupDialog(view, this);
 	}
 
-	public void finishGameSetup(){
+	public void finishGameSetup() {
 		game.dealCards();
 		game.setCurrentPlayer();
 		updateView();
@@ -69,7 +68,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 				playerSetup.resetDialog();
 				numPlayers--;
 			}
-			if(numPlayers == 0){
+			if (numPlayers == 0) {
 				finishGameSetup();
 			}
 		}
@@ -77,26 +76,44 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		if (e.getActionCommand().equals("suggest")) {
 			// do suggest things
 			// System.out.println(getSuspect());
-			String s = getSuspect();
-			if (s == null){return;}
-			String w = getMurderWeapon();
-			if (w == null){return;}
-			if (game.canSuggest(s, w)) {
+			if (game.canSuggest()) {
+				String s = getSuspect();
+				if (s == null) {
+					return;
+				}
+				String w = getMurderWeapon();
+				if (w == null) {
+					return;
+				}
+				String r = game.currentRoomName();
+				view.infoMessage("\"Perhaps it was " + s + " in the " + r + " with the " + w + "?\"",
+						game.getCurrentNick() + ":");
 				String result = game.refute(game.suggest(s, w));
 				if (result == null) {
 					// game won stuff
 				} else {
 					// refuted dialog
+					view.infoMessage("There's irrefutable proof that '" + result + "' was not involved.", "But Wait!");
+					game.endTurn();
+					updateView();
 				}
+			} else {
+				view.warningMessage("You must be inside a valid room to suggest", "Uh Oh!");
 			}
 		} else if (e.getActionCommand().equals("accuse")) {
 			// do accuse things
 			String s = getSuspect();
-			if (s == null){return;}
+			if (s == null) {
+				return;
+			}
 			String r = getCrimeScene();
-			if (r == null){return;}
+			if (r == null) {
+				return;
+			}
 			String w = getMurderWeapon();
-			if (w == null){return;}
+			if (w == null) {
+				return;
+			}
 			game.accusationCorrect(s, r, w);
 		} else if (e.getActionCommand().equals("end")) {
 			game.endTurn();
@@ -142,6 +159,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	public void mouseClicked(MouseEvent e) {
 		view.findComponentAt(e.getPoint()).requestFocus();
 
+<<<<<<< HEAD
 		System.out.println("x is:"+e.getX()+"y is:"+e.getY()+"width is:"+view.getCanvas().getWidth());
 		int col = pointToPos(e.getX());
 		int row = pointToPos(e.getY());
@@ -150,6 +168,15 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			game.tryLeaveRoom(row, col);
 		}
 		else {
+=======
+		System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
+		int col = pointToPos(e.getX());
+		int row = pointToPos(e.getY());
+		System.out.println("row, col" + row + "," + col);
+		if (0 < col && col < 26 && 0 < row && row < 26) {
+			game.tryLeaveRoom(row, col);
+		} else {
+>>>>>>> dd6cef1e7e6bda251aed1b93e3fb9949f12f87d1
 			System.out.println("outside of canvas");
 		}
 		view.repaint();
@@ -163,7 +190,6 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-
 
 	}
 
@@ -191,11 +217,6 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * @return
 	 */
 	public List<String> getAllCharacters() {
-		// List<String> charas = new ArrayList<>();
-		// for (Player p : game.getAllCharas()) {
-		// charas.add(p.getName());
-		// }
-		// return charas;
 		return game.allCharaNames();
 	}
 
@@ -208,8 +229,8 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	}
 
 	/**
-	 * gets a list of characters and calls the view to display a dialog box asking
-	 * the user to choose one, which is then returned
+	 * gets a list of characters and calls the view to display a dialog box
+	 * asking the user to choose one, which is then returned
 	 *
 	 * @return
 	 */

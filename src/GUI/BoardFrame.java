@@ -69,7 +69,7 @@ public class BoardFrame extends JFrame {
 		add(canvas, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
-		//startGameSetup();
+
 
 	}
 
@@ -218,6 +218,18 @@ public class BoardFrame extends JFrame {
 				options,
 				options[0]);
 		return s;
+	}
+
+	public void warningMessage(String msg, String title){
+		JOptionPane.showMessageDialog((JFrame) this, msg, title, JOptionPane.ERROR_MESSAGE);
+	}
+
+	public void infoMessage(String msg, String title){
+		JOptionPane.showMessageDialog((JFrame) this, msg, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public void gameWonMessage(String winner){
+		String msg = "Egads! " + winner + " has solved it!";
 	}
 
 }
