@@ -4,8 +4,6 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.ButtonModel;
-import javax.swing.JOptionPane;
-
 import board.Player;
 
 import board.Tile;
@@ -18,16 +16,21 @@ import main.TextClient;
  * @author kraemezoe
  *
  */
-public class Controller implements MouseListener, ActionListener, KeyListener{
+public class Controller implements MouseListener, ActionListener, KeyListener {
 
 	Game game;
 	BoardFrame view;
 	PlayerSetupDialog playerSetup;
+	int numPlayers;
 
 	public Controller() {
+<<<<<<< HEAD
 		this.game = new Game(new TextClient());
+=======
+		this.game = new Game();
+>>>>>>> f4711d4e42c1eb6ee83e9254744bde7dabd02be1
 		this.view = new BoardFrame(this);
-		//doPlayerSetupView();
+		doGameSetup();
 	}
 
 	public Controller(BoardFrame view, Game game) {
@@ -48,8 +51,16 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 
 	}
 
-	public void doPlayerSetupView() {
+	public void doGameSetup() {
+		numPlayers = view.getNumPlayers();
 		playerSetup = new PlayerSetupDialog(view, this);
+	}
+
+	public void finishGameSetup(){
+		game.dealCards();
+		game.setCurrentPlayer();
+		updateView();
+		playerSetup.dispose();
 	}
 
 	@Override
@@ -60,17 +71,40 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 			if (chara != null && !nick.isEmpty()) {
 				game.addPlayer(game.playerFromString(chara.getActionCommand()), nick);
 				playerSetup.resetDialog();
+				numPlayers--;
 			}
-
+			if(numPlayers == 0){
+				finishGameSetup();
+			}
 		}
+
 		if (e.getActionCommand().equals("suggest")) {
 			// do suggest things
-			System.out.println(getSuspect());
+			// System.out.println(getSuspect());
+			String s = getSuspect();
+			if (s == null){return;}
+			String w = getMurderWeapon();
+			if (w == null){return;}
+			if (game.canSuggest(s, w)) {
+				String result = game.refute(game.suggest(s, w));
+				if (result == null) {
+					// game won stuff
+				} else {
+					// refuted dialog
+				}
+			}
 		} else if (e.getActionCommand().equals("accuse")) {
 			// do accuse things
-			game.accusationCorrect(getSuspect(), getCrimeScene(), getMurderWeapon());
-		}else if(e.getActionCommand().equals("end")){
+			String s = getSuspect();
+			if (s == null){return;}
+			String r = getCrimeScene();
+			if (r == null){return;}
+			String w = getMurderWeapon();
+			if (w == null){return;}
+			game.accusationCorrect(s, r, w);
+		} else if (e.getActionCommand().equals("end")) {
 			game.endTurn();
+			updateView();
 		}
 	}
 
@@ -88,17 +122,17 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		int id = e.getKeyCode();
-		switch(id){
-		case(KeyEvent.VK_DOWN):
+		switch (id) {
+		case (KeyEvent.VK_DOWN):
 			game.tryMove("S");
 			break;
-		case(KeyEvent.VK_LEFT):
+		case (KeyEvent.VK_LEFT):
 			game.tryMove("W");
 			break;
-		case(KeyEvent.VK_RIGHT):
+		case (KeyEvent.VK_RIGHT):
 			game.tryMove("E");
 			break;
-		case(KeyEvent.VK_UP):
+		case (KeyEvent.VK_UP):
 
 			game.tryMove("N");
 			break;
@@ -110,6 +144,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+<<<<<<< HEAD
 		view.findComponentAt(e.getPoint()).requestFocus();
 		
 		System.out.println("x is:"+e.getX()+"y is:"+e.getY()+"width is:"+view.getCanvas().getWidth());
@@ -120,6 +155,15 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 			game.tryLeaveRoom(row, col);
 		}
 		else {
+=======
+		System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
+		int col = pointToPos(e.getX());
+		int row = pointToPos(e.getY());
+		System.out.println("row, col" + row + "," + col);
+		if (0 < col && col < 26 && 0 < row && row < 26) {
+			game.tryLeaveRoom(col, row);
+		} else {
+>>>>>>> f4711d4e42c1eb6ee83e9254744bde7dabd02be1
 			System.out.println("outside of canvas");
 		}
 		view.repaint();
@@ -127,7 +171,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 	}
 
 	private int pointToPos(int point) {
-		return point/(view.getCanvas().getWidth()/25);
+		return point / (view.getCanvas().getWidth() / 25);
 	}
 
 	@Override
@@ -161,11 +205,12 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 	 * @return
 	 */
 	public List<String> getAllCharacters() {
-		List<String> charas = new ArrayList<>();
-		for (Player p : game.getAllCharas()) {
-			charas.add(p.getName());
-		}
-		return charas;
+		// List<String> charas = new ArrayList<>();
+		// for (Player p : game.getAllCharas()) {
+		// charas.add(p.getName());
+		// }
+		// return charas;
+		return game.allCharaNames();
 	}
 
 	public Tile[][] getTiles() {
@@ -176,19 +221,46 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 		return game.getBoard().getTile(row, col);
 	}
 
+	/**
+	 * gets a list of characters and calls the view to display a dialog box asking
+	 * the user to choose one, which is then returned
+	 *
+	 * @return
+	 */
 	public String getSuspect() {
-		String[] options = { "is", "this", "working", "?" };
+		Object[] options = game.allValidCharaNames().toArray();
 		return view.guessDialog("Choose a character", "Who dunnit?", options);
 	}
 
+	/**
+	 * gets a list of rooms and calls the view to display a dialog box asking
+	 * the user to choose one, which is then returned
+	 *
+	 * @return
+	 */
 	public String getCrimeScene() {
-		String[] options = { "is", "this", "working", "?" };
+		Object[] options = game.allValidRoomNames().toArray();
 		return view.guessDialog("Choose a room", "Scene of the crime?", options);
 	}
 
-	public String getMurderWeapon(){
-		String[] options = { "walla", "wall-a", "bing", "bang"};
+	/**
+	 * gets a list of weapons and calls the view to display a dialog box asking
+	 * the user to choose one, which is then returned
+	 *
+	 * @return
+	 */
+	public String getMurderWeapon() {
+		Object[] options = game.allValidWeapNames().toArray();
 		return view.guessDialog("Choose a weapon", "Murder weapon?", options);
+	}
+
+	/**
+	 * updates the view's checklist to display that of the current player
+	 */
+	public void updateView() {
+		view.updateNick(game.getCurrentNick());
+		view.updateChara(game.getCurrentChara());
+		view.updateChecklist(game.currentPlayerChecklist());
 	}
 
 	public void printBoard() {
@@ -198,7 +270,5 @@ public class Controller implements MouseListener, ActionListener, KeyListener{
 	public static void main(String args[]) {
 		new Controller();
 	}
-
-
 
 }
