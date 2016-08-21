@@ -17,7 +17,7 @@ import main.TextClient;
  * @author kraemezoe
  *
  */
-public class Controller implements ActionListener, KeyListener{
+public class Controller implements MouseListener, ActionListener, KeyListener{
 
 	Game game;
 	BoardFrame view;
@@ -26,7 +26,7 @@ public class Controller implements ActionListener, KeyListener{
 	public Controller(){
 		this.game = new Game(new TextClient());
 		this.view = new BoardFrame(this);
-		doPlayerSetupView();
+		//doPlayerSetupView();
 	}
 
 	public Controller(BoardFrame view, Game game){
@@ -80,22 +80,65 @@ public class Controller implements ActionListener, KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		int id = e.getID();
-		System.out.println("got here?");
+		int id = e.getKeyCode();
 		switch(id){
-		case(KeyEvent.VK_KP_DOWN):
+		case(KeyEvent.VK_DOWN):
 			game.tryMove("S");
 			break;
-		case(KeyEvent.VK_KP_LEFT):
+		case(KeyEvent.VK_LEFT):
 			game.tryMove("W");
 			break;
-		case(KeyEvent.VK_KP_RIGHT):
+		case(KeyEvent.VK_RIGHT):
 			game.tryMove("E");
 			break;
-		case(KeyEvent.VK_KP_UP):
+		case(KeyEvent.VK_UP):
 			game.tryMove("N");
 			break;
+		default:
+			System.out.println("Not an option");
 		}
+		view.repaint();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		System.out.println("x is:"+e.getX()+"y is:"+e.getY()+"width is:"+view.getCanvas().getWidth());
+		int col = pointToPos(e.getX());
+		int row = pointToPos(e.getY());
+		System.out.println("row, col"+row+","+col);
+		if(0<col&&col<26&&0<row&&row<26){
+			game.tryLeaveRoom(col, row);
+		}
+		else {
+			System.out.println("outside of canvas");
+		}
+	}
+
+	private int pointToPos(int point) {
+		return point/(view.getCanvas().getWidth()/25);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
 
 	}
 
@@ -132,5 +175,7 @@ public class Controller implements ActionListener, KeyListener{
 	public static void main(String args[]){
 		new Controller();
 	}
+
+
 
 }

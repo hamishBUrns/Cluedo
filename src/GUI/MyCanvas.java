@@ -16,10 +16,14 @@ public class MyCanvas extends JPanel {
 	public MyCanvas(Controller ctrl){
         setBorder(BorderFactory.createLineBorder(Color.black));
         control=ctrl;
+        setFocusable(true);
+        addKeyListener(control);
+        addMouseListener(control);
+
     }
 
 	public Dimension getPreferredSize() {
-		return new Dimension(1000,1000);
+		return new Dimension(600,600);
 	}
 	@Override
 	public void paintComponent(Graphics g){
@@ -60,7 +64,7 @@ public class MyCanvas extends JPanel {
 				g.setColor(Color.lightGray);
 				g.drawRect(i,z, squaresize,squaresize);
 				g.setColor(Color.blue);
-				g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+				g.setFont(new Font("TimesRoman", Font.PLAIN, squaresize));
 				if(control.getTile(row, col).getToken()!=null){
 
 					g.drawString(control.getTile(row, col).toString(), i+xoffset, z+yoffset);

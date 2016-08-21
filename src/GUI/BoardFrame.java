@@ -74,7 +74,9 @@ public class BoardFrame extends JFrame{
 		//startGameSetup();
 
 	}
-
+	public JPanel getCanvas(){
+		return canvas;
+	}
 	public int getNumPlayers(){
 		//setUpPSDPanel();
 		Object [] options = {2, 3, 4, 5, 6};

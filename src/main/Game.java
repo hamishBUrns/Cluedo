@@ -32,7 +32,7 @@ public class Game {
 		checklist = new Checklist();
 		noWinner = true;
 		board = new Board();
-		diceRoll=0;
+		diceRoll=10;
 		turnIndex=0;
 
 		assignCharacters();
@@ -163,9 +163,28 @@ public class Game {
 			System.out.println("cant move");
 			return;
 		}
+		System.out.println("was allowed to move");
 		move(players.get(turnIndex),dir);
 	}
 
+	public void tryLeaveRoom(int row, int col){
+		if(!canLeaveRoom()){
+			System.out.println("can't leave room");
+			return;
+		}
+		Tile door = board.getTile(row, col);
+		leaveRoom(door);
+	}
+	public boolean canLeaveRoom(){
+		Room room = board.currentRoom(currentPlayer);
+		if(room==null){//if player isn't in a room
+			return false;
+		}
+		if(!room.getDoors().containsValue(board.getTile(row, col))){ //if the door selected isn't a door of the players current room
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * gets and handles a command from the user, and ends a player's turn
@@ -247,19 +266,10 @@ public class Game {
 	 * @param room
 	 * @param p
 	 */
-	public void leaveRoom(int diceRoll, Room room, Player p) {
-		board.printBoard();
-		Map<String, Tile> doors = room.getDoors();
-		System.out.println("Exits from the " + room.getName() + " are:");
-		for (String s : doors.keySet()) {
-			System.out.println(s);
-		}
-		String exit = client.readString("How would you like to leave?");
-		while (!doors.containsKey(exit)) {
-			exit = client.readString("Please choose an exit from the list");
-		}
+	public void leaveRoom(Tile door) {
+		Player p=currentPlayer;
 		room.takeFromRoom(p, board);
-		Tile destination = doors.get(exit);
+		Tile destination = door;
 		p.setRow(destination.getRow());
 		p.setCol(destination.getCol());
 		board.getTile(p.getRow(), p.getCol()).setToken(p);
@@ -307,8 +317,10 @@ public class Game {
 		}
 		if (board.currentRoom(p) != null) {
 			board.currentRoom(p).putInRoom(p, board);
+			diceRoll=0;
 			return;
 			}
+		board.printBoard();
 	}
 
 	/**
