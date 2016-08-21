@@ -27,6 +27,12 @@ public class Checklist {
 		}
 	}
 
+	public boolean contains(Card c){
+		return characters.contains(c) || rooms.contains(c) || weapons.contains(c);
+	}
+
+	///////////////not needed///////////
+
 	public void printChecklist(){
 		System.out.println("//Checklist//");
 		System.out.println("Characters:");
@@ -56,10 +62,6 @@ public class Checklist {
 		for(WeaponCard w : weapons){
 			System.out.println(w.getName());
 		}
-	}
-
-	public boolean contains(Card c){
-		return characters.contains(c) || rooms.contains(c) || weapons.contains(c);
 	}
 
 }

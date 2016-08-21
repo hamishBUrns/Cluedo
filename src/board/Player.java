@@ -3,6 +3,7 @@ package board;
 import java.util.*;
 
 import cards.Card;
+import main.Checklist;
 
 public class Player implements Token {
 
@@ -12,6 +13,7 @@ public class Player implements Token {
 	private String nick;
 	private boolean stillIn;
 	private int playerNumber;
+	private Checklist checklist;
 
 	public Player(String nam, int row, int col) {
 		// TODO Auto-generated constructor stub
@@ -19,6 +21,7 @@ public class Player implements Token {
 		this.col = col;
 		this.name =nam;
 		stillIn = true;
+		checklist = new Checklist();
 		}
 
 	/**
@@ -39,6 +42,10 @@ public class Player implements Token {
 		for (Card c : hand) {
 			System.out.println(c.getName());
 		}
+	}
+
+	public Checklist getChecklist(){
+		return checklist;
 	}
 
 	/**
