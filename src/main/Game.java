@@ -44,6 +44,24 @@ public class Game {
 
 	}
 
+	public Game() {
+		deck = new Deck();
+		noWinner = true;
+		board = new Board();
+		diceRoll=10;
+		turnIndex=0;
+
+		//populate the array that holds all characters in the game
+		allCharas.add(new Player("Miss Scarlett", 0, 9));
+		allCharas.add(new Player("Colonel Mustard", 0, 15));
+		allCharas.add(new Player("Mrs White", 6, 24));
+		allCharas.add(new Player("The Reverend Green", 17, 0));
+		allCharas.add(new Player("Mrs Peacock", 19, 24));
+		allCharas.add(new Player("Professor Plum", 24, 7));
+
+		placeWeapons();
+	}
+
 
 	/**
 	 * Creates the weapons of the game and puts them in rooms
@@ -146,7 +164,11 @@ public class Game {
 		else{
 			turnIndex++;
 		}
-		currentPlayer=players.get(turnIndex);
+		setCurrentPlayer();
+	}
+
+	public void setCurrentPlayer(){
+		currentPlayer = players.get(turnIndex);
 	}
 
 	public boolean canMove(){

@@ -110,8 +110,8 @@ public class BoardFrame extends JFrame{
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(300,500));
 		tabPane.addTab("Actions", testPanel());
-		tabPane.addTab("Checklist", checklistPanel());
 		tabPane.addTab("Cards", handPanel());
+		tabPane.addTab("Checklist", checklistPanel());
 		return tabPane;
 	}
 

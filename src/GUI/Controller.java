@@ -21,11 +21,12 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	Game game;
 	BoardFrame view;
 	PlayerSetupDialog playerSetup;
+	int numPlayers;
 
 	public Controller() {
-		this.game = new Game(new TextClient(), 3);
+		this.game = new Game();
 		this.view = new BoardFrame(this);
-		// doPlayerSetupView();
+		doGameSetup();
 	}
 
 	public Controller(BoardFrame view, Game game) {
@@ -45,8 +46,16 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 
 	}
 
-	public void doPlayerSetupView() {
+	public void doGameSetup() {
+		numPlayers = view.getNumPlayers();
 		playerSetup = new PlayerSetupDialog(view, this);
+	}
+
+	public void finishGameSetup(){
+		game.dealCards();
+		game.setCurrentPlayer();
+		updateChecklist();
+		playerSetup.dispose();
 	}
 
 	@Override
@@ -57,8 +66,11 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			if (chara != null && !nick.isEmpty()) {
 				game.addPlayer(game.playerFromString(chara.getActionCommand()), nick);
 				playerSetup.resetDialog();
+				numPlayers--;
 			}
-
+			if(numPlayers == 0){
+				finishGameSetup();
+			}
 		}
 
 		if (e.getActionCommand().equals("suggest")) {
