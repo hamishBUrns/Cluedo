@@ -27,7 +27,6 @@ public class BoardFrame extends JFrame {
 	// Players put in name //text field
 	// players choose character //radio box
 
-<<<<<<< HEAD
 	//DONE: Board drawing
 			//Drawing weapon and players
 			//Drawing on weapon and player movement
@@ -36,16 +35,6 @@ public class BoardFrame extends JFrame {
 
 	//DONE: End Turn
 			// integrate logic
-=======
-	// STEP 1.5: Board drawing
-	// Drawing weapon and players
-	// Drawing on weapon and player movement
-
-	// STEP 2: change move to use key listener
-
-	// STEP 2.5: End Turn
-	// integrate logic
->>>>>>> f4711d4e42c1eb6ee83e9254744bde7dabd02be1
 
 	// STEP 3: Dialogue boxes at start of turn with information
 	// Dialogue box at end of game
@@ -55,11 +44,7 @@ public class BoardFrame extends JFrame {
 
 	// STEP 5: Dialogue box when attempting to close main window/ new game etc
 
-<<<<<<< HEAD
 	//DONE: When exiting room select door with mouse to choose
-=======
-	// STEP 6: When exiting room select door with mouse to choose
->>>>>>> f4711d4e42c1eb6ee83e9254744bde7dabd02be1
 
 	// STEP 7: Displaying hand as images
 	// Otherwise text
@@ -91,11 +76,6 @@ public class BoardFrame extends JFrame {
 		add(canvas, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
-<<<<<<< HEAD
-		//startGameSetup();
-
-=======
->>>>>>> f4711d4e42c1eb6ee83e9254744bde7dabd02be1
 	}
 
 	public JPanel getCanvas() {
@@ -243,6 +223,18 @@ public class BoardFrame extends JFrame {
 				options,
 				options[0]);
 		return s;
+	}
+
+	public void warningMessage(String msg, String title){
+		JOptionPane.showMessageDialog((JFrame) this, msg, title, JOptionPane.ERROR_MESSAGE);
+	}
+
+	public void infoMessage(String msg, String title){
+		JOptionPane.showMessageDialog((JFrame) this, msg, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public void gameWonMessage(String winner){
+		String msg = "Egads! " + winner + " has solved it!";
 	}
 
 }
