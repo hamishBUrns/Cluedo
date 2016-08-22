@@ -15,43 +15,36 @@ import main.Game;
  *
  */
 public class BoardFrame extends JFrame {
-	// selector fields for choosing character/room/weapons?
-	// draw board from images essentially replacing the toString bits
-	// buttons to: end turn, suggest, accuse (only pressable after moving
-	// finished)
-	// dialogue boxes for suggest, accuse, leaving room, new turn, public
-	// dialogues
-	// keyListener to handle movement
 
-	// STEP 1: set up pop-up dialogues that start the game
-	// Players put in name //text field
-	// players choose character //radio box
 
-	//DONE: Board drawing
-			//Drawing weapon and players
-			//Drawing on weapon and player movement
-
-	//DONE: change move to use key listener
-
-	//DONE: End Turn
-			// integrate logic
-
-	// STEP 3: Dialogue boxes at start of turn with information
-	// Dialogue box at end of game
-
-	// STEP 4: Suggestion/accuse
-	// Pop ups with combo boxes or text fields
-
-	// STEP 5: Dialogue box when attempting to close main window/ new game etc
-
-	//DONE: When exiting room select door with mouse to choose
-
-	// STEP 7: Displaying hand as images
-	// Otherwise text
-
-	// STEP 8: Change logic of checklist to be personal
-	// Display Checklist
-
+	/**
+	 * To Do:
+	 *
+	 * ESSENTIAL
+	 * Java Doc everything
+	 * Internal comment stuff
+	 * Remove System Out
+	 * Sequence diagram
+	 * Object diagram
+	 * Individual report
+	 *
+	 * Implement images for tokens (JLabel)
+	 * Implement hover for labels
+	 * Dialogue boxes for
+	 * 		Upon suggest accuse result
+	 * 		Change of players turn
+	 * Show number of dice steps left
+	 * Suggest/checklist logic
+	 * Name the rooms (labels?)
+	 *
+	 * OTHER
+	 * Showing the secret staircases
+	 * Change resizeable logic so that selecting doors wont bug out
+	 * Have doors change color when mousing over them
+	 *
+	 *
+	 *
+	 */
 	private Controller control;
 	private JMenuBar menuBar;
 	private JTextArea cards;
@@ -76,6 +69,8 @@ public class BoardFrame extends JFrame {
 		add(canvas, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
+
+
 	}
 
 	public JPanel getCanvas() {
