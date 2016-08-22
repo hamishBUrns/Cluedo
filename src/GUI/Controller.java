@@ -24,29 +24,12 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	int numPlayers;
 
 	public Controller() {
-		this.game = new Game();
-		this.view = new BoardFrame(this);
 		doGameSetup();
 	}
 
-	public Controller(BoardFrame view, Game game) {
-		this.game = game;
-		this.view = view;
-
-	}
-
-	/**
-	 * for testing the view/controller interaction without worrying game logic
-	 * yet
-	 *
-	 * @param view
-	 */
-	public Controller(BoardFrame view) {
-		this.view = view;
-
-	}
-
 	public void doGameSetup() {
+		this.game = new Game();
+		this.view = new BoardFrame(this);
 		numPlayers = view.getNumPlayers();
 		playerSetup = new PlayerSetupDialog(view, this);
 	}
@@ -72,69 +55,76 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			if (numPlayers == 0) {
 				finishGameSetup();
 			}
-		}
-
-		if (e.getActionCommand().equals("suggest")) {
-			// do suggest things
-			if (game.canSuggest()) {
-				// get strings for suggested character & weapon
-				// if null, player has canceled the action, so return without doing anything
-				String s = getSuspect();
-				if (s == null) {
-					return;
-				}
-				String w = getMurderWeapon();
-				if (w == null) {
-					return;
-				}
-				String r = game.currentRoomName();
-				view.infoMessage("\"Perhaps it was " + s + " in the " + r + " with the " + w + "?\"",
-						game.getCurrentNick() + ":");
-				String result = game.refute(game.suggest(s, w));
-				if (result == null) {
-					// game won stuff
-					view.gameWonMessage(game.getCurrentNick());
-				} else {
-					// refuted dialog
-					view.infoMessage("There's irrefutable proof that '" + result + "' was not involved.", "But Wait!");
-					game.endTurn();
-					//updateView();
-				}
-			} else {
-				view.warningMessage("You must be inside a valid room to suggest", "Uh Oh!");
+		}else{
+			if (e.getActionCommand().equals("suggest")) {
+				// do suggest things
+				suggest();
+			} else if (e.getActionCommand().equals("accuse")) {
+				// do accuse things
+				accuse();
+			} else if (e.getActionCommand().equals("end")) {
+				game.endTurn();
+				// updateView();
 			}
-		} else if (e.getActionCommand().equals("accuse")) {
-			// do accuse things
-			// get strings for accused character, room, & weapon
-			//  if null, player has canceled the action, so return without doing anything
+			updateView();
+		}
+	}
+
+	public void suggest() {
+		if (game.canSuggest()) {
+			// get strings for suggested character & weapon
+			// if null, player has canceled the action, so return without doing
+			// anything
 			String s = getSuspect();
 			if (s == null) {
-				return;
-			}
-			String r = getCrimeScene();
-			if (r == null) {
 				return;
 			}
 			String w = getMurderWeapon();
 			if (w == null) {
 				return;
 			}
-			if(game.accusationCorrect(s, r, w)){
+			String r = game.currentRoomName();
+			view.infoMessage("\"Perhaps it was " + s + " in the " + r + " with the " + w + "?\"",
+					game.getCurrentNick() + ":");
+			String result = game.refute(game.suggest(s, w));
+			if (result == null) {
+				// game won stuff
 				view.gameWonMessage(game.getCurrentNick());
-			}else{
+			} else {
+				// refuted dialog
+				view.infoMessage("There's irrefutable proof that '" + result + "' was not involved.", "But Wait!");
 				game.endTurn();
-				view.playerLostMessage(game.getCurrentNick());
-				if(!game.playersLeft()){
-					view.gameLostMessage();
-				}
+				// updateView();
 			}
-		} else if (e.getActionCommand().equals("end")) {
-			game.endTurn();
-			//updateView();
+		} else {
+			view.warningMessage("You must be inside a valid room to suggest", "Uh Oh!");
 		}
+	}
 
-		if(playerSetup == null){
-			updateView();
+	public void accuse() {
+		// get strings for accused character, room, & weapon
+		// if null, player has canceled the action, so return without doing
+		// anything
+		String s = getSuspect();
+		if (s == null) {
+			return;
+		}
+		String r = getCrimeScene();
+		if (r == null) {
+			return;
+		}
+		String w = getMurderWeapon();
+		if (w == null) {
+			return;
+		}
+		if (game.accusationCorrect(s, r, w)) {
+			view.gameWonMessage(game.getCurrentNick());
+		} else {
+			game.endTurn();
+			view.playerLostMessage(game.getCurrentNick());
+			if (!game.playersLeft()) {
+				view.gameLostMessage();
+			}
 		}
 	}
 
@@ -151,7 +141,9 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(playerSetup != null){return;}
+		if (playerSetup != null) {
+			return;
+		}
 		int id = e.getKeyCode();
 		switch (id) {
 		case (KeyEvent.VK_DOWN):
@@ -164,18 +156,20 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			game.tryMove("E");
 			break;
 		case (KeyEvent.VK_UP):
-
 			game.tryMove("N");
 			break;
 		default:
 			System.out.println("Not an option");
 		}
+		view.updateStepsLeft(game.getDiceRoll());
 		view.repaint();
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(playerSetup != null){return;}
+		if (playerSetup != null || game.getDiceRoll() == 0) {
+			return;
+		}
 		view.findComponentAt(e.getPoint()).requestFocus();
 
 		System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
@@ -187,6 +181,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		} else {
 			System.out.println("outside of canvas");
 		}
+
 		view.repaint();
 
 	}
@@ -270,18 +265,20 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	}
 
 	/**
-	 * updates the view's display to reflect any changes that have occurred in the game
+	 * updates the view's display to reflect any changes that have occurred in
+	 * the game
 	 */
 	public void updateView() {
 		view.updateNick(game.getCurrentNick());
 		view.updateChara(game.getCurrentChara());
+		view.updateStepsLeft(game.getDiceRoll());
 		view.updateHand(game.currentPlayerHand());
 		view.updateChecklist(game.currentPlayerChecklist());
 		view.repaint();
 	}
 
 	public void printBoard() {
-		game.getBoard().printBoard();
+		// game.getBoard().printBoard();
 	}
 
 	public static void main(String args[]) {

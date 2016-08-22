@@ -51,6 +51,7 @@ public class BoardFrame extends JFrame {
 	private JTextArea checklist;
 	private JLabel nick;
 	private JLabel chara;
+	private JLabel stepsLeft;
 	private MyCanvas canvas;
 
 	public BoardFrame(Controller ctrl) {
@@ -125,27 +126,32 @@ public class BoardFrame extends JFrame {
 	private JPanel mainPanel() {
 		JPanel main = new JPanel();
 
-		JPanel labels = new JPanel(new GridLayout(2,1,5,5));
+		JPanel labels = new JPanel(new GridLayout(3,1,5,5));
 		nick = new JLabel("nickname");
 		chara = new JLabel("character");
+		stepsLeft = new JLabel();
 		labels.add(nick);
 		labels.add(chara);
+		labels.add(stepsLeft);
 
 		JPanel buttons = new JPanel(new GridLayout(3,1,5,5));
 		buttons.setPreferredSize(new Dimension(200, 100));
 
 		JButton sug = new JButton("Suggest");
 		sug.setMnemonic(KeyEvent.VK_S);// actually alt + s
+		sug.setToolTipText("You must be in the room you're suggesting to do this");
 		sug.setActionCommand("suggest");
 		sug.addActionListener(control);
 
 		JButton acc = new JButton("Accuse");
 		acc.setMnemonic(KeyEvent.VK_A);// actually alt + a
+		acc.setToolTipText("Careful! If you're wrong, you'll be out of the game!");
 		acc.setActionCommand("accuse");
 		acc.addActionListener(control);
 
 		JButton end = new JButton("End Turn");
 		end.setMnemonic(KeyEvent.VK_E);// actually alt + e
+		end.setToolTipText("End your turn");
 		end.setActionCommand("end");
 		end.addActionListener(control);
 
@@ -216,6 +222,10 @@ public class BoardFrame extends JFrame {
 		chara.setText(newChara);
 	}
 
+	public void updateStepsLeft(int steps){
+		stepsLeft.setText("Steps left: "+steps);
+	}
+
 	public String guessDialog(String title, String msg, Object[] options) {
 		String s = (String) JOptionPane.showInputDialog(
 				(JFrame) this,
@@ -237,7 +247,9 @@ public class BoardFrame extends JFrame {
 	}
 
 	public void gameWonMessage(String winner){
-		String msg = "Egads! " + winner + " has solved it!";
+		JOptionPane.showMessageDialog((JFrame) this,
+				winner + " has solved it!",
+				"Egads!", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public void playerLostMessage(String loser){
@@ -252,8 +264,22 @@ public class BoardFrame extends JFrame {
 				"Wow.", JOptionPane.ERROR_MESSAGE);
 	}
 
-	public void gameOverOptions(){
-
+	public boolean startNewGame(String msg, String title){
+		Object [] options = {"Start sleuthing!", "Cancel"};
+		int choice = JOptionPane.showOptionDialog(
+				(JFrame) this,
+				msg,
+				title,
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]);
+		if(choice == JOptionPane.YES_OPTION){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 }

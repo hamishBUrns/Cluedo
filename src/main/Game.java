@@ -12,9 +12,9 @@ public class Game {
 	private List<Card> solution = new ArrayList<Card>();
 	private Map<String, Weapon> weapons = new HashMap<>();
 
-	private TextClient client;
+	//private TextClient client;
 	private Deck deck;
-	private Checklist checklist;
+	//private Checklist checklist;
 	private Board board;
 
 	private int turnIndex;
@@ -110,6 +110,9 @@ public class Game {
 		diceRoll = rand.nextInt(11) + 2;
 	}
 
+	/**
+	 * increments the turnIndex and sets the current player
+	 */
 	public void endTurn(){
 		if(turnIndex==players.size()-1){
 			turnIndex=0;
@@ -120,8 +123,13 @@ public class Game {
 		setCurrentPlayer();
 	}
 
+	/**
+	 * Sets the current player using the turnIndex and rolls the dice for their turn.
+	 * If that player is out of the game, calls endTurn
+	 */
 	public void setCurrentPlayer(){
 		currentPlayer = players.get(turnIndex);
+		rollDice();
 		if(!currentPlayer.isStillIn() && playersLeft()){
 			endTurn();
 		}
@@ -236,13 +244,16 @@ public class Game {
 			diceRoll=0;
 			return;
 			}
-		board.printBoard();
+		//board.printBoard();
 	}
 
 	public boolean canSuggest() {
 		Room room = board.currentRoom(currentPlayer);
-		Card r = cardFromString(room.getName());
 		if(room == null){
+			return false;
+		}
+		Card r = cardFromString(room.getName());
+		if(currentPlayer.getChecklist().contains(r)){
 			return false;
 		}
 		return true;
@@ -392,10 +403,10 @@ public class Game {
 	 * @param numPlayers
 	 */
 	public Game(TextClient c, int numPlayers) {
-		client = c;
+		//client = c;
 		deck = new Deck();
 		board = new Board();
-		checklist = new Checklist();
+		//checklist = new Checklist();
 		noWinner = true;
 
 		List<Player> defaults = new ArrayList<Player>();
@@ -538,6 +549,10 @@ public class Game {
 			}
 		}
 		return s;
+	}
+
+	public int getDiceRoll(){
+		return diceRoll;
 	}
 
 }
