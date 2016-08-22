@@ -4,11 +4,8 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.ButtonModel;
-import board.Player;
-
 import board.Tile;
 import main.Game;
-import main.TextClient;
 
 /**
  * i'll do this later
@@ -24,12 +21,12 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	int numPlayers;
 
 	public Controller() {
+		this.view = new BoardFrame(this);
 		doGameSetup();
 	}
 
 	public void doGameSetup() {
 		this.game = new Game();
-		this.view = new BoardFrame(this);
 		numPlayers = view.getNumPlayers();
 		playerSetup = new PlayerSetupDialog(view, this);
 	}
@@ -64,7 +61,16 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 				accuse();
 			} else if (e.getActionCommand().equals("end")) {
 				game.endTurn();
-				// updateView();
+			} else if (e.getActionCommand().equals("help")){
+
+			} else if (e.getActionCommand().equals("new")){
+				if(view.startNewGame()){
+					//view.dispose();
+					doGameSetup();
+					return;
+				}
+			} else if (e.getActionCommand().equals("quit")){
+				System.out.println("leave");
 			}
 			updateView();
 		}
@@ -159,7 +165,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			game.tryMove("N");
 			break;
 		default:
-			System.out.println("Not an option");
+			//System.out.println("Not an option");
 		}
 		view.updateStepsLeft(game.getDiceRoll());
 		view.repaint();

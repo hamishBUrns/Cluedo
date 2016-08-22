@@ -104,8 +104,25 @@ public class BoardFrame extends JFrame {
 	 */
 	private JMenu menu() {
 		JMenu menu = new JMenu("File");
-		menu.add(new JMenuItem("Help"));
-		menu.add(new JMenuItem("Quit"));
+
+		JMenuItem help = new JMenuItem("Help");
+		help.setAccelerator(KeyStroke.getKeyStroke('h'));
+		help.setActionCommand("help");
+		help.addActionListener(control);
+		menu.add(help);
+
+		JMenuItem newGame = new JMenuItem("New Game");
+		newGame.setAccelerator(KeyStroke.getKeyStroke('n'));
+		newGame.setActionCommand("new");
+		newGame.addActionListener(control);
+		menu.add(newGame);
+
+		JMenuItem quit = new JMenuItem("Quit");
+		quit.setAccelerator(KeyStroke.getKeyStroke('q'));
+		quit.setActionCommand("quit");
+		quit.addActionListener(control);
+		menu.add(quit);
+
 		return menu;
 	}
 
@@ -264,12 +281,12 @@ public class BoardFrame extends JFrame {
 				"Wow.", JOptionPane.ERROR_MESSAGE);
 	}
 
-	public boolean startNewGame(String msg, String title){
+	public boolean startNewGame(){
 		Object [] options = {"Start sleuthing!", "Cancel"};
 		int choice = JOptionPane.showOptionDialog(
 				(JFrame) this,
-				msg,
-				title,
+				"Would you like to start a new game?",
+				"Murder Most Foul!",
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE,
 				null,
