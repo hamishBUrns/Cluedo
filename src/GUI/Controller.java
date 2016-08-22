@@ -25,12 +25,20 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		doGameSetup();
 	}
 
+	/**
+	 * creates a new Game, calls for dialog to get the number of players,
+	 * and creates a new PlayerSetupDialog to set up the players
+	 */
 	public void doGameSetup() {
 		this.game = new Game();
 		numPlayers = view.getNumPlayers();
 		playerSetup = new PlayerSetupDialog(view, this);
 	}
 
+	/**
+	 * completes the game set up by calling to deal cards and set the current player
+	 * updates the view and disposes of the player setup dialog
+	 */
 	public void finishGameSetup() {
 		game.dealCards();
 		game.setCurrentPlayer();
@@ -76,6 +84,11 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		}
 	}
 
+	/**
+	 * Obtains strings of the suggested cards from the user to be checked by the game logic
+	 * and displays the finalised suggestion. Calls to display the appropriate dialog depending
+	 * on whether the suggestion is correct
+	 */
 	public void suggest() {
 		if (game.canSuggest()) {
 			// get strings for suggested character & weapon
@@ -107,6 +120,11 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		}
 	}
 
+	/**
+	 * Obtains strings of the accused cards from the user to be checked by the game logic
+	 * and displays the finalised accusation. Calls to display the appropriate dialog depending
+	 * on whether the accusation is correct
+	 */
 	public void accuse() {
 		// get strings for accused character, room, & weapon
 		// if null, player has canceled the action, so return without doing
@@ -123,12 +141,17 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		if (w == null) {
 			return;
 		}
+		view.infoMessage("\"It was " + s + " in the " + r + " with the " + w + "!\"",
+				game.getCurrentNick() + ":");
 		if (game.accusationCorrect(s, r, w)) {
+			// game is won
 			view.gameWonMessage(game.getCurrentNick());
 		} else {
+			// player has lost
 			game.endTurn();
 			view.playerLostMessage(game.getCurrentNick());
 			if (!game.playersLeft()) {
+				// if no one is left in the game, game is lost
 				view.gameLostMessage();
 			}
 		}

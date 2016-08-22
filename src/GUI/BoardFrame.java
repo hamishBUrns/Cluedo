@@ -98,7 +98,7 @@ public class BoardFrame extends JFrame {
 	}
 
 	/**
-	 * set up the menu
+	 * set up and return the menu with its menu items
 	 *
 	 * @return
 	 */
@@ -127,7 +127,7 @@ public class BoardFrame extends JFrame {
 	}
 
 	/**
-	 * set up the tapped pane
+	 * set up and return the tapped pane
 	 *
 	 * @return
 	 */
@@ -140,6 +140,10 @@ public class BoardFrame extends JFrame {
 		return tabPane;
 	}
 
+	/**
+	 * set up and return the main tab panel
+	 * @return
+	 */
 	private JPanel mainPanel() {
 		JPanel main = new JPanel();
 
@@ -182,7 +186,7 @@ public class BoardFrame extends JFrame {
 	}
 
 	/**
-	 * set up the checklist tab panel
+	 * set up and return the checklist tab panel
 	 *
 	 * @return
 	 */
@@ -195,7 +199,7 @@ public class BoardFrame extends JFrame {
 	}
 
 	/**
-	 * set up the player hand tab panel
+	 * set up and return the player hand tab panel
 	 *
 	 * @return
 	 */
@@ -243,6 +247,14 @@ public class BoardFrame extends JFrame {
 		stepsLeft.setText("Steps left: "+steps);
 	}
 
+	/**
+	 * display a dialog box that asks the user to choose one of the given options
+	 * and returns their choice
+	 * @param title
+	 * @param msg
+	 * @param options
+	 * @return
+	 */
 	public String guessDialog(String title, String msg, Object[] options) {
 		String s = (String) JOptionPane.showInputDialog(
 				(JFrame) this,
@@ -255,10 +267,22 @@ public class BoardFrame extends JFrame {
 		return s;
 	}
 
+	/**
+	 * displays a message of warning to the user, used for when they attempt an
+	 * illegal action such as trying to suggest without being in a valid room
+	 * @param msg
+	 * @param title
+	 */
 	public void warningMessage(String msg, String title){
 		JOptionPane.showMessageDialog((JFrame) this, msg, title, JOptionPane.WARNING_MESSAGE);
 	}
 
+	/**
+	 * displays a message of the given msg string to the user, used to display finalised
+	 * suggestions/accusations
+	 * @param msg
+	 * @param title
+	 */
 	public void infoMessage(String msg, String title){
 		JOptionPane.showMessageDialog((JFrame) this, msg, title, JOptionPane.INFORMATION_MESSAGE);
 	}
