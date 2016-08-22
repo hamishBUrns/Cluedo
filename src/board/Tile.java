@@ -75,7 +75,7 @@ public class Tile {
 	@Override
 	public String toString() {
 		if (token != null) {
-			return token.symbol();
+			return token.id();
 		} else {
 			switch (type) {
 			case ("wall"):

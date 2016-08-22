@@ -108,8 +108,8 @@ public class Player implements Token {
 	}
 
 	@Override
-	public String symbol() {
-		return Integer.toString(playerNumber);
+	public String id() {
+		return name;
 	}
 
 }

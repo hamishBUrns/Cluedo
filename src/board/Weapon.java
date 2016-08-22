@@ -19,7 +19,7 @@ public class Weapon implements Token {
 	}
 
 	@Override
-	public String symbol() {
+	public String id() {
 		switch(name){
 			case "dagger":
 				return "^";

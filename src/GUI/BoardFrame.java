@@ -30,9 +30,6 @@ public class BoardFrame extends JFrame {
 	 *
 	 * Implement images for tokens (JLabel)
 	 * Implement hover for labels
-	 * Dialogue boxes for
-	 * 		Upon suggest accuse result
-	 * 		Change of players turn
 	 * Show number of dice steps left
 	 * Suggest/checklist logic
 	 * Name the rooms (labels?)
@@ -41,6 +38,8 @@ public class BoardFrame extends JFrame {
 	 * Showing the secret staircases
 	 * Change resizeable logic so that selecting doors wont bug out
 	 * Have doors change color when mousing over them
+	 * Dialogue boxes for
+	 * 		Change of players turn
 	 *
 	 *
 	 *
@@ -69,8 +68,6 @@ public class BoardFrame extends JFrame {
 		add(canvas, BorderLayout.CENTER);
 		pack();
 		setVisible(true);
-
-
 	}
 
 	public JPanel getCanvas() {
