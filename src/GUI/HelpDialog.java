@@ -31,7 +31,9 @@ public class HelpDialog extends JDialog {
 				+ "Your checklist keeps track of all the cards you've seen (and \n"
 				+ "therefore cannot be part of the solution), and can be found in the \n"
 				+ "'Checklist' tab on the right panel. You can see what cards are in \n"
-				+ "your hand under the 'Cards' tab\n\n";
+				+ "your hand under the 'Cards' tab\n\n"
+				+ "To short cut to a button, hold alt and the underlined letter keys.\n"
+				+ "Press N to start a new game, Q to quit, and H for help.";
 		main.add(new JTextArea(s));
 		return main;
 	}

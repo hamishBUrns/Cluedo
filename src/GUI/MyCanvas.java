@@ -128,26 +128,26 @@ public class MyCanvas extends JPanel {
 
 	private void createTokenLabels() {
 
-		labels.add(createLabel("images/missScarlet.png", "ms", "Miss Scarlett"));
-		labels.add(createLabel("images/colonelMustard.jpg", "cm", "Col. Mustard"));
-		labels.add(createLabel("images/mrsWhite.png", "mw", "Mrs. White"));
-		labels.add(createLabel("images/thereverendgreen.jpg", "trg", "The Rev. Green"));
-		labels.add(createLabel("images/mrspeacock.jpg", "professor plum", "Mrs. Peacock"));
-		labels.add(createLabel("images/profPlum.jpg", "pp", "Professor Plum"));
+		labels.add(createLabel("images/missScarlet.png", "Miss Scarlett"));
+		labels.add(createLabel("images/colonelMustard.jpg", "Col. Mustard"));
+		labels.add(createLabel("images/mrsWhite.png", "Mrs. White"));
+		labels.add(createLabel("images/thereverendgreen.jpg", "The Rev. Green"));
+		labels.add(createLabel("images/mrspeacock.jpg", "Mrs. Peacock"));
+		labels.add(createLabel("images/profPlum.jpg", "Professor Plum"));
 
-		labels.add(createLabel("images/pipe.jpeg", "pp", "pipe"));
-		labels.add(createLabel("images/spanner.png", "pp", "spanner"));
-		labels.add(createLabel("images/rope.jpeg", "pp", "rope"));
-		labels.add(createLabel("images/revolver.jpeg", "pp", "revolver"));
-		labels.add(createLabel("images/dagger.png", "pp", "dagger"));
-		labels.add(createLabel("images/candlestick.jpeg", "pp", "candlestick"));
+		labels.add(createLabel("images/pipe.jpeg", "pipe"));
+		labels.add(createLabel("images/spanner.png", "spanner"));
+		labels.add(createLabel("images/rope.jpeg", "rope"));
+		labels.add(createLabel("images/revolver.jpeg", "revolver"));
+		labels.add(createLabel("images/dagger.png", "dagger"));
+		labels.add(createLabel("images/candlestick.jpeg", "candlestick"));
 	}
 
-	private JLabel createLabel(String path, String description, String hoverText) {
+	private JLabel createLabel(String path, String description) {
 		ImageIcon imageicon = createImageIcon(path, description);
 		imageicon.setImage(getScaledImage(imageicon.getImage(), squaresize, squaresize));
 		JLabel label = new JLabel(imageicon);
-		label.setToolTipText(hoverText);
+		label.setToolTipText(description);
 		label.setOpaque(true);
 		this.add(label);
 		return label;
