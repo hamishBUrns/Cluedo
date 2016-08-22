@@ -252,4 +252,8 @@ public class BoardFrame extends JFrame {
 				"Wow.", JOptionPane.ERROR_MESSAGE);
 	}
 
+	public void gameOverOptions(){
+
+	}
+
 }
