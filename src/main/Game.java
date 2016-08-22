@@ -163,15 +163,15 @@ public class Game {
 	public boolean canLeaveRoom(Tile door){
 		Room room = board.currentRoom(currentPlayer);
 		if(room==null){//if player isn't in a room
-			System.out.println("player not in room");
+			//System.out.println("player not in room");
 			return false;
 		}
 		if(!room.getDoors().containsValue(door)){ //if the door selected isn't a door of the players current room
 			for(Tile t: room.getDoors().values()){
-				System.out.println("Door:"+t.getRow()+","+t.getCol());
+				//System.out.println("Door:"+t.getRow()+","+t.getCol());
 			}
-			System.out.println("actual door is:"+door.getRow()+","+door.getCol());
-			System.out.println("door is not of this room");
+			//System.out.println("actual door is:"+door.getRow()+","+door.getCol());
+			//System.out.println("door is not of this room");
 			return false;
 		}
 		return true;

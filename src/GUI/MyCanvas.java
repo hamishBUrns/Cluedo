@@ -34,7 +34,7 @@ public class MyCanvas extends JPanel {
 
         labels= new ArrayList<JLabel>();
         createTokenLabels();
-
+        
 
     }
 
@@ -76,7 +76,6 @@ public class MyCanvas extends JPanel {
 				g.fillRect(i, z, squaresize, squaresize);
 
 				if(control.getTile(row,col).getToken()!=null){
-					System.out.println(control.getTile(row,col).getToken().id());
 					switch(control.getTile(row,col).getToken().id()){
 					case("Miss Scarlett"):
 						labels.get(0).setLocation(i, z);
@@ -115,11 +114,7 @@ public class MyCanvas extends JPanel {
 					case("$"):
 						labels.get(11).setLocation(i, z);
 					break;
-					default:
-						System.out.println("Something wrong with to string?");
 					}
-
-
 				g.setColor(Color.lightGray);
 				g.drawRect(i,z, squaresize,squaresize);
 

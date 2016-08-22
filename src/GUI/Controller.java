@@ -8,7 +8,7 @@ import board.Tile;
 import main.Game;
 
 /**
- * i'll do this later
+ *Controller to connect view and model (boardframe and game)
  *
  * @author kraemezoe
  *
@@ -203,14 +203,14 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		view.findComponentAt(e.getPoint()).requestFocus();
 
 
-		System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
+		//System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
 		int col = pointToPos(e.getX());
 		int row = pointToPos(e.getY());
-		System.out.println("row, col" + row + "," + col);
+		//System.out.println("row, col" + row + "," + col);
 		if (0 < col && col < 26 && 0 < row && row < 26) {
 			game.tryLeaveRoom(row, col);
 		} else {
-			System.out.println("outside of canvas");
+			//System.out.println("outside of canvas");
 		}
 
 		view.repaint();

@@ -23,18 +23,18 @@ public class BoardFrame extends JFrame {
 	 * ESSENTIAL
 	 * Java Doc everything
 	 * Internal comment stuff
-	 * Remove System Out
+	 * 
 	 * Sequence diagram
 	 * Object diagram
 	 * Individual report
 	 *
-	 * Implement images for tokens (JLabel)
-	 * Implement hover for labels
-	 * Show number of dice steps left
-	 * Suggest/checklist logic
-	 * Name the rooms (labels?)
-	 *
+	 * 
 	 * OTHER
+	 * Accuse lose says wrong person loses?
+	 * Implement hover for labels
+	 * 
+	 *
+	 * MORE OTHER
 	 * Showing the secret staircases
 	 * Change resizeable logic so that selecting doors wont bug out
 	 * Have doors change color when mousing over them
