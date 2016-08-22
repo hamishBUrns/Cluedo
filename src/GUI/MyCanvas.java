@@ -34,7 +34,7 @@ public class MyCanvas extends JPanel {
 
         labels= new ArrayList<JLabel>();
         createTokenLabels();
-        
+
 
     }
 
@@ -61,7 +61,7 @@ public class MyCanvas extends JPanel {
 					g.setColor(Color.yellow);
 				break;
 				case ("door"):
-					g.setColor(Color.MAGENTA);
+					g.setColor(Color.orange);
 				break;
 				case ("start"):
 					g.setColor(Color.green);
@@ -72,6 +72,12 @@ public class MyCanvas extends JPanel {
 				default:
 					g.setColor(Color.red);
 					break;
+				}
+				if((row==24 && col==21)||
+						(row==19 && col==0)||
+						(row==5 && col==23)||
+						(row==1 && col==5)){
+				g.setColor(Color.magenta);
 				}
 				g.fillRect(i, z, squaresize, squaresize);
 

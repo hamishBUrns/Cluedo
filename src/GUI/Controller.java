@@ -235,7 +235,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+		view.findComponentAt(e.getPoint()).requestFocus();
 
 	}
 
