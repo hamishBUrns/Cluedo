@@ -56,6 +56,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		game.setCurrentPlayer();
 		updateView();
 		playerSetup.dispose();
+		playerSetup = null;
 	}
 
 	@Override
@@ -75,8 +76,9 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 
 		if (e.getActionCommand().equals("suggest")) {
 			// do suggest things
-			// System.out.println(getSuspect());
 			if (game.canSuggest()) {
+				// get strings for suggested character & weapon
+				// if null, player has canceled the action, so return without doing anything
 				String s = getSuspect();
 				if (s == null) {
 					return;
@@ -91,17 +93,20 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 				String result = game.refute(game.suggest(s, w));
 				if (result == null) {
 					// game won stuff
+					view.gameWonMessage(game.getCurrentNick());
 				} else {
 					// refuted dialog
 					view.infoMessage("There's irrefutable proof that '" + result + "' was not involved.", "But Wait!");
 					game.endTurn();
-					updateView();
+					//updateView();
 				}
 			} else {
 				view.warningMessage("You must be inside a valid room to suggest", "Uh Oh!");
 			}
 		} else if (e.getActionCommand().equals("accuse")) {
 			// do accuse things
+			// get strings for accused character, room, & weapon
+			//  if null, player has canceled the action, so return without doing anything
 			String s = getSuspect();
 			if (s == null) {
 				return;
@@ -114,9 +119,21 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			if (w == null) {
 				return;
 			}
-			game.accusationCorrect(s, r, w);
+			if(game.accusationCorrect(s, r, w)){
+				view.gameWonMessage(game.getCurrentNick());
+			}else{
+				game.endTurn();
+				view.playerLostMessage(game.getCurrentNick());
+				if(!game.playersLeft()){
+					view.gameLostMessage();
+				}
+			}
 		} else if (e.getActionCommand().equals("end")) {
 			game.endTurn();
+			//updateView();
+		}
+
+		if(playerSetup == null){
 			updateView();
 		}
 	}
@@ -134,6 +151,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		if(playerSetup != null){return;}
 		int id = e.getKeyCode();
 		switch (id) {
 		case (KeyEvent.VK_DOWN):
@@ -157,6 +175,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if(playerSetup != null){return;}
 		view.findComponentAt(e.getPoint()).requestFocus();
 
 		System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
@@ -251,12 +270,14 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	}
 
 	/**
-	 * updates the view's checklist to display that of the current player
+	 * updates the view's display to reflect any changes that have occurred in the game
 	 */
 	public void updateView() {
 		view.updateNick(game.getCurrentNick());
 		view.updateChara(game.getCurrentChara());
+		view.updateHand(game.currentPlayerHand());
 		view.updateChecklist(game.currentPlayerChecklist());
+		view.repaint();
 	}
 
 	public void printBoard() {

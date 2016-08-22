@@ -36,15 +36,6 @@ public class Player implements Token {
 		}
 	}
 
-	/**
-	 * prints out the cards in this player's hand
-	 */
-	public void printHand() {
-		for (Card c : hand) {
-			System.out.println(c.getName());
-		}
-	}
-
 	public Checklist getChecklist(){
 		return checklist;
 	}

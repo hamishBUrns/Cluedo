@@ -205,10 +205,18 @@ public class BoardFrame extends JFrame {
 		checklist.setText(text);
 	}
 
+	/**
+	 * updates what is displayed on the 'nick' label
+	 * @param newNick
+	 */
 	public void updateNick(String newNick){
 		nick.setText(newNick);
 	}
 
+	/**
+	 * updates what is displayed on the 'chara' label
+	 * @param newChara
+	 */
 	public void updateChara(String newChara){
 		chara.setText(newChara);
 	}
@@ -226,7 +234,7 @@ public class BoardFrame extends JFrame {
 	}
 
 	public void warningMessage(String msg, String title){
-		JOptionPane.showMessageDialog((JFrame) this, msg, title, JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog((JFrame) this, msg, title, JOptionPane.WARNING_MESSAGE);
 	}
 
 	public void infoMessage(String msg, String title){
@@ -235,6 +243,18 @@ public class BoardFrame extends JFrame {
 
 	public void gameWonMessage(String winner){
 		String msg = "Egads! " + winner + " has solved it!";
+	}
+
+	public void playerLostMessage(String loser){
+		JOptionPane.showMessageDialog((JFrame) this,
+				loser + " is out of the game.",
+				"What Poppycock!", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public void gameLostMessage(){
+		JOptionPane.showMessageDialog((JFrame) this,
+				"You all suck at this. Game over I guess.",
+				"Wow.", JOptionPane.ERROR_MESSAGE);
 	}
 
 }

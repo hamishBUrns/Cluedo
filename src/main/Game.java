@@ -152,8 +152,8 @@ public class Game {
 	// ===== turn logic starts here ==== //
 	public void rollDice() {
 		Random rand = new Random();
-		diceRoll = rand.nextInt(11) + 2; // generate a random number between
-											// 2 and 12
+		// generate a random number between 2 and 12
+		diceRoll = rand.nextInt(11) + 2;
 	}
 
 	public void endTurn() {
@@ -167,6 +167,9 @@ public class Game {
 
 	public void setCurrentPlayer() {
 		currentPlayer = players.get(turnIndex);
+		if(!currentPlayer.isStillIn() && playersLeft()){
+			endTurn();
+		}
 	}
 
 	public boolean canMove() {
@@ -362,42 +365,6 @@ public class Game {
 		board.printBoard();
 	}
 
-	// /**
-	// * get input for the weapon and character for this suggestion from the
-	// user
-	// *
-	// * @param room
-	// * @param p
-	// */
-	// public List<Card> suggest(Room room, Card r, Player p) {
-	// System.out.println("Cards in hand: ");
-	// p.printHand();
-	// Card c = askCharacter(p);
-	// Card w = askWeapon(p);
-	// printPublicDialog(
-	// "\"Perhaps it was " + c.getName() + " in the " + r.getName() + " with the
-	// " + w.getName() + "?\"");
-	//
-	// Player suspect = playerFromString(c.getName(), allCharas);
-	// Room susRoom = board.currentRoom(suspect);
-	// if (susRoom != null) {
-	// susRoom.takeFromRoom(suspect, board);
-	// }
-	// room.putInRoom(suspect, board);
-	//
-	// Weapon weap = weapons.get(w.getName());
-	// board.currentRoom(weap).takeFromRoom(weap, board);
-	// room.putInRoom(weap, board);
-	//
-	// board.printBoard();
-	//
-	// List<Card> cards = new ArrayList<>();
-	// cards.add(c);
-	// cards.add(r);
-	// cards.add(w);
-	// return cards;
-	// }
-
 	public boolean canSuggest() {
 		Room room = board.currentRoom(currentPlayer);
 		if (room == null) {
@@ -446,9 +413,12 @@ public class Game {
 			for (Card c : players.get(current).getHand()) {
 				for (Card s : suggested) {
 					if (c.equals(s)) {
+						// if someone has a card that matches:
+						// add it to everyone's checklists
 						for (Player p : players) {
 							p.getChecklist().addCard(c);
 						}
+						// and return the name of the card
 						return c.getName();
 					}
 				}
@@ -459,100 +429,13 @@ public class Game {
 				current = 0;
 			}
 		}
+		// if no one has a match, return null
 		return null;
 	}
 
-	// /**
-	// * get input for the room, weapon, and character for this accusation from
-	// * the user
-	// *
-	// * @param p
-	// */
-	// public List<Card> accuse(Player p) {
-	// System.out.println("Cards in hand: ");
-	// p.printHand();
-	// Card c = askCharacter(p);
-	// Card r = askRoom(p);
-	// Card w = askWeapon(p);
-	// printPublicDialog("\"It was " + c.getName() + " in the " + r.getName() +
-	// " with the " + w.getName() + "!\"");
-	//
-	// List<Card> cards = new ArrayList<>();
-	// cards.add(c);
-	// cards.add(r);
-	// cards.add(w);
-	// return cards;
-	// }
-
-	// /**
-	// * Gets a string input from the user and returns the corresponding
-	// character
-	// * card Will not return until a matching card is found that is not in the
-	// * players checklist or hand
-	// *
-	// * @param p
-	// * @return
-	// */
-	// public Card askCharacter(Player p) {
-	// System.out.println("Characters on checklist: ");
-	// checklist.printCheckedCharas();
-	// Card c = cardFromString(client.readString("Who dunnit?"));
-	// while (c == null || !(c instanceof CharacterCard) ||
-	// p.getHand().contains(c) || checklist.contains(c)) {
-	// c = cardFromString(
-	// client.readString("Character must not be in your checklist or hand and
-	// must be spelt correctly"));
-	// }
-	// return c;
-	// }
-	//
-	// /**
-	// * Gets a string input from the user and returns the corresponding room
-	// card
-	// * Will not return until a matching card is found that is not in the
-	// players
-	// * checklist or hand
-	// *
-	// * @param p
-	// * @return
-	// */
-	// public Card askRoom(Player p) {
-	// System.out.println("Rooms on checklist: ");
-	// checklist.printCheckedRooms();
-	// Card r = cardFromString(client.readString("Scene of the crime?"));
-	// while (r == null || !(r instanceof RoomCard) || p.getHand().contains(r)
-	// || checklist.contains(r)) {
-	// r = cardFromString(
-	// client.readString("Room must not be in your checklist or hand and must be
-	// spelt correctly"));
-	// }
-	// return r;
-	// }
-	//
-	// /**
-	// * Gets a string input from the user and returns the corresponding weapon
-	// * card Will not return until a matching card is found that is not in the
-	// * players checklist or hand
-	// *
-	// * @param p
-	// * @return
-	// */
-	// public Card askWeapon(Player p) {
-	// System.out.println("Weapons on checklist: ");
-	// checklist.printCheckedWeaps();
-	// Card w = cardFromString(client.readString("Murder weapon?"));
-	// while (w == null || !(w instanceof WeaponCard) || p.getHand().contains(w)
-	// || checklist.contains(w)) {
-	// w = cardFromString(
-	// client.readString("Weapon must not be in your checklist or hand and must
-	// be spelt correctly"));
-	// }
-	// return w;
-	// }
-
 	/**
-	 * sequence diagram Returns true if accusation matches the solution
-	 *
+	 * Returns true if accusation matches the solution
+	 * If they differ, removes the accusing character from the game
 	 * @param accusation
 	 * @return
 	 */
@@ -563,6 +446,7 @@ public class Game {
 		acc.add(cardFromString(w));
 		for (Card c : acc) {
 			if (!solution.contains(c)) {
+				currentPlayer.setStatus(false);
 				return false;
 			}
 		}
@@ -602,6 +486,12 @@ public class Game {
 		return null;
 	}
 
+	/**
+	 * returns the player object whose name matches the given string
+	 * null if no match found
+	 * @param character
+	 * @return
+	 */
 	public Player playerFromString(String character) {
 		for (Player p : allCharas) {
 			if (p.getName().equalsIgnoreCase(character)) {
@@ -612,12 +502,12 @@ public class Game {
 	}
 
 	/**
-	 * Returns true if there are still players that are left(Haven't been kicked
+	 * Returns true if there are still players that are left (Haven't been kicked
 	 * out by wrong accusation)
 	 *
 	 * @return
 	 */
-	public boolean playersleft() {
+	public boolean playersLeft() {
 		for (Player p : players) {
 			if (p.isStillIn()) {
 				return true;
@@ -672,10 +562,6 @@ public class Game {
 
 	}
 
-	public void setSolution(List<Card> sol) {
-		solution = sol;
-	}
-
 	/**
 	 * returns list of players, for testing only
 	 *
@@ -684,6 +570,8 @@ public class Game {
 	public List<Player> getPlayers() {
 		return players;
 	}
+
+	/////these ones are being used now//////
 
 	public List<Player> getAllCharas() {
 		return allCharas;
@@ -727,15 +615,6 @@ public class Game {
 		return weapNames;
 	}
 
-	// /**
-	// * return checklist, for testing only
-	// *
-	// * @return
-	// */
-	// public Checklist getChecklist() {
-	// return checklist;
-	// }
-
 	/**
 	 * returns the board
 	 *
@@ -745,6 +624,7 @@ public class Game {
 		return board;
 	}
 
+	//not used?
 	public Deck getDeck() {
 		return deck;
 	}
@@ -759,6 +639,14 @@ public class Game {
 
 	public String currentRoomName(){
 		return board.currentRoom(currentPlayer).getName();
+	}
+
+	public String currentPlayerHand(){
+		String s = currentPlayer.getNick() + "'s Hand: \n";
+		for(Card c : currentPlayer.getHand()){
+			s += "\n" + c.getName();
+		}
+		return s;
 	}
 
 	public String currentPlayerChecklist() {
