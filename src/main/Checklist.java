@@ -17,6 +17,10 @@ public class Checklist {
 		characters = new ArrayList<>();
 	}
 
+	/**
+	 * add a card to this checklist into the appropriate sub-list
+	 * @param c
+	 */
 	public void addCard(Card c){
 		if(c instanceof CharacterCard){
 			characters.add((CharacterCard) c);
@@ -27,41 +31,13 @@ public class Checklist {
 		}
 	}
 
+	/**
+	 * returns true if any of the character, room, or weapon lists contain the given card
+	 * @param c
+	 * @return
+	 */
 	public boolean contains(Card c){
 		return characters.contains(c) || rooms.contains(c) || weapons.contains(c);
-	}
-
-	///////////////not needed///////////
-
-	public void printChecklist(){
-		System.out.println("//Checklist//");
-		System.out.println("Characters:");
-		printCheckedCharas();
-		System.out.println("Rooms:");
-		printCheckedRooms();
-		System.out.println("Weapons:");
-		printCheckedWeaps();
-	}
-
-	public void printCheckedCharas(){
-		if(characters.isEmpty()){System.out.println("[none]");}
-		for(CharacterCard c : characters){
-			System.out.println(c.getName());
-		}
-	}
-
-	public void printCheckedRooms(){
-		if(rooms.isEmpty()){System.out.println("[none]");}
-		for(RoomCard r : rooms){
-			System.out.println(r.getName());
-		}
-	}
-
-	public void printCheckedWeaps(){
-		if(weapons.isEmpty()){System.out.println("[none]");}
-		for(WeaponCard w : weapons){
-			System.out.println(w.getName());
-		}
 	}
 
 }

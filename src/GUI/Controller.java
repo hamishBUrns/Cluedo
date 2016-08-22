@@ -4,11 +4,8 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.ButtonModel;
-import board.Player;
-
 import board.Tile;
 import main.Game;
-import main.TextClient;
 
 /**
  * i'll do this later
@@ -29,33 +26,25 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		doGameSetup();
 	}
 
-	public Controller(BoardFrame view, Game game) {
-		this.game = game;
-		this.view = view;
-
-	}
-
 	/**
-	 * for testing the view/controller interaction without worrying game logic
-	 * yet
-	 *
-	 * @param view
+	 * creates a new Game, calls for dialog to get the number of players,
+	 * and creates a new PlayerSetupDialog to set up the players
 	 */
-	public Controller(BoardFrame view) {
-		this.view = view;
-
-	}
-
 	public void doGameSetup() {
 		numPlayers = view.getNumPlayers();
 		playerSetup = new PlayerSetupDialog(view, this);
 	}
 
+	/**
+	 * completes the game set up by calling to deal cards and set the current player
+	 * updates the view and disposes of the player setup dialog
+	 */
 	public void finishGameSetup() {
 		game.dealCards();
 		game.setCurrentPlayer();
 		updateView();
 		playerSetup.dispose();
+		playerSetup = null;
 	}
 
 	@Override
@@ -71,53 +60,101 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			if (numPlayers == 0) {
 				finishGameSetup();
 			}
-		}
 
-		if (e.getActionCommand().equals("suggest")) {
-//			// do suggest things
-//			// System.out.println(getSuspect());
-//			if (game.canSuggest()) {
-//				String s = getSuspect();
-//				if (s == null) {
-//					return;
-//				}
-//				String w = getMurderWeapon();
-//				if (w == null) {
-//					return;
-//				}
-//				String r = game.currentRoomName();
-//				view.infoMessage("\"Perhaps it was " + s + " in the " + r + " with the " + w + "?\"",
-//						game.getCurrentNick() + ":");
-//				String result = game.refute(game.suggest(s, w));
-//				if (result == null) {
-//					// game won stuff
-//				} else {
-//					// refuted dialog
-//					view.infoMessage("There's irrefutable proof that '" + result + "' was not involved.", "But Wait!");
-//					game.endTurn();
-//					updateView();
-//				}
-//			} else {
-//				view.warningMessage("You must be inside a valid room to suggest", "Uh Oh!");
-//			}
-		} else if (e.getActionCommand().equals("accuse")) {
-			// do accuse things
+		}else{
+			if (e.getActionCommand().equals("suggest")) {
+				// do suggest things
+				suggest();
+			} else if (e.getActionCommand().equals("accuse")) {
+				// do accuse things
+				accuse();
+			} else if (e.getActionCommand().equals("end")) {
+				game.endTurn();
+			} else if (e.getActionCommand().equals("help")){
+
+			} else if (e.getActionCommand().equals("new")){
+				if(view.startNewGame()){
+					//view.dispose();
+					doGameSetup();
+					return;
+				}
+			} else if (e.getActionCommand().equals("quit")){
+				System.out.println("leave");
+			}
+			updateView();
+		}
+	}
+
+	/**
+	 * Obtains strings of the suggested cards from the user to be checked by the game logic
+	 * and displays the finalised suggestion. Calls to display the appropriate dialog depending
+	 * on whether the suggestion is correct
+	 */
+	public void suggest() {
+		if (game.canSuggest()) {
+			// get strings for suggested character & weapon
+			// if null, player has canceled the action, so return without doing
+			// anything
 			String s = getSuspect();
 			if (s == null) {
-				return;
-			}
-			String r = getCrimeScene();
-			if (r == null) {
 				return;
 			}
 			String w = getMurderWeapon();
 			if (w == null) {
 				return;
 			}
-			game.accusationCorrect(s, r, w);
-		} else if (e.getActionCommand().equals("end")) {
+			String r = game.currentRoomName();
+			view.infoMessage("\"Perhaps it was " + s + " in the " + r + " with the " + w + "?\"",
+					game.getCurrentNick() + ":");
+			String result = game.refute(game.suggest(s, w));
+			if (result == null) {
+				// game won stuff
+				view.gameWonMessage(game.getCurrentNick());
+			} else {
+				// refuted dialog
+				view.infoMessage("There's irrefutable proof that '" + result + "' was not involved.", "But Wait!");
+				game.endTurn();
+				// updateView();
+			}
+		} else {
+			view.warningMessage("You must be inside a valid room to suggest", "Uh Oh!");
+		}
+	}
+
+	/**
+	 * Obtains strings of the accused cards from the user to be checked by the game logic
+	 * and displays the finalised accusation. Calls to display the appropriate dialog depending
+	 * on whether the accusation is correct
+	 */
+	public void accuse() {
+		// get strings for accused character, room, & weapon
+		// if null, player has canceled the action, so return without doing
+		// anything
+		String s = getSuspect();
+		if (s == null) {
+			return;
+		}
+		String r = getCrimeScene();
+		if (r == null) {
+			return;
+		}
+		String w = getMurderWeapon();
+		if (w == null) {
+			return;
+		}
+		view.infoMessage("\"It was " + s + " in the " + r + " with the " + w + "!\"",
+				game.getCurrentNick() + ":");
+		if (game.accusationCorrect(s, r, w)) {
+			// game is won
+			view.gameWonMessage(game.getCurrentNick());
+		} else {
+			// player has lost
 			game.endTurn();
-			updateView();
+			view.playerLostMessage(game.getCurrentNick());
+			if (!game.playersLeft()) {
+				// if no one is left in the game, game is lost
+				view.gameLostMessage();
+			}
 		}
 	}
 
@@ -134,6 +171,9 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		if (playerSetup != null) {
+			return;
+		}
 		int id = e.getKeyCode();
 		switch (id) {
 		case (KeyEvent.VK_DOWN):
@@ -146,29 +186,33 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			game.tryMove("E");
 			break;
 		case (KeyEvent.VK_UP):
-
 			game.tryMove("N");
 			break;
 		default:
-			System.out.println("Not an option");
+			//System.out.println("Not an option");
 		}
+		view.updateStepsLeft(game.getDiceRoll());
 		view.repaint();
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if (playerSetup != null || game.getDiceRoll() == 0) {
+			return;
+		}
 		view.findComponentAt(e.getPoint()).requestFocus();
 
-		System.out.println("x is:"+e.getX()+"y is:"+e.getY()+"width is:"+view.getCanvas().getWidth());
+
+		System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
 		int col = pointToPos(e.getX());
 		int row = pointToPos(e.getY());
-		System.out.println("row, col"+row+","+col);
-		if(0<col&&col<26&&0<row&&row<26){
+		System.out.println("row, col" + row + "," + col);
+		if (0 < col && col < 26 && 0 < row && row < 26) {
 			game.tryLeaveRoom(row, col);
-		}
-		else {
+		} else {
 			System.out.println("outside of canvas");
 		}
+
 		view.repaint();
 
 	}
@@ -252,17 +296,20 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	}
 
 	/**
-	 * updates the view's checklist to display that of the current player
+	 * updates the view's display to reflect any changes that have occurred in
+	 * the game
 	 */
 	public void updateView() {
 		view.updateNick(game.getCurrentNick());
 		view.updateChara(game.getCurrentChara());
+		view.updateStepsLeft(game.getDiceRoll());
+		view.updateHand(game.currentPlayerHand());
 		view.updateChecklist(game.currentPlayerChecklist());
 		view.repaint();
 	}
 
 	public void printBoard() {
-		game.getBoard().printBoard();
+		// game.getBoard().printBoard();
 	}
 
 	public static void main(String args[]) {

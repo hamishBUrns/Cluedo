@@ -20,6 +20,7 @@ import board.Tile;
 public class MyCanvas extends JPanel {
 	int squaresize;
 	Controller control;
+
 	ArrayList<JLabel> labels;
 
 	public MyCanvas(Controller ctrl){
@@ -38,20 +39,20 @@ public class MyCanvas extends JPanel {
     }
 
 	public Dimension getPreferredSize() {
-		return new Dimension(600,600);
+		return new Dimension(600, 600);
 	}
 
 	@Override
-	public void paintComponent(Graphics g){
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		for(int row=0; row<25; row++){
-			for(int col=0;col<25;col++){
-				int i=col*squaresize;
-				int z=row*squaresize;
-				int xoffset=squaresize/4;
-				int yoffset=(squaresize*3)/4;
-				switch(control.getTile(row, col).getType()){
+		for (int row = 0; row < 25; row++) {
+			for (int col = 0; col < 25; col++) {
+				int i = col * squaresize;
+				int z = row * squaresize;
+				int xoffset = squaresize / 4;
+				int yoffset = (squaresize * 3) / 4;
+				switch (control.getTile(row, col).getType()) {
 
 				case ("wall"):
 					g.setColor(Color.black);
@@ -72,16 +73,8 @@ public class MyCanvas extends JPanel {
 					g.setColor(Color.red);
 					break;
 				}
+				g.fillRect(i, z, squaresize, squaresize);
 
-				g.fillRect(i,z, squaresize,squaresize);
-
-				g.setColor(Color.lightGray);
-				g.drawRect(i,z, squaresize,squaresize);
-
-
-//				g.setColor(Color.blue);
-//				g.setFont(new Font("TimesRoman", Font.PLAIN, squaresize));
-//				g.drawString(control.getTile(row, col).toString(), i+xoffset, z+yoffset);
 				if(control.getTile(row,col).getToken()!=null){
 					System.out.println(control.getTile(row,col).getToken().id());
 					switch(control.getTile(row,col).getToken().id()){
@@ -125,11 +118,15 @@ public class MyCanvas extends JPanel {
 					default:
 						System.out.println("Something wrong with to string?");
 					}
+
+
+				g.setColor(Color.lightGray);
+				g.drawRect(i,z, squaresize,squaresize);
+
 				}
-
-
 			}
 		}
+
 
 
 
@@ -158,12 +155,8 @@ public class MyCanvas extends JPanel {
         label.setOpaque(true);
         this.add(label);
         return label;
-
-
 	}
-	private void moveToken(){
 
-	}
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	protected ImageIcon createImageIcon(String path,
 	                                           String description) {

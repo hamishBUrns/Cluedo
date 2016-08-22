@@ -38,7 +38,7 @@ public class PlayerSetupDialog extends JDialog {
 	public void setUpPanel() {
 		panel = new JPanel(new BorderLayout());
 
-		nickInput = new JTextField("select a nickname");
+		nickInput = new JTextField("nickname (max 15 characters)");
 		nickInput.addActionListener(control);
 		panel.add(nickInput, BorderLayout.NORTH);
 
@@ -62,8 +62,16 @@ public class PlayerSetupDialog extends JDialog {
 		panel.add(confirm, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * returns up to the 15th character in the nickInput field
+	 * @return
+	 */
 	public String returnNick() {
-		return nickInput.getText();
+		String nick = nickInput.getText();
+		if (nick.length()>15){
+			return nick.substring(0, 14);
+		}
+		return nick;
 	}
 
 	public ButtonModel returnCharaSelection() {
@@ -73,7 +81,7 @@ public class PlayerSetupDialog extends JDialog {
 	public void resetDialog() {
 		psdRadioGroup.getSelection().setEnabled(false);
 		psdRadioGroup.clearSelection();
-		nickInput.setText("select a nickname");
+		nickInput.setText("nickname (max 15 characters)");
 	}
 
 }
