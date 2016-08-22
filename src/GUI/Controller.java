@@ -21,7 +21,6 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	int numPlayers;
 
 	public Controller() {
-		this.game = new Game();
 		this.view = new BoardFrame(this);
 		doGameSetup();
 	}
@@ -31,6 +30,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * and creates a new PlayerSetupDialog to set up the players
 	 */
 	public void doGameSetup() {
+		this.game = new Game();
 		numPlayers = view.getNumPlayers();
 		playerSetup = new PlayerSetupDialog(view, this);
 	}
@@ -60,7 +60,6 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			if (numPlayers == 0) {
 				finishGameSetup();
 			}
-
 		}else{
 			if (e.getActionCommand().equals("suggest")) {
 				// do suggest things
@@ -202,17 +201,14 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		}
 		view.findComponentAt(e.getPoint()).requestFocus();
 
-
-		//System.out.println("x is:" + e.getX() + "y is:" + e.getY() + "width is:" + view.getCanvas().getWidth());
 		int col = pointToPos(e.getX());
 		int row = pointToPos(e.getY());
-		//System.out.println("row, col" + row + "," + col);
 		if (0 < col && col < 26 && 0 < row && row < 26) {
 			game.tryLeaveRoom(row, col);
 		} else {
 			//System.out.println("outside of canvas");
 		}
-
+		updateView();
 		view.repaint();
 
 	}
@@ -254,10 +250,20 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 		return game.allCharaNames();
 	}
 
+	/**
+	 * returns the game board's array of Tiles
+	 * @return
+	 */
 	public Tile[][] getTiles() {
 		return game.getBoard().getTiles();
 	}
 
+	/**
+	 * returns the tile at the given row and column
+	 * @param row
+	 * @param col
+	 * @return
+	 */
 	public Tile getTile(int row, int col) {
 		return game.getBoard().getTile(row, col);
 	}

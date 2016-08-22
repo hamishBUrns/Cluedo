@@ -12,9 +12,9 @@ public class Game {
 	private List<Card> solution = new ArrayList<Card>();
 	private Map<String, Weapon> weapons = new HashMap<>();
 
-	//private TextClient client;
+	// private TextClient client;
 	private Deck deck;
-	//private Checklist checklist;
+	// private Checklist checklist;
 	private Board board;
 
 	private int turnIndex;
@@ -28,21 +28,20 @@ public class Game {
 	 * @param c
 	 */
 
-
 	public Game() {
 		deck = new Deck();
 		noWinner = true;
 		board = new Board();
-		diceRoll=100;
-		turnIndex=0;
+		diceRoll = 100;
+		turnIndex = 0;
 
-		//populate the array that holds all characters in the game
+		// populate the array that holds all characters in the game
 
 		placeCharacters();
 		placeWeapons();
 	}
 
-	public void placeCharacters(){
+	public void placeCharacters() {
 		allCharas.add(new Player("Miss Scarlett", 0, 9));
 		allCharas.add(new Player("Colonel Mustard", 0, 15));
 		allCharas.add(new Player("Mrs White", 6, 24));
@@ -50,7 +49,7 @@ public class Game {
 		allCharas.add(new Player("Mrs Peacock", 19, 24));
 		allCharas.add(new Player("Professor Plum", 24, 7));
 
-		for(Player p: allCharas){
+		for (Player p : allCharas) {
 			board.getTile(p.getRow(), p.getCol()).setToken(p);
 		}
 	}
@@ -88,7 +87,7 @@ public class Game {
 			}
 		}
 		for (Card c : deck.getDeck()) {
-			for(Player p : players){
+			for (Player p : players) {
 				p.getChecklist().addCard(c);
 			}
 		}
@@ -96,15 +95,14 @@ public class Game {
 						// card in the game
 	}
 
-	public void addPlayer(Player p, String nick){
+	public void addPlayer(Player p, String nick) {
 		p.setNick(nick);
 		players.add(p);
 		p.setPlayerNumber(players.size());
 	}
 
-
 	// ===== turn logic starts here ==== //
-	public void rollDice(){
+	public void rollDice() {
 		Random rand = new Random();
 		// generate a random number between 2 and 12
 		diceRoll = rand.nextInt(11) + 2;
@@ -113,75 +111,76 @@ public class Game {
 	/**
 	 * increments the turnIndex and sets the current player
 	 */
-	public void endTurn(){
-		if(turnIndex==players.size()-1){
-			turnIndex=0;
-		}
-		else{
+	public void endTurn() {
+		if (turnIndex == players.size() - 1) {
+			turnIndex = 0;
+		} else {
 			turnIndex++;
 		}
 		setCurrentPlayer();
 	}
 
 	/**
-	 * Sets the current player using the turnIndex and rolls the dice for their turn.
-	 * If that player is out of the game, calls endTurn
+	 * Sets the current player using the turnIndex and rolls the dice for their
+	 * turn. If that player is out of the game, calls endTurn
 	 */
-	public void setCurrentPlayer(){
+	public void setCurrentPlayer() {
 		currentPlayer = players.get(turnIndex);
 		rollDice();
-		if(!currentPlayer.isStillIn() && playersLeft()){
+		if (!currentPlayer.isStillIn() && playersLeft()) {
 			endTurn();
 		}
 	}
 
-	public boolean canMove(){
-		if(!currentPlayer.isStillIn()){
+	public boolean canMove() {
+		if (!currentPlayer.isStillIn()) {
 			return false;
 		}
-		if(diceRoll==0){
+		if (diceRoll == 0) {
 			return false;
 		}
-		if(!noWinner){
+		if (!noWinner) {
 			return false;
 		}
-		if(board.currentRoom(currentPlayer)!=null){
+		if (board.currentRoom(currentPlayer) != null) {
 			return false;
 		}
 		return true;
 	}
 
-	public void tryMove(String dir){
-		if(!canMove()){
-			System.out.println("cant move");
+	public void tryMove(String dir) {
+		if (!canMove()) {
+			//System.out.println("cant move");
 			return;
 		}
 		move(dir);
 
 	}
 
-	public boolean canLeaveRoom(Tile door){
+	public boolean canLeaveRoom(Tile door) {
 		Room room = board.currentRoom(currentPlayer);
-		if(room==null){//if player isn't in a room
-			//System.out.println("player not in room");
+		if (room == null) {// if player isn't in a room
+			// System.out.println("player not in room");
 			return false;
 		}
-		if(!room.getDoors().containsValue(door)){ //if the door selected isn't a door of the players current room
-			for(Tile t: room.getDoors().values()){
-				//System.out.println("Door:"+t.getRow()+","+t.getCol());
+		if (!room.getDoors().containsValue(door)) { // if the door selected
+													// isn't a door of the
+													// players current room
+			for (Tile t : room.getDoors().values()) {
+				// System.out.println("Door:"+t.getRow()+","+t.getCol());
 			}
-			//System.out.println("actual door is:"+door.getRow()+","+door.getCol());
-			//System.out.println("door is not of this room");
+			// System.out.println("actual door
+			// is:"+door.getRow()+","+door.getCol());
+			// System.out.println("door is not of this room");
 			return false;
 		}
 		return true;
 	}
 
-
-	public void tryLeaveRoom(int row, int col){
+	public void tryLeaveRoom(int row, int col) {
 		Tile door = board.getTile(row, col);
-		if(!canLeaveRoom(door)){
-			System.out.println("can't leave room");
+		if (!canLeaveRoom(door)) {
+			//System.out.println("can't leave room");
 			return;
 		}
 		leaveRoom(door);
@@ -189,19 +188,19 @@ public class Game {
 
 	/**
 	 * current player leaves room by specified door
+	 *
 	 * @param diceRoll
 	 * @param room
 	 * @param p
 	 */
 	public void leaveRoom(Tile door) {
-		Player p=currentPlayer;
-		Room room =getBoard().currentRoom(p);
+		Player p = currentPlayer;
+		Room room = getBoard().currentRoom(p);
 		room.takeFromRoom(p, board);
 		Tile destination = door;
 		p.setRow(destination.getRow());
 		p.setCol(destination.getCol());
 		board.getTile(p.getRow(), p.getCol()).setToken(p);
-		Room newRoom = board.currentRoom(p);
 		move("null");
 	}
 
@@ -209,57 +208,60 @@ public class Game {
 	 * gets user input to move them around the board
 	 */
 	public void move(String dir) {
-		dir=dir.toUpperCase();
-		Player p=currentPlayer;
+		dir = dir.toUpperCase();
+		Player p = currentPlayer;
 		switch (dir) {
 		case ("N"):
 			// go north
 			if (board.moveValid(p.getRow(), p.getCol(), p.getRow() - 1, p.getCol(), p)) {
 				diceRoll--;
 			}
-		break;
+			break;
 		case ("S"):
 			// go south
 			if (board.moveValid(p.getRow(), p.getCol(), p.getRow() + 1, p.getCol(), p)) {
 				diceRoll--;
 			}
-		break;
+			break;
 		case ("E"):
 			// go east
 			if (board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() + 1, p)) {
 				diceRoll--;
 			}
-		break;
+			break;
 		case ("W"):
 			// go west
 			if (board.moveValid(p.getRow(), p.getCol(), p.getRow(), p.getCol() - 1, p)) {
 				diceRoll--;
 			}
-		break;
+			break;
 		default:
-			System.out.println("Invalid input. Please use one of the following: N, S, E, W");
+			// System.out.println("Invalid input. Please use one of the
+			// following: N, S, E, W");
 		}
+		// if player took the secret stairs, put them in the new room and set
+		// roll to 0
 		if (board.currentRoom(p) != null) {
 			board.currentRoom(p).putInRoom(p, board);
-			diceRoll=0;
+			diceRoll = 0;
 			return;
-			}
-		//board.printBoard();
+		}
+		// board.printBoard();
 	}
 
 	public boolean canSuggest() {
 		Room room = board.currentRoom(currentPlayer);
-		if(room == null){
+		if (room == null) {
 			return false;
 		}
 		Card r = cardFromString(room.getName());
-		if(currentPlayer.getChecklist().contains(r)){
+		if (currentPlayer.getChecklist().contains(r)) {
 			return false;
 		}
 		return true;
 	}
 
-	public List<Card> suggest(String s, String w){
+	public List<Card> suggest(String s, String w) {
 		Room room = board.currentRoom(currentPlayer);
 
 		List<Card> sug = new ArrayList<>();
@@ -273,6 +275,10 @@ public class Game {
 			susRoom.takeFromRoom(suspect, board);
 		}
 		room.putInRoom(suspect, board);
+
+		Weapon weap = weapons.get(w);
+		board.currentRoom(weap).takeFromRoom(weap, board);
+		room.putInRoom(weap, board);
 
 		return sug;
 	}
@@ -312,8 +318,9 @@ public class Game {
 	}
 
 	/**
-	 * Returns true if accusation matches the solution
-	 * If they differ, removes the accusing character from the game
+	 * Returns true if accusation matches the solution If they differ, removes
+	 * the accusing character from the game
+	 *
 	 * @param accusation
 	 * @return
 	 */
@@ -365,8 +372,9 @@ public class Game {
 	}
 
 	/**
-	 * returns the player object whose name matches the given string
-	 * null if no match found
+	 * returns the player object whose name matches the given string null if no
+	 * match found
+	 *
 	 * @param character
 	 * @return
 	 */
@@ -380,8 +388,8 @@ public class Game {
 	}
 
 	/**
-	 * Returns true if there are still players that are left (Haven't been kicked
-	 * out by wrong accusation)
+	 * Returns true if there are still players that are left (Haven't been
+	 * kicked out by wrong accusation)
 	 *
 	 * @return
 	 */
@@ -403,10 +411,10 @@ public class Game {
 	 * @param numPlayers
 	 */
 	public Game(TextClient c, int numPlayers) {
-		//client = c;
+		// client = c;
 		deck = new Deck();
 		board = new Board();
-		//checklist = new Checklist();
+		// checklist = new Checklist();
 		noWinner = true;
 
 		List<Player> defaults = new ArrayList<Player>();
@@ -445,44 +453,44 @@ public class Game {
 		return players;
 	}
 
-	/////these ones are being used now//////
+	///// these ones are being used now//////
 
 	public List<Player> getAllCharas() {
 		return allCharas;
 	}
 
-	public List<String> allCharaNames(){
+	public List<String> allCharaNames() {
 		List<String> charaNames = new ArrayList<>();
-		for(Card c : deck.characters){
+		for (Card c : deck.characters) {
 			charaNames.add(c.getName());
 		}
 		return charaNames;
 	}
 
-	public List<String> allValidRoomNames(){
+	public List<String> allValidRoomNames() {
 		List<String> roomNames = new ArrayList<>();
-		for(Card r : deck.rooms){
-			if(!currentPlayer.getChecklist().contains(r)){
+		for (Card r : deck.rooms) {
+			if (!currentPlayer.getChecklist().contains(r)) {
 				roomNames.add(r.getName());
 			}
 		}
 		return roomNames;
 	}
 
-	public List<String> allValidCharaNames(){
+	public List<String> allValidCharaNames() {
 		List<String> charaNames = new ArrayList<>();
-		for(Card c : deck.characters){
-			if(!currentPlayer.getChecklist().contains(c)){
+		for (Card c : deck.characters) {
+			if (!currentPlayer.getChecklist().contains(c)) {
 				charaNames.add(c.getName());
 			}
 		}
 		return charaNames;
 	}
 
-	public List<String> allValidWeapNames(){
+	public List<String> allValidWeapNames() {
 		List<String> weapNames = new ArrayList<>();
-		for(Card w : deck.weapons){
-			if(!currentPlayer.getChecklist().contains(w)){
+		for (Card w : deck.weapons) {
+			if (!currentPlayer.getChecklist().contains(w)) {
 				weapNames.add(w.getName());
 			}
 		}
@@ -491,32 +499,33 @@ public class Game {
 
 	/**
 	 * returns the board
+	 *
 	 * @return
 	 */
 	public Board getBoard() {
 		return board;
 	}
 
-	//not used?
+	// not used?
 	public Deck getDeck() {
 		return deck;
 	}
 
-	public String getCurrentChara(){
+	public String getCurrentChara() {
 		return currentPlayer.getName();
 	}
 
-	public String getCurrentNick(){
+	public String getCurrentNick() {
 		return currentPlayer.getNick();
 	}
 
-	public String currentRoomName(){
+	public String currentRoomName() {
 		return board.currentRoom(currentPlayer).getName();
 	}
 
-	public String currentPlayerHand(){
+	public String currentPlayerHand() {
 		String s = currentPlayer.getNick() + "'s Hand: \n";
-		for(Card c : currentPlayer.getHand()){
+		for (Card c : currentPlayer.getHand()) {
 			s += "\n" + c.getName();
 		}
 		return s;
@@ -525,33 +534,33 @@ public class Game {
 	public String currentPlayerChecklist() {
 		String s = currentPlayer.getNick() + "'s Checklist \n";
 		s += "\nCharacters: \n";
-		for(Card c : deck.characters){
-			if(currentPlayer.getChecklist().contains(c)){
+		for (Card c : deck.characters) {
+			if (currentPlayer.getChecklist().contains(c)) {
 				s += c.getName() + "[X]\n";
-			}else{
+			} else {
 				s += c.getName() + "[ ]\n";
 			}
 		}
 		s += "\nRooms: \n";
-		for(Card r : deck.rooms){
-			if(currentPlayer.getChecklist().contains(r)){
+		for (Card r : deck.rooms) {
+			if (currentPlayer.getChecklist().contains(r)) {
 				s += r.getName() + "[X]\n";
-			}else{
+			} else {
 				s += r.getName() + "[ ]\n";
 			}
 		}
 		s += "\nWeapons: \n";
-		for(Card w : deck.weapons){
-			if(currentPlayer.getChecklist().contains(w)){
+		for (Card w : deck.weapons) {
+			if (currentPlayer.getChecklist().contains(w)) {
 				s += w.getName() + "[X]\n";
-			}else{
+			} else {
 				s += w.getName() + "[ ]\n";
 			}
 		}
 		return s;
 	}
 
-	public int getDiceRoll(){
+	public int getDiceRoll() {
 		return diceRoll;
 	}
 

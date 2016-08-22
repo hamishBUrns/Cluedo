@@ -35,7 +35,7 @@ public class PlayerSetupDialog extends JDialog {
 		setVisible(true);
 	}
 
-	public void setUpPanel() {
+	private void setUpPanel() {
 		panel = new JPanel(new BorderLayout());
 
 		nickInput = new JTextField("nickname (max 15 characters)");
