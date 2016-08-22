@@ -18,10 +18,10 @@ import javax.swing.JPanel;
 import board.Tile;
 
 public class MyCanvas extends JPanel {
-	int squaresize;
-	Controller control;
+	private int squaresize;
+	private Controller control;
 
-	ArrayList<JLabel> labels;
+	private ArrayList<JLabel> labels;
 
 	public MyCanvas(Controller ctrl) {
 		setBorder(BorderFactory.createLineBorder(Color.black));
@@ -128,25 +128,26 @@ public class MyCanvas extends JPanel {
 
 	private void createTokenLabels() {
 
-		labels.add(createLabel("images/missScarlet.png", "ms"));
-		labels.add(createLabel("images/colonelMustard.jpg", "cm"));
-		labels.add(createLabel("images/mrsWhite.png", "mw"));
-		labels.add(createLabel("images/thereverendgreen.jpg", "trg"));
-		labels.add(createLabel("images/mrspeacock.jpg", "professor plum"));
-		labels.add(createLabel("images/profPlum.jpg", "pp"));
+		labels.add(createLabel("images/missScarlet.png", "ms", "Miss Scarlett"));
+		labels.add(createLabel("images/colonelMustard.jpg", "cm", "Col. Mustard"));
+		labels.add(createLabel("images/mrsWhite.png", "mw", "Mrs. White"));
+		labels.add(createLabel("images/thereverendgreen.jpg", "trg", "The Rev. Green"));
+		labels.add(createLabel("images/mrspeacock.jpg", "professor plum", "Mrs. Peacock"));
+		labels.add(createLabel("images/profPlum.jpg", "pp", "Professor Plum"));
 
-		labels.add(createLabel("images/pipe.jpeg", "pp"));
-		labels.add(createLabel("images/spanner.png", "pp"));
-		labels.add(createLabel("images/rope.jpeg", "pp"));
-		labels.add(createLabel("images/revolver.jpeg", "pp"));
-		labels.add(createLabel("images/dagger.png", "pp"));
-		labels.add(createLabel("images/candlestick.jpeg", "pp"));
+		labels.add(createLabel("images/pipe.jpeg", "pp", "pipe"));
+		labels.add(createLabel("images/spanner.png", "pp", "spanner"));
+		labels.add(createLabel("images/rope.jpeg", "pp", "rope"));
+		labels.add(createLabel("images/revolver.jpeg", "pp", "revolver"));
+		labels.add(createLabel("images/dagger.png", "pp", "dagger"));
+		labels.add(createLabel("images/candlestick.jpeg", "pp", "candlestick"));
 	}
 
-	private JLabel createLabel(String path, String description) {
+	private JLabel createLabel(String path, String description, String hoverText) {
 		ImageIcon imageicon = createImageIcon(path, description);
 		imageicon.setImage(getScaledImage(imageicon.getImage(), squaresize, squaresize));
 		JLabel label = new JLabel(imageicon);
+		label.setToolTipText(hoverText);
 		label.setOpaque(true);
 		this.add(label);
 		return label;

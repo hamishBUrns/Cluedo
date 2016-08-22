@@ -21,6 +21,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	int numPlayers;
 
 	public Controller() {
+		this.game = new Game();
 		this.view = new BoardFrame(this);
 		doGameSetup();
 	}
@@ -30,7 +31,6 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 	 * and creates a new PlayerSetupDialog to set up the players
 	 */
 	public void doGameSetup() {
-		this.game = new Game();
 		numPlayers = view.getNumPlayers();
 		playerSetup = new PlayerSetupDialog(view, this);
 	}
@@ -60,6 +60,7 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			if (numPlayers == 0) {
 				finishGameSetup();
 			}
+
 		}else{
 			if (e.getActionCommand().equals("suggest")) {
 				// do suggest things
@@ -70,10 +71,11 @@ public class Controller implements MouseListener, ActionListener, KeyListener {
 			} else if (e.getActionCommand().equals("end")) {
 				game.endTurn();
 			} else if (e.getActionCommand().equals("help")){
-
+				new HelpDialog(view);
 			} else if (e.getActionCommand().equals("new")){
 				if(view.startNewGame()){
-					//view.dispose();
+					//make a new Game object and do the set up
+					game = new Game();
 					doGameSetup();
 					return;
 				}
